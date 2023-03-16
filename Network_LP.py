@@ -42,7 +42,9 @@ for a in range(Agv_num):
 for i in range(len(Arc_information)):
     Arc_information[i].append([i])
     
-  
+
+for i in range(len(Arc_information)):
+    print(Arc_information[i])
 # Make Arc index bundles
 # Arc_bundles = []
 # for i in range(Agv_num * 2 + 1):
