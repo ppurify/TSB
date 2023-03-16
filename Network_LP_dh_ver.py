@@ -30,7 +30,6 @@ for a in range(len(Pick_to_drop)):
         Arc_information.append([['p', a],['d', a],[b]])
 
 
-
 # generate A3
 for a in range(Drop_to_sink):
     Arc_information.append([['d', a],['s'],[0]])
