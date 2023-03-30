@@ -15,8 +15,19 @@ Agv_num = 3
 Agv_to_pick = [[3,3],
                [2,2],
                [1,3]]
+
 Pick_to_drop = [3,2]
 
+
+
+# Agv_num = 2
+
+# # [[0번 agv가 0번 p로 가는 경로 수, 0번 agv가 1번 p로 가는 경로 수] ...]
+# # 추후 한번에 3개 경로로 통일
+# Agv_to_pick = [[2,2],
+#                [2,3]]
+
+# Pick_to_drop = [3,2]
 
 
 
@@ -26,6 +37,8 @@ Number_of_job = 0
 
 Arc_information = []
 
+
+#추후 sink노드로 가는 아크들의 cost를 0으로 설정하도록 수정해야함
 # generate A1
 for a in range(len(Agv_to_pick)):
     for b in range(len(Agv_to_pick[a])):
@@ -58,10 +71,34 @@ Arc_information.sort()
 
 
 
+
 # set cost(tmpt, not yet coded)
 for i in range(len(Arc_information)):
     Arc_information[i].append([i])
 
+
+# Arc_information[0][3][0] = 1
+# Arc_information[1][3][0] = 2
+# Arc_information[2][3][0] = 3
+# Arc_information[3][3][0] = 4
+# Arc_information[4][3][0] = 0
+# Arc_information[5][3][0] = 1
+# Arc_information[6][3][0] = 2
+# Arc_information[7][3][0] = 3
+# Arc_information[8][3][0] = 4
+# Arc_information[9][3][0] = 5
+# Arc_information[10][3][0] = 0
+# Arc_information[11][3][0] = 0
+# Arc_information[12][3][0] = 0
+# Arc_information[13][3][0] = 1
+# Arc_information[14][3][0] = 2
+# Arc_information[15][3][0] = 3
+# Arc_information[16][3][0] = 1
+# Arc_information[17][3][0] = 2
+
+
+# Agv_to_pick_costs = [[1,2,3,4], [1,2,3,4,5]]
+# Pick_to_drop_costs = [[1,2,3], [1,2]]
 
 for i in range(len(Arc_information)):
     print(Arc_information[i])
@@ -130,7 +167,6 @@ for i in range(Number_of_job):
 
 
 # Constraint 4
-
 for j in range(Number_of_job):
     arcs_to_drop_node = []
     
@@ -139,7 +175,6 @@ for j in range(Number_of_job):
             arcs_to_drop_node.append(i)
     # print(arcs_to_drop_node)
     solver.Add(sum(x[j] for j in arcs_to_drop_node) == 1)
-
 
 
 
@@ -157,6 +192,7 @@ if status == pywraplp.Solver.OPTIMAL:
     print('Objective value =', solver.Objective().Value())
     print()
     for i in range(Total_arc_num):
-        print(x[i].name(), ' = ', x[i].solution_value())
+        if x[i].solution_value() > 0:
+            print(x[i].name(), ' = ', x[i].solution_value())
 else:
     print('The problem does not have an optimal solution.')
