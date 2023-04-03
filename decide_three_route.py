@@ -46,7 +46,6 @@ def move(start, finish, grid):
     return current
 
 
-
 def move(start, finish, grid):
     current = start
     paths = [] # list to save different paths from start to finish
