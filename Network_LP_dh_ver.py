@@ -1,91 +1,71 @@
 from ortools.linear_solver import pywraplp
 import numpy as np
 
+
 solver = pywraplp.Solver.CreateSolver('GLOP')
 if not solver:
     print("Please check solver")
 
+inf = solver.infinity()
 # Parameters
 Agv_num = 3
-Agv_to_pick = [[3,3],
-               [2,2],
-               [1,3]]
 
-Pick_to_drop = [3,2]
-Drop_to_sink = Agv_num
+# [[0번 agv가 0번 p로 가는 경로 수, 0번 agv가 1번 p로 가는 경로 수] ...]
+# 추후 한번에 3개 경로로 통일할 예정
+Agv_to_pick = [[3, 3],
+               [2, 2],
+               [1, 3]]
 
-Total_arc_num = Agv_num + sum(sum(Agv_to_pick, [])) + sum(Pick_to_drop) + Drop_to_sink
+Pick_to_drop = [3, 2]
+
+
+# generate A부분에서 갱신됨. 지금은 0으로 놔둬도 됨
+Number_of_job = 0
+
 
 Arc_information = []
 
+#추후 sink노드로 가는 아크들의 cost를 0으로 설정하도록 수정해야함
 # generate A1
 for a in range(len(Agv_to_pick)):
     for b in range(len(Agv_to_pick[a])):
         for c in range(Agv_to_pick[a][b]):
-            Arc_information.append([['agv', a],['p', b],[c]])
-            
+            Arc_information.append([['agv', a], ['p', b], [c]])
+        if b > Number_of_job:
+            Number_of_job = b
+
 # generate A2
 for a in range(len(Pick_to_drop)):
     for b in range(Pick_to_drop[a]):
-        Arc_information.append([['p', a],['d', a],[b]])
+        Arc_information.append([['p', a], ['d', a], [b]])
+    if a > Number_of_job:
+        Number_of_job = a
 
-
+Number_of_job += 1
+Drop_to_sink = Number_of_job
+Total_arc_num = Agv_num + sum(sum(Agv_to_pick, [])) + \
+    sum(Pick_to_drop) + Drop_to_sink
 
 # generate A3
 for a in range(Drop_to_sink):
-    Arc_information.append([['d', a],['s'],[0]])
+    Arc_information.append([['d', a], ['s'], [0]])
 
 # generate A4
 for a in range(Agv_num):
-    Arc_information.append([['agv', a],['s'],[0]])
+    Arc_information.append([['agv', a], ['s'], [0]])
+
+Arc_information.sort()
 
 
 # set cost(tmpt, not yet coded)
 for i in range(len(Arc_information)):
     Arc_information[i].append([i])
-    
+
 
 for i in range(len(Arc_information)):
     print(Arc_information[i])
-# Make Arc index bundles
-# Arc_bundles = []
-# for i in range(Agv_num * 2 + 1):
-#     if i == 0:
-#         Arc_bundles.append(list(range(0, Agv_to_pick[i] + 1)))
 
-#     elif (i > 0) & (i < Agv_num):
-#         Previous_value = Arc_bundles[i-1][-1]
-#         Arc_bundles.append(list(range(Previous_value + 1, Previous_value + 1 + Agv_to_pick[i] + 1)))
-
-#     elif (i >= Agv_num) & (i < Agv_num*2):
-#         Previous_value = Arc_bundles[i-1][-1]
-#         Arc_bundles.append(list(range(Previous_value + 1, Previous_value + 1 + Pick_to_drop[i%Agv_num])))
-    
-#     else:
-#         Previous_value = Arc_bundles[i-1][-1]
-#         Arc_bundles.append(list(range(Previous_value + 1, Total_arc_num)))
-
-# Index with cost
-# Agv_to_pick_costs = [[1,2,3], [4,5], [3,2,1]]
-# Pick_to_drop_costs = [[2,1], [1,2,3,4], [1,2]]
-
-# for i in range(Agv_num):
-#     if len(Agv_to_pick_costs[i]) != Agv_to_pick[i]:
-#         print("Please Check Agv_to_pick_costs or Agv_to_pick[", i, "]"  )
-#     elif len(Pick_to_drop_costs[i]) != Pick_to_drop[i]:
-#         print("Please Check Pick_to_drop_costs or Pick_to_drop[", i , "]"  )
-
-# Arc_costs = np.zeros(Total_arc_num)
-
-# for i in range(Agv_num *2):
-#     if i < Agv_num:
-#         Arc_index_list = Arc_bundles[i][1:]
-#         for j in range(len(Arc_index_list)):
-#             Arc_costs[Arc_index_list[j]] = Agv_to_pick_costs[i%Agv_num][j]
-#     else:
-#         Arc_index_list = Arc_bundles[i]
-#         for j in range(len(Arc_index_list)):
-#             Arc_costs[Arc_index_list[j]] = Pick_to_drop_costs[i%Agv_num][j]
+print()
 
 
 # Decision Variables
@@ -94,42 +74,79 @@ for i in range(Total_arc_num):
     x[i] = solver.NumVar(0, 1, 'x[%i]' % i)
 
 
-# Constraint 1 
-for i in range(len(Arc_information)):
-    solver.Add(sum(x[j] for j in Arc_bundles[i]) == 1)
+# Constraint 1
+start_node_index = [0]
+for i in range(len(Agv_to_pick)):
+    start_node_index.append(sum(Agv_to_pick[i]) + 1)
+    start_node_index[-1] += start_node_index[-2]
+
+for i in range(len(start_node_index)-1):
+    solver.Add(sum(x[j] for j in range(
+        start_node_index[i], start_node_index[i+1])) == 1)
+
 
 # Constraint 2
-# Make forward to sink node
-To_sink_node = Arc_bundles[-1]
-for i in range(Agv_num):
-    To_sink_node = To_sink_node + [Arc_bundles[i][0]]
-solver.Add(sum(Arc_status[i] for i in To_sink_node) == Agv_num)
+arcs_to_sink_node = []
+for i in range(len(Arc_information)):
+    if Arc_information[i][1][0] == 's':
+        arcs_to_sink_node.append(i)
+
+solver.Add(sum(x[j] for j in arcs_to_sink_node) == Agv_num)
+
 
 # Constraint 3
-for i in range(Agv_num):
-    Pick_to_drop_arc = Arc_bundles[Agv_num + i]
-    solver.Add(sum(Arc_status[k] for k in Arc_bundles[i][1:]) == sum(Arc_status[j] for j in Pick_to_drop_arc))
-    solver.Add(sum(Arc_status[j] for j in Pick_to_drop_arc) == Arc_status[Arc_bundles[-1][i]])
+for i in range(Number_of_job):
+    arcs_from_pick_node = []
+    arcs_to_pick_node = []
+    arcs_from_drop_node = []
+    arcs_to_drop_node = []
+
+    for j in range(len(Arc_information)):
+        # 출발지가 p이거나
+        if Arc_information[j][0] == ['p', i]:
+            arcs_from_pick_node.append(j)
+        # 도착지가 p
+        if Arc_information[j][1] == ['p', i]:
+            arcs_to_pick_node.append(j)
+        # 출발지가 d이거나
+        if Arc_information[j][0] == ['d', i]:
+            arcs_from_drop_node.append(j)
+        # 도착지가 d
+        if Arc_information[j][1] == ['d', i]:
+            arcs_to_drop_node.append(j)
+
+    solver.Add(sum(x[j] for j in arcs_from_pick_node)
+               == sum(x[j] for j in arcs_to_pick_node))
+    solver.Add(sum(x[j] for j in arcs_from_drop_node)
+               == sum(x[j] for j in arcs_to_drop_node))
+
 
 # Constraint 4
-for i in range(Agv_num):
-    Pick_to_drop_arc = Arc_bundles[Agv_num + i]
-    solver.Add(sum(Arc_status[j] for j in Pick_to_drop_arc) == 1)
+for j in range(Number_of_job):
+    arcs_to_drop_node = []
+
+    for i in range(len(Arc_information)):
+        if Arc_information[i][1] == ['d', j]:
+            arcs_to_drop_node.append(i)
+
+    solver.Add(sum(x[j] for j in arcs_to_drop_node) == 1)
+
 
 # Obejctive
 objective = solver.Objective()
 for i in range(Total_arc_num):
-    objective.SetCoefficient(Arc_status[i], Arc_costs[i])
+    objective.SetCoefficient(x[i], Arc_information[i][3][0])
 
 objective.SetMinimization()
 
 status = solver.Solve()
-print("Total_arc_num : " , Total_arc_num)
+print("Total_arc_num : ", Total_arc_num)
 print()
 if status == pywraplp.Solver.OPTIMAL:
     print('Objective value =', solver.Objective().Value())
     print()
     for i in range(Total_arc_num):
-        print(Arc_status[i].name(), ' = ', Arc_status[i].solution_value())
+        if x[i].solution_value() > 0:
+            print(x[i].name(), ' = ', x[i].solution_value())
 else:
     print('The problem does not have an optimal solution.')
