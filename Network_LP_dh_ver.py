@@ -10,6 +10,7 @@ inf = solver.infinity()
 # Parameters
 Agv_num = 3
 
+#
 # [[0번 agv가 0번 p로 가는 경로 수, 0번 agv가 1번 p로 가는 경로 수] ...]
 # 추후 한번에 3개 경로로 통일
 Agv_to_pick = [[3,3],
