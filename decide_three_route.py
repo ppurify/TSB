@@ -29,7 +29,7 @@ dy = [1, 0, -1, 0]
 path = [start]
 route = []
 current = start
-print(grid.shape)
+
 
 
 
@@ -43,23 +43,29 @@ def blue(current, finish, grid):
     return candidate
 
 
+
+
 def purple(current, finish, grid):
     candidate = []
+    temp_candidate = []
 
     # start가 purple grid에 있을 때, 일단 모든 candidate 고려
     if len(path) == 1:
+        distances = []
         for i in range(4):
             nx = current[0] + dx[i]
             ny = current[1] + dy[i]
             if 0 <= nx < grid.shape[0] and 0 <= ny < grid.shape[1] and grid[current[0]+dx[i], current[1]+dy[i]] != -1:
-                candidate.append((current[0]+dx[i], current[1]+dy[i]))
-        
-        # finish와 거리가 가장 가까운 candidate만 남기기
-        distances = []
-        for i in range(len(candidate)):
-            distances.append(abs(candidate[i][0]-finish[0])+abs(candidate[i][1]-finish[1]))
+                temp_candidate.append((current[0]+dx[i], current[1]+dy[i]))
+                distances.append(abs(current[0]+dx[i]-finish[0])+abs(current[1]+dy[i]-finish[1]))
+        print('temp_candidate : ', temp_candidate)
+        print('distances : ', distances)
+        # finish와 거리가 가장 가까운 candidate만 남기기 다시말해, finish와 가까운 좌표만 남김
         min_distance = min(distances)
-        
+
+        for i in range(len(temp_candidate)):
+            if distances[i] == min_distance:
+                candidate.append(temp_candidate[i])
         
 
     # 가는도중, 이전 위치 파악하여 이동방향대로 한칸 이동
@@ -73,7 +79,6 @@ def purple(current, finish, grid):
 
 
 
-print(blue(current=current, finish=finish, grid=grid))
 
 
 
@@ -86,7 +91,8 @@ print(blue(current=current, finish=finish, grid=grid))
 
 
 
-
+current = (0,3)
+finish = (8,4)
 
 
 def green(current, finish, grid):
@@ -99,6 +105,7 @@ def green(current, finish, grid):
 
 
 
+print(green(current=current, finish=finish, grid=grid))
 
 
 
