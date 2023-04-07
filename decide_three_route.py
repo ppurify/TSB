@@ -213,46 +213,73 @@ for i in range(len(route)):
     print()
 
 print(route)
-[[(0, 6), (1, 6), (2, 6), (3, 6), (4, 6), (4, 5), (4, 4), (3, 4), (2, 4), (1, 4), (0, 4)], [(0, 6), (1, 6), (2, 6), (2, 5), (2, 4), (1, 4), (0, 4)], [(0, 6), (0, 5), (0, 4)]]
 
-# import matplotlib.pyplot as plt
 
-# # 시작점과 종료점
-# start_coord = (start[1], start[0])
-# finish_coord = (finish[1], finish[0])
 
-# # 경로 추출
-# current = start_coord
-# path = [current]
-# while current != finish_coord:
-#     candidate = purple(current, finish_coord, grid, path)
-#     if len(candidate) == 0:
-#         break
-#     current = candidate[0]
-#     path.append(current)
+number_of_YT = 50
+number_of_job = 50
 
-# # grid 시각화
-# fig, ax = plt.subplots(figsize=(7, 9))
+for i in range(number_of_YT):
+    for j in range(number_of_job):
+        start = None
+        finish = None
 
-# # 블럭 그리기
-# for i in range(grid.shape[0]):
-#     for j in range(grid.shape[1]):
-#         if grid[i, j] == -1:
-#             ax.add_patch(plt.Rectangle((j, i), 1, 1, facecolor='gray'))
+        while start is None or grid[start] == -1 or finish is None or grid[finish] == -1 or finish == start:
+            start = (np.random.randint(9), np.random.randint(7))
+            finish = (np.random.randint(9), np.random.randint(7))
 
-# # 경로 그리기
-# for i in range(len(path) - 1):
-#     ax.plot([path[i][0] + 0.5, path[i + 1][0] + 0.5], [path[i][1] + 0.5, path[i + 1][1] + 0.5], 'r')
+        print('YT : ', i, 'job : ', j, 'start : ', start, 'finish : ', finish)
 
-# # 시작점과 종료점 그리기
-# ax.plot(start_coord[0] + 0.5, start_coord[1] + 0.5, 'bo', markersize=10)
-# ax.plot(finish_coord[0] + 0.5, finish_coord[1] + 0.5, 'yo', markersize=10)
+        path = []
+        route = []
+        current = start
+        move(current, finish, grid, path, route)
 
-# # 눈금 없애기
-# ax.set_xticks([])
-# ax.set_yticks([])
 
-# plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
