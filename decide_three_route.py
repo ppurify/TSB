@@ -140,7 +140,10 @@ def orange(current, finish, grid, path):
 
 
 
-
+start = (0,6)
+finish = (0,4)
+path = []
+route = []
 
 
 
@@ -187,31 +190,30 @@ def move(current, finish, grid, path, route):
 
     return
 
+move(start, finish, grid, path, route)
+
+# for i in range(len(grid)):
+#     for j in range(len(grid[0])):
+#         for k in range(len(grid)):
+#             for p in range(len(grid[0])):
+#                 start = (i,j)
+#                 finish = (k,p)
+#                 path = []
+#                 route = []
+#                 current = start
+#                 if grid[start[0], start[1]] == -1 or grid[finish[0], finish[1]] == -1:
+#                     continue
+#                 move(current, finish, grid, path, route)
+#                 print('start : ', start, 'finish : ', finish)
+#                 print('Number of completed paths : ', len(route))
 
 
-for i in range(len(grid)):
-    for j in range(len(grid[0])):
-        for k in range(len(grid)):
-            for p in range(len(grid[0])):
-                start = (i,j)
-                finish = (k,p)
-                path = []
-                route = []
-                current = start
-                if grid[start[0], start[1]] == -1 or grid[finish[0], finish[1]] == -1:
-                    continue
-                move(current, finish, grid, path, route)
-                print('start : ', start, 'finish : ', finish)
-                print('Number of completed paths : ', len(route))
+for i in range(len(route)):
+    print(route[i])
+    print()
 
-
-# for i in range(len(route)):
-#     print(route[i])
-#     print()
-
-
-# print(len(route))
-
+print(route)
+[[(0, 6), (1, 6), (2, 6), (3, 6), (4, 6), (4, 5), (4, 4), (3, 4), (2, 4), (1, 4), (0, 4)], [(0, 6), (1, 6), (2, 6), (2, 5), (2, 4), (1, 4), (0, 4)], [(0, 6), (0, 5), (0, 4)]]
 
 # import matplotlib.pyplot as plt
 
