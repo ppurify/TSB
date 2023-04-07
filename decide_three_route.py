@@ -140,26 +140,22 @@ def orange(current, finish, grid, path):
 
 
 
-start = (2,4)
-finish = (0,3)
-path = []
-route = []
-current = start
 
 
 
-# 1. 밟았던건 안밟게 !! path 리스트 활용
+
+
+# 1. 밟았던건 안밟게. path 리스트 활용
 # 2. 추후 if current == 왼쪽 가장자리 쪽 or 교차로 등이면 소요시간 변화 등 속성
+# 3. 
 def move(current, finish, grid, path, route):
-    print('current : ', current)
-    path.append(current)
-    # if len(path)>= 25: # 무한루프 방지
-    #     return
-    print('path : ', path)
+    #print('current : ', current)
 
-    # Get possible moves based on color of current cell
+    path.append(current)
+    #print('path : ', path)
+
     color = grid[current[0], current[1]]
-    print('color : ', color)
+    #print('color : ', color)
     if color == 1:
         candidate = blue(current, finish, grid, path)
     elif color == 2:
@@ -169,21 +165,20 @@ def move(current, finish, grid, path, route):
     elif color == 4:
         candidate = orange(current, finish, grid, path)
     else:
-        print('Invalid color')
+        print('Invalid color. terminating.')
         return
-    print('candidate : ', candidate)
+    #print('candidate : ', candidate)
 
     # 갈곳 없으면 종료
     if len(candidate) == 0 :
-        print('This path is dead end.', 'path : ', path)
+        #print('This path is dead end.', 'path : ', path)
         return
-    
 
     # candidate 방문
     for next_move in candidate:
         if next_move == finish:
             # If next_move is finish, add completed path to route
-            print('got finish, completed path : ', path + [next_move]) 
+            #print('got finish, completed path : ', path + [next_move]) 
             route.append(path + [next_move])
         else:
             # Continue recursively visiting candidate
@@ -192,15 +187,30 @@ def move(current, finish, grid, path, route):
 
     return
 
-move(current = current, finish = finish, grid = grid, path = path, route = route)
 
 
-for i in range(len(route)):
-    print(route[i])
-    print()
+for i in range(len(grid)):
+    for j in range(len(grid[0])):
+        for k in range(len(grid)):
+            for p in range(len(grid[0])):
+                start = (i,j)
+                finish = (k,p)
+                path = []
+                route = []
+                current = start
+                if grid[start[0], start[1]] == -1 or grid[finish[0], finish[1]] == -1:
+                    continue
+                move(current, finish, grid, path, route)
+                print('start : ', start, 'finish : ', finish)
+                print('Number of completed paths : ', len(route))
 
 
-print(len(route))
+# for i in range(len(route)):
+#     print(route[i])
+#     print()
+
+
+# print(len(route))
 
 
 # import matplotlib.pyplot as plt
