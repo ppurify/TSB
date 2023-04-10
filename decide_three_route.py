@@ -1,4 +1,6 @@
 import numpy as np
+import matplotlib.pyplot as plt
+import time
 
 # parameter(have to set by yourself)
 grid = np.array([
@@ -30,8 +32,10 @@ to_right = (0,1)
 def blue(current, finish, grid, path):
     candidate = []
 
-    current = (current[0], current[1]-1)
-    candidate.append(current)
+    nx = current[0]
+    ny = current[1] - 1
+    if (nx,ny) not in path and 0 <= nx < grid.shape[0] and 0 <= ny < grid.shape[1] and grid[nx, ny] != -1:
+        candidate.append((nx, ny))
 
     return candidate
 
@@ -46,7 +50,7 @@ def blue(current, finish, grid, path):
 #     # if len(path) == 1:
 #     for i in range(4):
 #         nx = current[0] + dx[i]
-#         ny = current[1] + dy[i]
+#         ny = current[1] + dy[i]1. 
 #         # 그리드 범위 안에 있고, Block이 아니고, 이미 간 길이 아닌 경우만
 #         if 0 <= nx < grid.shape[0] and 0 <= ny < grid.shape[1] and grid[nx, ny] != -1 and (nx, ny) not in path:
 #             # 역주행으로 blue로 가는 경우 제외
@@ -208,72 +212,120 @@ move(start, finish, grid, path, route)
 #                 print('Number of completed paths : ', len(route))
 
 
-for i in range(len(route)):
-    print(route[i])
+# for i in range(len(route)):
+#     print(route[i])
+#     print()
+
+# print(route)
+
+
+number_of_YT = 5
+number_of_job = 5000
+
+# for i in range(number_of_YT):
+#     while YT_location is None or grid[YT_location] == -1:
+#         YT_location = (np.random.randint(9), np.random.randint(7))
+
+#     for j in range(number_of_job) : 
+#         start = None
+#         finish = None
+
+#         while start is None or grid[start] == -1 or finish is None or grid[finish] == -1 or YT_location == start or start == finish :
+#             start = (np.random.randint(9), np.random.randint(7))
+#             finish = (np.random.randint(9), np.random.randint(7))
+
+#         print("YT_location : ", YT_location)
+#         print("start : ", start)
+#         print("finish : ", finish)
+
+
+#         path = []
+#         route = []
+#         current = YT_location
+#         move(current, finish, grid, path, route)
+#         print('Number of completed paths : ', len(route))
+#         print()
+
+before_grid = np.array([
+    [4, 2, 3, 2, 3, 2, 4],
+    [2, -1, 2, -1, 2, -1, 2],
+    [4, 1, 3, 1, 3, 1, 4],
+    [2, -1, 2, -1, 2, -1, 2],
+    [4, 1, 3, 1, 3, 1, 4],
+    [2, -1, 2, -1, 2, -1, 2],
+    [4, 1, 3, 1, 3, 1, 4],
+    [2, -1, 2, -1, 2, -1, 2],
+    [4, 2, 3, 2, 3, 2, 4],
+])
+
+parameter1 = 0.4
+parameter2 = 0.3
+parameter3 = 0.3
+
+
+
+
+
+
+
+grid_for_count = np.zeros_like(grid)
+
+#현재 시각
+start_time = time.time()
+
+for i in range(number_of_job) :
+    start = None
+    finish = None
+
+    while start is None or grid[start] == -1 or finish is None or grid[finish] == -1 or finish == start:
+        start = (np.random.randint(9), np.random.randint(7))
+        finish = (np.random.randint(9), np.random.randint(7))
     print()
+    print("start : ", start)
+    print("finish : ", finish)
 
-print(route)
+    path = []
+    route = []
+    current = start
+    move(current, finish, grid, path, route)
 
+    if len(route) > 3:
+        # 아크로 선정될 3개의 경로 추리기
+        pass
+    else:
+        # 발견된 루트 다 arc로 반영. 모자랑 arc는 cost inf로 정해서 dummy arc 생성
+        pass
+    print('Number of completed paths : ', len(route))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+    
 
+# start = (6,2)
+# finish = (6,5)
 
-number_of_YT = 50
-number_of_job = 50
-
-for i in range(number_of_YT):
-    for j in range(number_of_job):
-        start = None
-        finish = None
-
-        while start is None or grid[start] == -1 or finish is None or grid[finish] == -1 or finish == start:
-            start = (np.random.randint(9), np.random.randint(7))
-            finish = (np.random.randint(9), np.random.randint(7))
-
-        print('YT : ', i, 'job : ', j, 'start : ', start, 'finish : ', finish)
-
-        path = []
-        route = []
-        current = start
-        move(current, finish, grid, path, route)
-
-
-
-
-
-
-
+# path = []
+# rout = []
+# current = start
+# move(current, finish, grid, path, route)
+# for i in range(len(route)):
+#     print(route[i])
+#     print()
+# print('Number of completed paths : ', len(route))
 
 
 
 
 
+    for path in route:
+        for point in path:
+            grid_for_count[point] += 1
+
+    print(grid_for_count)
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+end_time = time.time()
+print("소요시간 : ", end_time - start_time)
 
 
 
