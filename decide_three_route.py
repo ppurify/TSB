@@ -262,28 +262,75 @@ alpha2 = 0.3
 alpha3 = 0.3
 
 
-number_of_YT = 2
-number_of_job = 3
+number_of_YT = 1
+number_of_job = 1
 
 cost = []
 
-for i in range(len(number_of_YT)):
+YT_position = None
+Pick_position = None
+Drop_position = None
+
+
+
+# start = None
+# finish = None
+
+# while start is None or grid[start] == -1 or finish is None or grid[finish] == -1 or finish == start:
+#     start = (np.random.randint(9), np.random.randint(7))
+#     finish = (np.random.randint(9), np.random.randint(7))
+
+
+
+
+def penalty(prev_grid, start, finish, route, alpha1, alpha3):
+    penalty_list = []
+
+    for i in range(len(route)):
+        sum_of_counter_of_prev_grid = 0
+        for j in range(len(route[i])):
+            sum_of_counter_of_prev_grid += prev_grid[route[i][j][0], route[i][j][1]]
+
+        penalty_list.append(sum_of_counter_of_prev_grid)
+
+    final_three_route = []
+
+    return  final_three_route
+
+
+
+
+
+
+for i in range(number_of_YT):
     while YT_position is None or grid[YT_position] == -1:
-        YT_position = [np.random.randint(9), np.random.randint(7)]
+        YT_position = (np.random.randint(9), np.random.randint(7))
+        print('YT_position : ', YT_position)
     
-    for j in range(len(number_of_job)):
-        while Pickup_position is None or grid[Pickup_position] == -1 or Dropoff_position is None or grid[Dropoff_position] == -1 or finish == start:
-            Pickup_position = [np.random.randint(9), np.random.randint(7)]
-            Dropoff_position = [np.random.randint(9), np.random.randint(7)]
-
+    for j in range(number_of_job):
+        while Pick_position is None or grid[Pick_position] == -1 or Drop_position is None or grid[Drop_position] == -1 or finish == start:
+            Pick_position = (np.random.randint(9), np.random.randint(7))
+            Drop_position = (np.random.randint(9), np.random.randint(7))
+            print('Pick_position : ', Pick_position)
+            print('Drop_position : ', Drop_position)
     
-        path = []
-        route = []
-        current = YT_position
-        move(current, Pickup_position, grid, path, route)
-        move(Pickup_position, Dropoff_position, grid, path, route)
+        path_YT_to_Pick = []
+        route_YT_to_Pick = []
 
-        
+        path_Pick_to_Drop = []
+        route_Pick_to_Drop = []
+
+        move(YT_position, Pick_position, grid, path_YT_to_Pick, route_YT_to_Pick)
+        move(Pick_position, Drop_position, grid, path_Pick_to_Drop, route_Pick_to_Drop)
+
+        print('length of route_YT_to_Pick : ', len(route_YT_to_Pick))
+        print('route_YT_to_Pick : ', route_YT_to_Pick)
+        print('')
+        print('length of route_Pick_to_Drop : ', len(route_Pick_to_Drop))
+        print('route_Pick_to_Drop : ', route_Pick_to_Drop)
+
+        if len(route) > 3 :
+            penalty()
 
 
 
@@ -297,61 +344,62 @@ for i in range(len(number_of_YT)):
 
 
 
-now_grid = np.zeros_like(grid)
 
-#현재 시각
-start_time = time.time()
+# now_grid = np.zeros_like(grid)
 
-for i in range(number_of_job) :
-    start = None
-    finish = None
+# #현재 시각
+# start_time = time.time()
 
-    while start is None or grid[start] == -1 or finish is None or grid[finish] == -1 or finish == start:
-        start = (np.random.randint(9), np.random.randint(7))
-        finish = (np.random.randint(9), np.random.randint(7))
-    print()
-    print("start : ", start)
-    print("finish : ", finish)
+# for i in range(number_of_job) :
+#     start = None
+#     finish = None
 
-    path = []
-    route = []
-    current = start
-    move(current, finish, grid, path, route)
-
-    if len(route) > 3:
-        # 아크로 선정될 3개의 경로 추리기
-        pass
-    else:
-        # 발견된 루트 다 arc로 반영. 모자랑 arc는 cost inf로 정해서 dummy arc 생성
-        pass
-    print('Number of completed paths : ', len(route))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
-    
-
-# start = (6,2)
-# finish = (6,5)
-
-# path = []
-# rout = []
-# current = start.
-# move(current, finish, grid, path, route)
-# for i in range(len(route)):
-#     print(route[i])
+#     while start is None or grid[start] == -1 or finish is None or grid[finish] == -1 or finish == start:
+#         start = (np.random.randint(9), np.random.randint(7))
+#         finish = (np.random.randint(9), np.random.randint(7))
 #     print()
-# print('Number of completed paths : ', len(route))
+#     print("start : ", start)
+#     print("finish : ", finish)
+
+#     path = []
+#     route = []
+#     current = start
+#     move(current, finish, grid, path, route)
+
+#     if len(route) > 3:
+#         # 아크로 선정될 3개의 경로 추리기
+#         pass
+#     else:
+#         # 발견된 루트 다 arc로 반영. 모자랑 arc는 cost inf로 정해서 dummy arc 생성
+#         pass
+#     print('Number of completed paths : ', len(route))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+    
+
+# # start = (6,2)
+# # finish = (6,5)
+
+# # path = []
+# # rout = []
+# # current = start.
+# # move(current, finish, grid, path, route)
+# # for i in range(len(route)):
+# #     print(route[i])
+# #     print()
+# # print('Number of completed paths : ', len(route))
 
 
-    for path in route:
-        for point in path:
-            now_grid[point] += 1
+#     for path in route:
+#         for point in path:
+#             now_grid[point] += 1
 
-    print(now_grid)
-
-
+#     print(now_grid)
 
 
 
-end_time = time.time()
-print("소요시간 : ", end_time - start_time)
+
+
+# end_time = time.time()
+# print("소요시간 : ", end_time - start_time)
 
 
 
