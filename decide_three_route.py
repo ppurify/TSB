@@ -219,8 +219,7 @@ move(start, finish, grid, path, route)
 # print(route)
 
 
-number_of_YT = 5
-number_of_job = 5000
+
 
 # for i in range(number_of_YT):
 #     while YT_location is None or grid[YT_location] == -1:
@@ -246,7 +245,7 @@ number_of_job = 5000
 #         print('Number of completed paths : ', len(route))
 #         print()
 
-before_grid = np.array([
+prev_grid = np.array([
     [4, 2, 3, 2, 3, 2, 4],
     [2, -1, 2, -1, 2, -1, 2],
     [4, 1, 3, 1, 3, 1, 4],
@@ -258,9 +257,33 @@ before_grid = np.array([
     [4, 2, 3, 2, 3, 2, 4],
 ])
 
-parameter1 = 0.4
-parameter2 = 0.3
-parameter3 = 0.3
+alpah1 = 0.4
+alpha2 = 0.3
+alpha3 = 0.3
+
+
+number_of_YT = 2
+number_of_job = 3
+
+cost = []
+
+for i in range(len(number_of_YT)):
+    while YT_position is None or grid[YT_position] == -1:
+        YT_position = [np.random.randint(9), np.random.randint(7)]
+    
+    for j in range(len(number_of_job)):
+        while Pickup_position is None or grid[Pickup_position] == -1 or Dropoff_position is None or grid[Dropoff_position] == -1 or finish == start:
+            Pickup_position = [np.random.randint(9), np.random.randint(7)]
+            Dropoff_position = [np.random.randint(9), np.random.randint(7)]
+
+    
+        path = []
+        route = []
+        current = YT_position
+        move(current, Pickup_position, grid, path, route)
+        move(Pickup_position, Dropoff_position, grid, path, route)
+
+        
 
 
 
@@ -268,7 +291,13 @@ parameter3 = 0.3
 
 
 
-grid_for_count = np.zeros_like(grid)
+
+
+
+
+
+
+now_grid = np.zeros_like(grid)
 
 #현재 시각
 start_time = time.time()
@@ -303,7 +332,7 @@ for i in range(number_of_job) :
 
 # path = []
 # rout = []
-# current = start
+# current = start.
 # move(current, finish, grid, path, route)
 # for i in range(len(route)):
 #     print(route[i])
@@ -311,14 +340,11 @@ for i in range(number_of_job) :
 # print('Number of completed paths : ', len(route))
 
 
-
-
-
     for path in route:
         for point in path:
-            grid_for_count[point] += 1
+            now_grid[point] += 1
 
-    print(grid_for_count)
+    print(now_grid)
 
 
 
