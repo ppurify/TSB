@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 
+import heapq
+
 # parameter(have to set by yourself)
 grid = np.array([
     [4, 2, 3, 2, 3, 2, 4],
@@ -144,10 +146,10 @@ def orange(current, finish, grid, path):
 
 
 
-start = (0,6)
-finish = (0,4)
-path = []
-route = []
+# start = (0,6)
+# finish = (0,4)
+# path = []
+# route = []
 
 
 
@@ -194,7 +196,7 @@ def move(current, finish, grid, path, route):
 
     return
 
-move(start, finish, grid, path, route)
+# print(move(start, finish, grid, path, route))
 
 # for i in range(len(grid)):
 #     for j in range(len(grid[0])):
@@ -245,6 +247,33 @@ move(start, finish, grid, path, route)
 #         print('Number of completed paths : ', len(route))
 #         print()
 
+
+
+
+def penalty(prev_grid, route, alpha1, alpha3):
+    penalty_list = []
+
+    for i in range(len(route)):
+        
+        sum_of_counter_of_prev_grid = 0
+        sum_of_move = len(route[i])
+        for j in range(len(route[i])):
+            sum_of_counter_of_prev_grid += prev_grid[(route[i][j][0], route[i][j][1])]
+
+        # 각 경로의 penalty 산출하여 리스트에 저장
+        penalty_list.append((alpha1 * sum_of_counter_of_prev_grid) + (alpha3 * sum_of_move))
+
+    # penalty가 가장 작은 3개의 경로의 인덱스를 추출하여 final_three_route 리스트에 저장
+    final_three_route_idx = heapq.nsmallest(3, range(len(penalty_list)), key=penalty_list.__getitem__)
+    final_three_route = [route[i] for i in final_three_route_idx]
+
+    print(penalty_list)
+    print(final_three_route)
+
+    return final_three_route
+
+
+
 prev_grid = np.array([
     [4, 2, 3, 2, 3, 2, 4],
     [2, -1, 2, -1, 2, -1, 2],
@@ -257,7 +286,7 @@ prev_grid = np.array([
     [4, 2, 3, 2, 3, 2, 4],
 ])
 
-alpah1 = 0.4
+alpha1 = 0.4
 alpha2 = 0.3
 alpha3 = 0.3
 
@@ -265,7 +294,6 @@ alpha3 = 0.3
 number_of_YT = 1
 number_of_job = 1
 
-cost = []
 
 YT_position = None
 Pick_position = None
@@ -273,47 +301,53 @@ Drop_position = None
 
 
 
-# start = None
-# finish = None
 
-# while start is None or grid[start] == -1 or finish is None or grid[finish] == -1 or finish == start:
-#     start = (np.random.randint(9), np.random.randint(7))
-#     finish = (np.random.randint(9), np.random.randint(7))
+# route = [[(3, 0), (4, 0), (5, 0), (6, 0), (7, 0), (8, 0), (8, 1), (8, 2), (8, 3), (8, 4), (8, 5), (8, 6), (7, 6), (6, 6), (6, 5), (6, 4), (5, 4), (4, 4), (3, 4), (2, 4), (1, 4), (0, 4), (0, 5), (0, 6), (1, 6), (2, 6), (3, 6), (4, 6), (5, 6)],
+#          [(3, 0), (4, 0), (5, 0), (6, 0), (7, 0), (8, 0), (8, 1), (8, 2), (8, 3), (8, 4), (8, 5), (8, 6), (7, 6), (6, 6), (5, 6)],
+#          [(3, 0), (4, 0), (5, 0), (6, 0), (7, 0), (8, 0), (8, 1), (8, 2), (8, 3), (8, 4), (7, 4), (6, 4), (5, 4), (4, 4), (3, 4), (2, 4), (1, 4), (0, 4), (0, 5), (0, 6), (1, 6), (2, 6), (3, 6), (4, 6), (5, 6)],
+#          [(3, 0), (4, 0), (5, 0), (6, 0), (7, 0), (8, 0), (8, 1), (8, 2), (7, 2), (6, 2), (5, 2), (4, 2), (3, 2), (2, 2), (2, 1), (2, 0), (1, 0), (0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (1, 6), (2, 6), (3, 6), (4, 6), (5, 6)],
+#          [(3, 0), (4, 0), (5, 0), (6, 0), (7, 0), (8, 0), (8, 1), (8, 2), (7, 2), (6, 2), (5, 2), (4, 2), (3, 2), (2, 2), (2, 1), (2, 0), (1, 0), (0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (1, 0), (0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (1, 6), (2, 6), (2, 5), (2, 4), (3, 4), (4, 4), (5, 4), (6, 4), (7, 4), (8, 4), (8, 5), (8, 6), (7, 6), (6, 6), (5, 6)],
+#          [(3, 0), (4, 0), (5, 0), (6, 0), (7, 0), (8, 0), (8, 1), (8, 2), (7, 2), (6, 2), (5, 2), (4, 2), (3, 2), (2, 2), (2, 1), (2, 0), (1, 0), (0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (1, 4), (2, 4), (3, 4), (4, 4), (5, 4), (6, 4), (7, 4), (8, 4), (8, 5), (8, 6), (7, 6), (6, 6), (5, 6)],
+#          [(3, 0), (4, 0), (5, 0), (6, 0), (7, 0), (8, 0), (8, 1), (8, 2), (7, 2), (6, 2), (5, 2), (4, 2), (3, 2), (2, 2), (1, 2), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (1, 6), (2, 6), (3, 6), (4, 6), (5, 6)],
+#          [(3, 0), (4, 0), (5, 0), (6, 0), (7, 0), (8, 0), (8, 1), (8, 2), (7, 2), (6, 2), (5, 2), (4, 2), (3, 2), (2, 2), (1, 2), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (1, 6), (2, 6), (3, 6), (4, 6), (4, 5), (4, 4), (5, 4), (6, 4), (7, 4), (8, 4), (8, 5), (8, 6), (7, 6), (6, 6), (5, 6)],
+#          [(3, 0), (4, 0), (5, 0), (6, 0), (7, 0), (8, 0), (8, 1), (8, 2), (7, 2), (6, 2), (5, 2), (4, 2), (3, 2), (2, 2), (1, 2), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (1, 6), (2, 6), (2, 5), (2, 4), (3, 4), (4, 4), (5, 4), (6, 4), (7, 4), (8, 4), (8, 5), (8, 6), (7, 6), (6, 6), (5, 6)],
+#          [(3, 0), (4, 0), (5, 0), (6, 0), (7, 0), (8, 0), (8, 1), (8, 2), (7, 2), (6, 2), (5, 2), (4, 2), (3, 2), (2, 2), (1, 2), (0, 2), (0, 3), (0, 4), (1, 4), (2, 4), (3, 4), (4, 4), (5, 4), (6, 4), (7, 4), (8, 4), (8, 5), (8, 6), (7, 6), (6, 6), (5, 6)]]
+
+# for i in range(len(penalty(prev_grid=prev_grid, route=route, alpha1=0.5, alpha3=0.3))):
+#     print(penalty(prev_grid=prev_grid, route=route, alpha1=0.5, alpha3=0.3)[i])
+
+# penalty(prev_grid=prev_grid, route=route, alpha1=0.5, alpha3=0.3)
 
 
-
-
-def penalty(prev_grid, start, finish, route, alpha1, alpha3):
-    penalty_list = []
-
-    for i in range(len(route)):
-        sum_of_counter_of_prev_grid = 0
-        for j in range(len(route[i])):
-            sum_of_counter_of_prev_grid += prev_grid[route[i][j][0], route[i][j][1]]
-
-        penalty_list.append(sum_of_counter_of_prev_grid)
-
-    final_three_route = []
-
-    return  final_three_route
+YT_positions = {}
+Job_positions = {}
 
 
 
-
-
-
+# 스케줄링 대상 YT 생성
 for i in range(number_of_YT):
     while YT_position is None or grid[YT_position] == -1:
         YT_position = (np.random.randint(9), np.random.randint(7))
-        print('YT_position : ', YT_position)
-    
+    YT_positions[i] = YT_position
+
+# 스케줄링 대상 작업 생성
+for j in range(number_of_job):
+    while Pick_position is None or grid[Pick_position] == -1 or Drop_position is None or grid[Drop_position] == -1 or finish == start:
+        Pick_position = (np.random.randint(9), np.random.randint(7))
+        Drop_position = (np.random.randint(9), np.random.randint(7))
+    Job_positions[j] = [Pick_position, Drop_position]
+  
+  
+# print('YT_positions : ', YT_positions)
+# print('Job_positions : ', Job_positions[0][1])
+
+
+for i in range(number_of_YT):
     for j in range(number_of_job):
-        while Pick_position is None or grid[Pick_position] == -1 or Drop_position is None or grid[Drop_position] == -1 or finish == start:
-            Pick_position = (np.random.randint(9), np.random.randint(7))
-            Drop_position = (np.random.randint(9), np.random.randint(7))
-            print('Pick_position : ', Pick_position)
-            print('Drop_position : ', Drop_position)
-    
+        YT_position = YT_positions[i]
+        Pick_position = Job_positions[j][0]
+        Drop_position = Job_positions[j][1]
+
         path_YT_to_Pick = []
         route_YT_to_Pick = []
 
@@ -323,16 +357,38 @@ for i in range(number_of_YT):
         move(YT_position, Pick_position, grid, path_YT_to_Pick, route_YT_to_Pick)
         move(Pick_position, Drop_position, grid, path_Pick_to_Drop, route_Pick_to_Drop)
 
-        print('length of route_YT_to_Pick : ', len(route_YT_to_Pick))
-        print('route_YT_to_Pick : ', route_YT_to_Pick)
+        print('length of route_YT_to_Pick : ', route_YT_to_Pick)
+        # print('route_YT_to_Pick : ', route_YT_to_Pick)
         print('')
-        print('length of route_Pick_to_Drop : ', len(route_Pick_to_Drop))
-        print('route_Pick_to_Drop : ', route_Pick_to_Drop)
-
-        if len(route) > 3 :
-            penalty()
+        print('length of route_Pick_to_Drop : ', route_Pick_to_Drop)
+        # print('route_Pick_to_Drop : ', route_Pick_to_Drop)
 
 
+        # 경로 수가 3개보다 많으면 패널티 함수 통해 3개로 줄이기
+        if len(route_YT_to_Pick) > 3 :
+            final_route_YT_to_Pick = penalty(prev_grid, route_YT_to_Pick, alpha1=alpha1, alpha3=alpha3)
+        # 그렇지 않으면 (더미 추가했지만 더미 경로 내용 안정해줌 !!)
+        else:
+            number_of_route_YT_to_Pick = len(route_YT_to_Pick)
+            for i in range(3 - number_of_route_YT_to_Pick):
+                route_YT_to_Pick.append(route_YT_to_Pick[-1])
+
+            final_route_YT_to_Pick = route_YT_to_Pick
+
+        if len(route_Pick_to_Drop) > 3 :
+            final_route_Pick_to_Drop = penalty(prev_grid, route_Pick_to_Drop, alpha1=alpha1, alpha3=alpha3)
+        
+        # 그렇지 않으면 (더미 추가했지만 더미 경로 내용 안정해줌 !!)
+        else:
+            number_of_route_Pick_to_Drop = len(route_Pick_to_Drop)
+            for i in range(3 - number_of_route_Pick_to_Drop):
+                route_Pick_to_Drop.append(route_Pick_to_Drop[-1])
+
+            final_route_Pick_to_Drop = route_Pick_to_Drop
+
+        
+
+        
 
 
 
@@ -406,195 +462,4 @@ for i in range(number_of_YT):
 
 
 
-
-
-
-# def move(current, finish, grid, path):
-#     if current == finish:
-#         return path
-
-#     color = grid[current]
-#     visited = set(path)
-
-#     if color == 1: # blue
-#         candidate = blue(current, finish, grid)
-    
-#     elif color == 2: # purple
-#         candidate = purple(current, finish, grid)
-
-#     elif color == 3: # green
-#         candidate = green(current, finish, grid)
-
-#     elif color == 4: # orange
-#         candidate = orange(current, finish, grid)
-
-#     paths = []
-#     for c in candidate:
-#         if c not in visited:
-#             new_path = path.copy()
-#             new_path.append(current)
-#             sub_path = move(c, finish, grid, new_path)
-#             if sub_path:
-#                 paths.append(sub_path)
-
-#     return paths
-
-
-
-
-
-
-
-
-
-# def move(current, finish, grid, path, route):
-#     if current == finish:
-#         route.append(path[:]) # append a copy of the path list to the route list
-#         return
-
-#     color = grid[current]
-#     candidates = []
-#     if color == 1:
-#         candidates = blue(current, finish, grid)
-#     elif color == 2:
-#         candidates = purple(current, finish, grid)
-#     elif color == 3:
-#         candidates = green(current, finish, grid)
-#     elif color == 4:
-#         candidates = orange(current, finish, grid)
-
-#     for candidate in candidates:
-#         if candidate not in path: # check if candidate is not visited before
-#             path.append(candidate) # append current coordinates to path list
-#             move(candidate, finish, grid, path, route) # recursively traverse the candidate
-#             path.pop() # remove current coordinates from path list after traversing it
-
-
-
-
-
-
-
-
-
-
-# def move(current, finish, grid, path):
-#     if current == finish:
-#         routes.append(path.copy())
-#         return
-#     for candidate in blue(current, finish, grid) + purple(current, finish, grid) + green(current, finish, grid) + orange(current, finish, grid):
-#         if candidate not in path:
-#             move(candidate, finish, grid, path + [candidate])
-
-
-
-
-
-
-
-
-
-# def move(current, finish, grid, visited, path, routes):
-#     # Get the possible directions based on the current block color.
-#     color = grid[current]
-#     if color == 1:
-#         candidate = blue(current, finish, grid)
-#     elif color == 2:
-#         candidate = purple(current, finish, grid)
-#     elif color == 3:
-#         candidate = green(current, finish, grid)
-#     elif color == 4:
-#         candidate = orange(current, finish, grid)
-#     else:
-#         print('Invalid block color!')
-#         return
-
-#     # Append the current coordinates to the path list.
-#     path.append(current)
-
-#     # Recursively execute the move function by traversing the returned candidates.
-#     for coord in candidate:
-#         if coord not in visited:
-#             # Create a copy of the path list to avoid modifying it for other traversals.
-#             path_copy = path.copy()
-#             # Recursively execute the move function with the new coordinates.
-#             move(coord, finish, grid, visited + [current], path_copy, routes)
-
-#     # When current coordinates are equals to finish coordinates, end the while loop and insert the path list so far into route list.
-#     if current == finish:
-#         routes.append(path)
-
-
-
-
-
-
-
-
-
-
-
-
-# def move(current, finish, grid, path, visited, route):
-#     if current == finish:
-#         path.append(current)
-#         route.append(path)
-#         return
-#     visited.add(current)
-#     for candidate in get_candidates(current, finish, grid, visited):
-#         new_path = path + [current]
-#         move(candidate, finish, grid, new_path, visited, route)
-
-# def get_candidates(current, finish, grid, visited):
-#     color = grid[current]
-#     if color == 1: # red
-#         return []
-#     elif color == 2: # blue
-#         return blue(current, finish, grid, visited)
-#     elif color == 3: # purple
-#         return purple(current, finish, grid, visited)
-#     elif color == 4: # green
-#         return green(current, finish, grid, visited)
-#     elif color == 5: # orange
-#         return orange(current, finish, grid, visited)
-
-# def blue(current, finish, grid, visited):
-#     candidate = []
-#     x, y = current
-#     if y > 0 and grid[x, y-1] != -1 and (x, y-1) not in visited:
-#         candidate.append((x, y-1))
-#     return candidate
-
-# def purple(current, finish, grid, visited):
-#     temp_candidate = []
-#     candidate = []
-#     distances = []
-
-#     for i in range(4):
-#         nx = current[0] + dx[i]
-#         ny = current[1] + dy[i]
-#         if 0 <= nx < grid.shape[0] and 0 <= ny < grid.shape[1] and grid[nx, ny] != -1 and (nx, ny) not in visited:
-#             if not ((nx - current[0], ny - current[1]) == to_right and grid[nx, ny]) == 1:
-#                 temp_candidate.append((nx, ny))
-#                 distances.append(abs(nx - finish[0]) + abs(ny - finish[1]))
-
-#     min_distance = min(distances)
-
-#     for i in range(len(temp_candidate)):
-#         if distances[i] == min_distance:
-#             candidate.append(temp_candidate[i])
-#     return candidate
-
-# def green(current, finish, grid, visited):
-#     temp_candidate = []
-#     candidate = []
-#     distances = []
-
-#     for i in range(4):
-#         nx = current[0] + dx[i]
-#         ny = current[1] + dy[i]
-#         if 0 <= nx < grid.shape[0] and 0 <= ny < grid.shape[1] and grid[nx, ny] != -1 and (nx, ny) not in visited:
-#             if not ((nx - current[0], ny - current[1]) == to_right and grid[nx, ny]) == 1:
-#                 temp_candidate.append((nx, ny))
-#                 distances.append(abs(nx - finish[0])+abs(ny - finish[1]))
 
