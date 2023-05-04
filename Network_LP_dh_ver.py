@@ -33,7 +33,7 @@ Pick_to_drop = [3,2]
 
 
 
-# generate A부분에서 갱신됨. 지금은 0으로 놔둬도 됨
+# generate A부분에서 갱신됨. 0으로 놔둬야 됨
 Number_of_job = 0
 
 Arc_information = []
@@ -78,28 +78,6 @@ for i in range(len(Arc_information)):
     Arc_information[i].append([i])
 
 
-# Arc_information[0][3][0] = 1
-# Arc_information[1][3][0] = 2
-# Arc_information[2][3][0] = 3
-# Arc_information[3][3][0] = 4
-# Arc_information[4][3][0] = 0
-# Arc_information[5][3][0] = 1
-# Arc_information[6][3][0] = 2
-# Arc_information[7][3][0] = 3
-# Arc_information[8][3][0] = 4
-# Arc_information[9][3][0] = 5
-# Arc_information[10][3][0] = 0
-# Arc_information[11][3][0] = 0
-# Arc_information[12][3][0] = 0
-# Arc_information[13][3][0] = 1
-# Arc_information[14][3][0] = 2
-# Arc_information[15][3][0] = 3
-# Arc_information[16][3][0] = 1
-# Arc_information[17][3][0] = 2
-
-
-# Agv_to_pick_costs = [[1,2,3,4], [1,2,3,4,5]]
-# Pick_to_drop_costs = [[1,2,3], [1,2]]
 
 for i in range(len(Arc_information)):
     print(Arc_information[i])

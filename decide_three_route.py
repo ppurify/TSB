@@ -42,41 +42,6 @@ def blue(current, finish, grid, path):
     return candidate
 
 
-# 최단거리 , 이미간길 고려순서 !!!!!!!!
-# def purple(current, finish, grid, path):
-#     temp_candidate = []
-#     candidate = []
-#     distances = []
-
-#     # start가 purple grid에 있을 때, 일단 모든 candidate 고려
-#     # if len(path) == 1:
-#     for i in range(4):
-#         nx = current[0] + dx[i]
-#         ny = current[1] + dy[i]1. 
-#         # 그리드 범위 안에 있고, Block이 아니고, 이미 간 길이 아닌 경우만
-#         if 0 <= nx < grid.shape[0] and 0 <= ny < grid.shape[1] and grid[nx, ny] != -1 and (nx, ny) not in path:
-#             # 역주행으로 blue로 가는 경우 제외
-#             if not ((nx - current[0], ny - current[1]) == to_right and grid[nx, ny]) == 1:
-#                 temp_candidate.append((nx, ny))
-#                 distances.append(abs(nx - finish[0]) + abs(ny - finish[1]))
-
-#     # finish와 거리가 가장 가까운 candidate만 남기기 다시말해, finish와 가까운 좌표만 남김
-#     min_distance = min(distances)
-
-#     for i in range(len(temp_candidate)):
-#         if distances[i] == min_distance:
-#             candidate.append(temp_candidate[i])
-    
-#     # 가는도중, 이전 위치 파악하여 이동방향대로 한칸 이동
-#     # else:
-#     #     previous = path[-2]
-#     #     direction = (current[0]-previous[0], current[1]-previous[1])
-#     #     current = (current[0]+direction[0], current[1]+direction[1])
-#     #     candidate.append(current)
-
-#     return candidate
-
-
 
 def purple(current, finish, grid, path):
     temp_candidate = []
@@ -194,7 +159,7 @@ def move(current, finish, grid, path, route):
             new_path = path.copy()
             move(next_move, finish, grid, new_path, route)
 
-    return
+    return route
 
 # print(move(start, finish, grid, path, route))
 
@@ -247,9 +212,23 @@ def move(current, finish, grid, path, route):
 #         print('Number of completed paths : ', len(route))
 #         print()
 
+class pair:
+    def __init__(self, YT_index, Job_index, YT_position, Pick_position, Drop_position, route_YT_to_Pick, route_Pick_to_Drop):
+        
+        self.YT_index = YT_index
+        self.Job_index = Job_index
+        self.YT_position = YT_position
+        self.Pick_position = Pick_position
+        self.Drop_position = Drop_position
+        self.route_YT_to_Pick = route_YT_to_Pick
+        self.route_Pick_to_Drop = route_Pick_to_Drop
+
+        return
 
 
 
+
+# route로 다수의 경로 받아서 최종 3개의 경로 final_three_route 반환
 def penalty(prev_grid, route, alpha1, alpha3):
     penalty_list = []
 
@@ -272,6 +251,27 @@ def penalty(prev_grid, route, alpha1, alpha3):
 
     return final_three_route
 
+# 각 route의 cost 계산, now_grid에 route가 밟는 칸에 +1
+def cost(prev_grid, now_grid, route, alpha1, alpha2, alpha3):
+    cost_per_path = []
+    for i in range(len(route)):
+
+        sum_of_counter_of_prev_grid = 0
+        sum_of_counter_of_now_grid = 0
+        sum_of_move = len(route[i])
+        for j in range(len(route[i])):
+            sum_of_counter_of_prev_grid += prev_grid[(route[i][j][0], route[i][j][1])]
+            sum_of_counter_of_now_grid += now_grid[(route[i][j][0], route[i][j][1])]
+            now_grid[(route[i][j][0], route[i][j][1])] += 1
+
+        # 각 경로의 cost 산출하여 리스트에 저장
+        cost = (alpha1 * sum_of_counter_of_prev_grid) + (alpha2 * sum_of_counter_of_now_grid) + (alpha3 * sum_of_move)
+        cost_per_path.append([cost, route[i]])
+        
+    return cost_per_path, now_grid
+
+    
+
 
 
 prev_grid = np.array([
@@ -285,6 +285,8 @@ prev_grid = np.array([
     [2, -1, 2, -1, 2, -1, 2],
     [4, 2, 3, 2, 3, 2, 4],
 ])
+
+now_grid = np.zeros((9,7))
 
 alpha1 = 0.4
 alpha2 = 0.3
@@ -302,25 +304,11 @@ Drop_position = None
 
 
 
-# route = [[(3, 0), (4, 0), (5, 0), (6, 0), (7, 0), (8, 0), (8, 1), (8, 2), (8, 3), (8, 4), (8, 5), (8, 6), (7, 6), (6, 6), (6, 5), (6, 4), (5, 4), (4, 4), (3, 4), (2, 4), (1, 4), (0, 4), (0, 5), (0, 6), (1, 6), (2, 6), (3, 6), (4, 6), (5, 6)],
-#          [(3, 0), (4, 0), (5, 0), (6, 0), (7, 0), (8, 0), (8, 1), (8, 2), (8, 3), (8, 4), (8, 5), (8, 6), (7, 6), (6, 6), (5, 6)],
-#          [(3, 0), (4, 0), (5, 0), (6, 0), (7, 0), (8, 0), (8, 1), (8, 2), (8, 3), (8, 4), (7, 4), (6, 4), (5, 4), (4, 4), (3, 4), (2, 4), (1, 4), (0, 4), (0, 5), (0, 6), (1, 6), (2, 6), (3, 6), (4, 6), (5, 6)],
-#          [(3, 0), (4, 0), (5, 0), (6, 0), (7, 0), (8, 0), (8, 1), (8, 2), (7, 2), (6, 2), (5, 2), (4, 2), (3, 2), (2, 2), (2, 1), (2, 0), (1, 0), (0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (1, 6), (2, 6), (3, 6), (4, 6), (5, 6)],
-#          [(3, 0), (4, 0), (5, 0), (6, 0), (7, 0), (8, 0), (8, 1), (8, 2), (7, 2), (6, 2), (5, 2), (4, 2), (3, 2), (2, 2), (2, 1), (2, 0), (1, 0), (0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (1, 0), (0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (1, 6), (2, 6), (2, 5), (2, 4), (3, 4), (4, 4), (5, 4), (6, 4), (7, 4), (8, 4), (8, 5), (8, 6), (7, 6), (6, 6), (5, 6)],
-#          [(3, 0), (4, 0), (5, 0), (6, 0), (7, 0), (8, 0), (8, 1), (8, 2), (7, 2), (6, 2), (5, 2), (4, 2), (3, 2), (2, 2), (2, 1), (2, 0), (1, 0), (0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (1, 4), (2, 4), (3, 4), (4, 4), (5, 4), (6, 4), (7, 4), (8, 4), (8, 5), (8, 6), (7, 6), (6, 6), (5, 6)],
-#          [(3, 0), (4, 0), (5, 0), (6, 0), (7, 0), (8, 0), (8, 1), (8, 2), (7, 2), (6, 2), (5, 2), (4, 2), (3, 2), (2, 2), (1, 2), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (1, 6), (2, 6), (3, 6), (4, 6), (5, 6)],
-#          [(3, 0), (4, 0), (5, 0), (6, 0), (7, 0), (8, 0), (8, 1), (8, 2), (7, 2), (6, 2), (5, 2), (4, 2), (3, 2), (2, 2), (1, 2), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (1, 6), (2, 6), (3, 6), (4, 6), (4, 5), (4, 4), (5, 4), (6, 4), (7, 4), (8, 4), (8, 5), (8, 6), (7, 6), (6, 6), (5, 6)],
-#          [(3, 0), (4, 0), (5, 0), (6, 0), (7, 0), (8, 0), (8, 1), (8, 2), (7, 2), (6, 2), (5, 2), (4, 2), (3, 2), (2, 2), (1, 2), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (1, 6), (2, 6), (2, 5), (2, 4), (3, 4), (4, 4), (5, 4), (6, 4), (7, 4), (8, 4), (8, 5), (8, 6), (7, 6), (6, 6), (5, 6)],
-#          [(3, 0), (4, 0), (5, 0), (6, 0), (7, 0), (8, 0), (8, 1), (8, 2), (7, 2), (6, 2), (5, 2), (4, 2), (3, 2), (2, 2), (1, 2), (0, 2), (0, 3), (0, 4), (1, 4), (2, 4), (3, 4), (4, 4), (5, 4), (6, 4), (7, 4), (8, 4), (8, 5), (8, 6), (7, 6), (6, 6), (5, 6)]]
-
-# for i in range(len(penalty(prev_grid=prev_grid, route=route, alpha1=0.5, alpha3=0.3))):
-#     print(penalty(prev_grid=prev_grid, route=route, alpha1=0.5, alpha3=0.3)[i])
-
-# penalty(prev_grid=prev_grid, route=route, alpha1=0.5, alpha3=0.3)
-
 
 YT_positions = {}
 Job_positions = {}
+pairs = []
+route_length = []
 
 
 
@@ -386,20 +374,57 @@ for i in range(number_of_YT):
 
             final_route_Pick_to_Drop = route_Pick_to_Drop
 
+
+
+        
+        # sort by priority를 위해 미리 route들의 길이 합을 구해놓음(9개(3x3)의 route길이 합)
+        total_routes_length = 0
+        for i in range(len(final_route_YT_to_Pick)):
+            total_routes_length += len(final_route_YT_to_Pick[i])
+            total_routes_length += len(final_route_Pick_to_Drop[i])
+
         
 
+        # pairname = "pair_"+str(i)+"_"+str(j)
+        # pairname = pair(i, j, final_route_YT_to_Pick, final_route_Pick_to_Drop)
+        # pairs.append(pairname)
+        # route_length.append([total_routes_length, pairname])
+
+
+# sort by priority
+route_length.sort(key=lambda x: x[0])
+
+
+# # cost 계산
+for i in route_length:
+    route_length[i][1].cost = cost(prev_grid, now_grid, route_length[i][1].route_YT_to_Pick, alpha1, alpha2, alpha3) + cost(prev_grid, now_grid, route_length[i][1].route_Pick_to_Drop, alpha1, alpha2, alpha3)
+
+
+
+
+
+
+
+
+
+# 각 route의 cost 계산, now_grid에 route가 밟는 칸에 +1
+def cost(prev_grid, now_grid, route, alpha1, alpha2, alpha3):
+    cost_per_path = []
+    for i in range(len(route)):
+
+        sum_of_counter_of_prev_grid = 0
+        sum_of_counter_of_now_grid = 0
+        sum_of_move = len(route[i])
+        for j in range(len(route[i])):
+            sum_of_counter_of_prev_grid += prev_grid[(route[i][j][0], route[i][j][1])]
+            sum_of_counter_of_now_grid += now_grid[(route[i][j][0], route[i][j][1])]
+            now_grid[(route[i][j][0], route[i][j][1])] += 1
+
+        # 각 경로의 cost 산출하여 리스트에 저장
+        cost = (alpha1 * sum_of_counter_of_prev_grid) + (alpha2 * sum_of_counter_of_now_grid) + (alpha3 * sum_of_move)
+        cost_per_path.append([cost, route[i]])
         
-
-
-
-
-
-
-
-
-
-
-
+    return cost_per_path, now_grid
 
 # now_grid = np.zeros_like(grid)
 
@@ -436,12 +461,12 @@ for i in range(number_of_YT):
 
 # # path = []
 # # rout = []
-# # current = start.
-# # move(current, finish, grid, path, route)
-# # for i in range(len(route)):
-# #     print(route[i])
-# #     print()
-# # print('Number of completed paths : ', len(route))
+# current = start.
+# move(current, finish, grid, path, route)
+# for i in range(len(route)):
+#     print(route[i])
+#     print()
+# print('Number of completed paths : ', len(route))
 
 
 #     for path in route:
@@ -456,10 +481,3 @@ for i in range(number_of_YT):
 
 # end_time = time.time()
 # print("소요시간 : ", end_time - start_time)
-
-
-
-
-
-
-
