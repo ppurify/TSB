@@ -1,13 +1,45 @@
 from ortools.linear_solver import pywraplp
 import numpy as np
+import matplotlib.pyplot as plt
 import sys
+import time
+import math
+import heapq
+
+import route_algorithm as ra
+
 
 solver = pywraplp.Solver.CreateSolver('GLOP')
 if not solver:
     print("Please check solver")
 
 inf = solver.infinity()
+
 # Parameters
+grid = ra.grid
+
+prev_count = np.array([
+    [4, 2, 3, 2, 3, 2, 4],
+    [2, -1, 2, -1, 2, -1, 2],
+    [4, 1, 3, 1, 3, 1, 4],
+    [2, -1, 2, -1, 2, -1, 2],
+    [4, 1, 3, 1, 3, 1, 4],
+    [2, -1, 2, -1, 2, -1, 2],
+    [4, 1, 3, 1, 3, 1, 4],
+    [2, -1, 2, -1, 2, -1, 2],
+    [4, 2, 3, 2, 3, 2, 4],
+])
+
+now_count = np.zeros((9,7))
+
+alpha1 = 0.4
+alpha2 = 0.3
+alpha3 = 0.3
+
+number_of_YT = 2
+number_of_job = 2
+
+
 Agv_num = 3
 
 #
