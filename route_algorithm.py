@@ -118,19 +118,21 @@ def orange(current, finish, grid, path):
     return candidate
 
 
-start = (0,6)
-finish = (0,4)
-path = []
-route = []
+# start = (0,6)
+# finish = (0,6)
+# path = []
+# route_YT_to_Pick = []
 
 
 # 1. 밟았던건 안밟게. path 리스트 활용
 # 2. 추후 if current == 왼쪽 가장자리 쪽 or 교차로 등이면 소요시간 변화 등 속성
-# 3. To do : path 라는 변수 없이 move 함수 내에서 path 리스트 만들어서 재귀적으로 돌리기
+# 3. current = finish면 route에 current좌표만 추가하고 종료
+# 4. To do : path 라는 변수 없이 move 함수 내에서 path 리스트 만들어서 재귀적으로 돌리기
 def move(current, finish, grid, path, route):
     if current == finish:
-        route = path
+        route = [[current]]
         return route
+    
     
     #print('current : ', current)
 
@@ -158,7 +160,7 @@ def move(current, finish, grid, path, route):
         return
 
     # candidate 방문
-    for next_move in candidate:
+    for next_move in candidate: 
         if next_move == finish:
             # If next_move is finish, add completed path to route
             #print('got finish, completed path : ', path + [next_move]) 
@@ -171,6 +173,12 @@ def move(current, finish, grid, path, route):
     return route
 
 
-result = move(start, finish, grid, path, route)
-for i in range(len(result)):
-    print('route', i, ' : ', result[i])
+# route_YT_to_Pick = move(start, finish, grid, path, route_YT_to_Pick)
+# for i in range(len(result)):
+#     print('route', i, ' : ', result[i])
+
+# print(route_YT_to_Pick)
+# print(len(route_YT_to_Pick))
+
+# print(result)
+# print(len(result))

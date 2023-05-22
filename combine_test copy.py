@@ -11,7 +11,7 @@ import route_algorithm as ra
 
 # 3. move 함수 작성시 path라는 변수 없이도 재귀적으로 돌수있게 수정
 # 4. 아크 다 순회한 now_count를 prev_count로 바꿔주는 코드 작성
-# 5. 다른경우는 다 되는데 이상하게 YT보다 Job이 더 많을때는 LP가 안풀림(Optimal이 안나옴)
+# 5. Optimal이 안나오는 경우
 
 # parameter.
 solver = pywraplp.Solver.CreateSolver('GLOP')
@@ -146,12 +146,13 @@ for i in range(number_of_YT):
         route_YT_to_Pick = []
 
         # 모든 경우의 경로 탐색
-        ra.move(YT_location, Pick_location, grid, path_YT_to_Pick, route_YT_to_Pick)
+        route_YT_to_Pick = ra.move(YT_location, Pick_location, grid, path_YT_to_Pick, route_YT_to_Pick)
         # print('length of route_YT_to_Pick : ', len(route_YT_to_Pick))
 
         if len(route_YT_to_Pick) == 0:
-            print('YT Number : ', i, 'location : ', YT_location)
-            print('Pick Number : ', j, 'location : ', Pick_location)
+            print('YT_location : ', YT_location)
+            print('Pick_location : ', Pick_location)
+            print('length of route is', len(route_YT_to_Pick))
             kk = True
             break
         if kk == True:
@@ -160,12 +161,15 @@ for i in range(number_of_YT):
         # 경로 수가 3개보다 많으면 패널티 함수 통해 3개로 줄이기
         if len(route_YT_to_Pick) > number_of_final_route :
             final_route_YT_to_Pick = penalty(prev_count, route_YT_to_Pick, number_of_final_route, alpha1=alpha1, alpha3=alpha3)
-        # 그렇지 않으면
+        
+        # 3개 미만이면
         elif len(route_YT_to_Pick) < number_of_final_route:
-            for _ in range(3 - len(route_YT_to_Pick)):
+            for _ in range(number_of_final_route - len(route_YT_to_Pick)):
                 # 빈 path 추가, 추후 해당 경로에 cost를 아주 큰 값으로 할당해서 해당 arc를 선택하지 않도록
                 route_YT_to_Pick.append([])
             final_route_YT_to_Pick = route_YT_to_Pick
+
+        # 3개면 그대로
         else:
             final_route_YT_to_Pick = route_YT_to_Pick
 
@@ -186,6 +190,7 @@ for i in range(number_of_YT):
 # Pick에서 Drop으로 가는 경로 생성, 아크 생성
 # 위의 for loop와 분리한이유 : YT -> Pick은 YT 하나에 모든 Job과 경로를 생성해야하지만 하나의 Job 안에서 Pick과 Drop의 연결은 한번만(경로는 세개 생성) 일어나야하기 때문
 for j in range(number_of_job):
+    kk = False
     Pick_location = Job_locations[j][0]
     Drop_location = Job_locations[j][1]
 
@@ -196,7 +201,16 @@ for j in range(number_of_job):
     route_Pick_to_Drop = []
 
     # 모든 경우의 경로 탐색
-    ra.move(Pick_location, Drop_location, grid, path_Pick_to_Drop, route_Pick_to_Drop)
+    route_Pick_to_Drop = ra.move(Pick_location, Drop_location, grid, path_Pick_to_Drop, route_Pick_to_Drop)
+
+    if len(route_YT_to_Pick) == 0:
+        print('YT_location : ', YT_location)
+        print('Pick_location : ', Pick_location)
+        print('length of route is', len(route_Pick_to_Drop))
+        kk = True
+        break
+    if kk == True:
+        break
     # print('length of route_Pick_to_Drop : ', len(route_Pick_to_Drop))
     # print('route_Pick_to_Drop')
     # for i in range(len(route_Pick_to_Drop)):
@@ -208,7 +222,7 @@ for j in range(number_of_job):
         final_route_Pick_to_Drop = penalty(prev_count, route_Pick_to_Drop, number_of_final_route, alpha1=alpha1, alpha3=alpha3)
     # 그렇지 않으면
     elif len(route_Pick_to_Drop) < number_of_final_route:
-        for _ in range(3 - len(route_Pick_to_Drop)):
+        for _ in range(number_of_final_route - len(route_Pick_to_Drop)):
             # 빈 path 추가, 추후 해당 경로에 cost를 아주 큰 값으로 할당해서 해당 arc를 선택하지 않도록
             route_Pick_to_Drop.append([])
         final_route_Pick_to_Drop = route_Pick_to_Drop
@@ -233,6 +247,7 @@ for j in range(number_of_job):
 
 # i : Drop, j : Pick 
 for i in range(number_of_job):
+    kk = False
     for j in range(number_of_job):
         if i != j:
             Drop_location = Job_locations[i][1]
@@ -242,18 +257,29 @@ for i in range(number_of_job):
             route_Drop_to_Pick = []
 
             # 모든 경우의 경로 탐색
-            ra.move(Drop_location, Pick_location, grid, path_Drop_to_Pick, route_Drop_to_Pick)
+            route_Drop_to_Pick = ra.move(Drop_location, Pick_location, grid, path_Drop_to_Pick, route_Drop_to_Pick)
             # print('length of route_Drop_to_Pick : ', len(route_Drop_to_Pick))
             # print('route_Drop_to_Pick')
             # for i in range(len(route_Drop_to_Pick)):
             #     print(route_Drop_to_Pick[i])
+
+            if len(route_YT_to_Pick) == 0:
+                print('YT_location : ', YT_location)
+                print('Pick_location : ', Pick_location)
+                print('length of route is', len(route_Drop_to_Pick))
+                kk = True
+                break
+            if kk == True:
+                break
+
+
 
             # 경로 수가 3개보다 많으면 패널티 함수 통해 3개로 줄이기
             if len(route_Drop_to_Pick) > number_of_final_route :
                 final_route_Drop_to_Pick = penalty(prev_count, route_Drop_to_Pick, number_of_final_route, alpha1=alpha1, alpha3=alpha3)
             # 그렇지 않으면
             elif len(route_Drop_to_Pick) < number_of_final_route:
-                for _ in range(3 - len(route_Drop_to_Pick)):
+                for _ in range(number_of_final_route - len(route_Drop_to_Pick)):
                     # 빈 path 추가, 추후 해당 경로에 cost를 아주 큰 값으로 할당해서 해당 arc를 선택하지 않도록
                     route_Drop_to_Pick.append([])
                 final_route_Drop_to_Pick = route_Drop_to_Pick
@@ -306,7 +332,7 @@ for i in range(len(arcs_YT_to_Pick)):
     # now_count에 path 반영
     for j in range(len(arcs_YT_to_Pick[i].path)):
         now_count[(arcs_YT_to_Pick[i].path[j][0], arcs_YT_to_Pick[i].path[j][1])] += 1
-
+        # print('now_count : ', now_count)
 
 
 
@@ -325,6 +351,7 @@ for i in range(len(arcs_Pick_to_Drop)):
     # now_count에 path 반영
     for j in range(len(arcs_Pick_to_Drop[i].path)):
         now_count[(arcs_Pick_to_Drop[i].path[j][0], arcs_Pick_to_Drop[i].path[j][1])] += 1
+        # print('now_count : ', now_count)
 
 # Drop_to_Pick의 arc 객체들의 cost 계산
 
@@ -341,6 +368,7 @@ for i in range(len(arcs_Drop_to_Pick)):
     # now_count에 path 반영
     for j in range(len(arcs_Drop_to_Pick[i].path)):
         now_count[(arcs_Drop_to_Pick[i].path[j][0], arcs_Drop_to_Pick[i].path[j][1])] += 1
+        # print('now_count : ', now_count)
 
 
 
