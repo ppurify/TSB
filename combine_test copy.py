@@ -1,7 +1,6 @@
 from ortools.linear_solver import pywraplp
 import numpy as np
 import heapq
-import math
 import sys
 
 import route_algorithm as ra
@@ -149,15 +148,8 @@ for i in range(number_of_YT):
         route_YT_to_Pick = ra.move(YT_location, Pick_location, grid, path_YT_to_Pick, route_YT_to_Pick)
         # print('length of route_YT_to_Pick : ', len(route_YT_to_Pick))
 
-        if len(route_YT_to_Pick) == 0:
-            print('YT_location : ', YT_location)
-            print('Pick_location : ', Pick_location)
-            print('length of route is', len(route_YT_to_Pick))
-            kk = True
-            break
-        if kk == True:
-            break
-
+        # if len(route_YT_to_Pick) == 0:
+        #     print('I'
         # 경로 수가 3개보다 많으면 패널티 함수 통해 3개로 줄이기
         if len(route_YT_to_Pick) > number_of_final_route :
             final_route_YT_to_Pick = penalty(prev_count, route_YT_to_Pick, number_of_final_route, alpha1=alpha1, alpha3=alpha3)
@@ -305,15 +297,6 @@ for i in range(number_of_job):
 
 
 
-
-
-
-
-
-
-
-
-
 # !!! 현재는 YT->Pick 아크들 먼저 길이순 오름차순 정렬하여 cost 계산 후 Pick->Drop 아크들 길이순 오름차순 정렬하여 cost 계산하는 방식으로 진행
 # !!! 따라서 앞부분 아크들이 우선적으로 cost계산되어 더 높은 우선순위로 인식됨
 
@@ -400,14 +383,13 @@ for _ in range(len(all_arcs)):
     #print('index : ', all_arcs[_].index)
 
 # 각 아크의 cost 출력
-for i in range(len(all_arcs)):
-    print('i : ', all_arcs[i].i,
-          'j : ', all_arcs[i].j,
-          'k : ', all_arcs[i].k,
-          'cost : ', all_arcs[i].cost,
-          'index : ', all_arcs[i].index)
+# for i in range(len(all_arcs)):
+#     print('i : ', all_arcs[i].i,
+#           'j : ', all_arcs[i].j,
+#           'k : ', all_arcs[i].k,
+#           'cost : ', all_arcs[i].cost,
+#           'index : ', all_arcs[i].index)
 
-Total_arc_num = len(arcs_YT_to_Pick) + len(arcs_Pick_to_Drop) + len(arcs_Drop_to_Pick) + len(arcs_Drop_to_Sink) + len(arcs_YT_to_Sink)
 
 
 
@@ -428,8 +410,8 @@ Total_arc_num = len(arcs_YT_to_Pick) + len(arcs_Pick_to_Drop) + len(arcs_Drop_to
 
 # Decision Variables
 # x : 어떤 아크가 활성화 되는지 나타내는 변수(활성화 : 1, 비활성화 : 0)
-x = np.empty(Total_arc_num, dtype=object)
-for i in range(Total_arc_num):
+x = np.empty(len(all_arcs), dtype=object)
+for i in range(len(all_arcs)):
     x[i] = solver.IntVar(0, 1, 'x[%i]' % i)
 
 
@@ -510,7 +492,7 @@ for l in range(number_of_job):
 
 # Obejctive
 objective = solver.Objective()
-for i in range(Total_arc_num):
+for i in range(len(all_arcs)):
     # 인덱스가 i인 arc의 cost를 x[i]와 곱해서 objective에 추가
     objective.SetCoefficient(x[i], all_arcs[i].cost)
     
@@ -519,23 +501,14 @@ objective.SetMinimization()
 
 
 status = solver.Solve()
-print("Total_arc_num : " , Total_arc_num)
+print("Number of arcs : " , len(all_arcs))
 print()
 if status == pywraplp.Solver.OPTIMAL:
     print('Objective value =', solver.Objective().Value())
     print()
-    for i in range(Total_arc_num):
+    for i in range(len(all_arcs)):
         if x[i].solution_value() > 0:
             print(x[i].name(), ' = ', x[i].solution_value())
 else:
     print('The problem does not have an optimal solution.')
-
-
-
-
-
-
-
-
-
 

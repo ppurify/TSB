@@ -1,12 +1,5 @@
 from ortools.linear_solver import pywraplp
 import numpy as np
-import matplotlib.pyplot as plt
-import sys
-import time
-import math
-import heapq
-
-import route_algorithm as ra
 
 
 solver = pywraplp.Solver.CreateSolver('GLOP')
@@ -15,21 +8,18 @@ if not solver:
 
 # parameter
 inf = solver.infinity()
-
 Agv_num = 2
 
-#
+
 # [[0번 agv가 0번 p로 가는 경로 수, 0번 agv가 1번 p로 가는 경로 수] ...]
 # 추후 한번에 3개 경로로 통일
 Agv_to_pick = [[3,3,3],
                [2,2,3]]
 
 Pick_to_drop = [3,2,3]
-
 Drop_to_pick = [3,2,3]
 
 
-# Agv_num = 2
 
 # # [[0번 agv가 0번 p로 가는 경로 수, 0번 agv가 1번 p로 가는 경로 수] ...]
 # # 추후 한번에 3개 경로로 통일
@@ -37,8 +27,6 @@ Drop_to_pick = [3,2,3]
 #                [2,3]]
 
 # Pick_to_drop = [3,2]
-
-
 
 
 # generate A부분에서 갱신됨. 0으로 놔둬야 됨
@@ -85,8 +73,6 @@ for a in range(Agv_num):
 Arc_information.sort()
 
 
-
-
 # set cost(tmpt, not yet coded)
 for i in range(len(Arc_information)):
     Arc_information[i].append([i])
@@ -95,7 +81,6 @@ for i in range(len(Arc_information)):
 
 for i in range(len(Arc_information)):
     print(Arc_information[i])
-
 print()
 
 
@@ -161,28 +146,24 @@ for i in range(Number_of_job):
 
 
 # Constraint 4
-# for j in range(Number_of_job):
-#     arcs_to_drop_node = []
+for j in range(Number_of_job):
+    arcs_to_drop_node = []
     
-#     for i in range(len(Arc_information)):
-#         if Arc_information[i][1] == ['d', j]:
-#             arcs_to_drop_node.append(i)
-#     # print(arcs_to_drop_node)
-#     solver.Add(sum(x[j] for j in arcs_to_drop_node) == 1)
+    for i in range(len(Arc_information)):
+        if Arc_information[i][1] == ['d', j]:
+            arcs_to_drop_node.append(i)
+    # print(arcs_to_drop_node)
+    solver.Add(sum(x[j] for j in arcs_to_drop_node) == 1)
 
 
-# Constraint 4
-arcs_to_drop_node = []
+# # Constraint 4
+# arcs_to_drop_node = []
 
-for i in range(len(Arc_information)):
-    if Arc_information[i][1] == ['d', j]:
-        arcs_to_drop_node.append(i)
-# print(arcs_to_drop_node)
-solver.Add(sum(x[j] for j in arcs_to_drop_node) == Agv_num)
-
-
-
-
+# for i in range(len(Arc_information)):
+#     if Arc_information[i][1] == ['d', j]:
+#         arcs_to_drop_node.append(i)
+# # print(arcs_to_drop_node)
+# solver.Add(sum(x[j] for j in arcs_to_drop_node) == Agv_num)
 
 
 
@@ -204,4 +185,3 @@ if status == pywraplp.Solver.OPTIMAL:
             print(x[i].name(), ' = ', x[i].solution_value())
 else:
     print('The problem does not have an optimal solution.')
-
