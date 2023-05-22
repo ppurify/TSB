@@ -13,44 +13,20 @@ solver = pywraplp.Solver.CreateSolver('GLOP')
 if not solver:
     print("Please check solver")
 
+# parameter
 inf = solver.infinity()
 
-# Parameters
-grid = ra.grid
-
-prev_count = np.array([
-    [4, 2, 3, 2, 3, 2, 4],
-    [2, -1, 2, -1, 2, -1, 2],
-    [4, 1, 3, 1, 3, 1, 4],
-    [2, -1, 2, -1, 2, -1, 2],
-    [4, 1, 3, 1, 3, 1, 4],
-    [2, -1, 2, -1, 2, -1, 2],
-    [4, 1, 3, 1, 3, 1, 4],
-    [2, -1, 2, -1, 2, -1, 2],
-    [4, 2, 3, 2, 3, 2, 4],
-])
-
-now_count = np.zeros((9,7))
-
-alpha1 = 0.4
-alpha2 = 0.3
-alpha3 = 0.3
-
-number_of_YT = 2
-number_of_job = 2
-
-
-Agv_num = 3
+Agv_num = 2
 
 #
 # [[0번 agv가 0번 p로 가는 경로 수, 0번 agv가 1번 p로 가는 경로 수] ...]
 # 추후 한번에 3개 경로로 통일
-Agv_to_pick = [[3,3],
-               [2,2],
-               [1,3]]
+Agv_to_pick = [[3,3,3],
+               [2,2,3]]
 
-Pick_to_drop = [3,2]
+Pick_to_drop = [3,2,3]
 
+Drop_to_pick = [3,2,3]
 
 
 # Agv_num = 2
@@ -99,6 +75,12 @@ for a in range(Drop_to_sink):
 for a in range(Agv_num):
     Arc_information.append([['agv', a],['s'],[0]])
 
+# gererate A5 : d to oter p
+# for a in range(len(Pick_to_drop)):
+#     for b in range(len(Pick_to_drop)):
+#         for c in range(Pick_to_drop[a]):
+#             Arc_information.append([['d', a],['p', b],[c]])
+
 
 Arc_information.sort()
 
@@ -129,10 +111,11 @@ start_node_index = [0]
 for i in range(len(Agv_to_pick)):
     start_node_index.append(sum(Agv_to_pick[i]) + 1)
     start_node_index[-1] += start_node_index[-2]
- 
+
+# print("start_node_index", start_node_index)
 for i in range(len(start_node_index)-1):
     solver.Add(sum(x[j] for j in range(start_node_index[i], start_node_index[i+1])) == 1)
-    
+    # print("sum(x[j] for j in range(start_node_index[i], start_node_index[i+1]))", sum(x[j] for j in range(start_node_index[i], start_node_index[i+1])))
     # print(start_node_index[i], start_node_index[i+1])
     # print(" start_node_index[i] : ", start_node_index[i])
     # print(" start_node_index[i+1] : ", start_node_index[i+1])
@@ -178,14 +161,28 @@ for i in range(Number_of_job):
 
 
 # Constraint 4
-for j in range(Number_of_job):
-    arcs_to_drop_node = []
+# for j in range(Number_of_job):
+#     arcs_to_drop_node = []
     
-    for i in range(len(Arc_information)):
-        if Arc_information[i][1] == ['d', j]:
-            arcs_to_drop_node.append(i)
-    # print(arcs_to_drop_node)
-    solver.Add(sum(x[j] for j in arcs_to_drop_node) == 1)
+#     for i in range(len(Arc_information)):
+#         if Arc_information[i][1] == ['d', j]:
+#             arcs_to_drop_node.append(i)
+#     # print(arcs_to_drop_node)
+#     solver.Add(sum(x[j] for j in arcs_to_drop_node) == 1)
+
+
+# Constraint 4
+arcs_to_drop_node = []
+
+for i in range(len(Arc_information)):
+    if Arc_information[i][1] == ['d', j]:
+        arcs_to_drop_node.append(i)
+# print(arcs_to_drop_node)
+solver.Add(sum(x[j] for j in arcs_to_drop_node) == Agv_num)
+
+
+
+
 
 
 

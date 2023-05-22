@@ -1,15 +1,17 @@
 from ortools.linear_solver import pywraplp
 import numpy as np
 import heapq
+import math
+import sys
 
 import route_algorithm as ra
 
 
 # issues
-# 1. arc 리스트에 arcname으로 안담김
-# 2. [해결], 경로 수 3개보다 작을때 더미 path추가 해주고 그 경로의 cost는 무한대로 해줘야함
+
 # 3. move 함수 작성시 path라는 변수 없이도 재귀적으로 돌수있게 수정
 # 4. 아크 다 순회한 now_count를 prev_count로 바꿔주는 코드 작성
+# 5. 다른경우는 다 되는데 이상하게 YT보다 Job이 더 많을때는 LP가 안풀림(Optimal이 안나옴)
 
 # parameter.
 solver = pywraplp.Solver.CreateSolver('GLOP')
@@ -32,14 +34,14 @@ prev_count = np.array([
     [4, 2, 3, 2, 3, 2, 4],
 ])
 
-now_count = np.zeros((9,7))
+now_count = np.zeros((len(grid), len(grid[0])))
 
 alpha1 = 0.4
 alpha2 = 0.3
 alpha3 = 0.3
 
-number_of_YT = 2
-number_of_job = 2
+number_of_YT = 10
+number_of_job = 10
 # 다수의 route에서 최종적으로 몇개의 arc만 남길지
 number_of_final_route = 3
 
@@ -47,17 +49,21 @@ number_of_final_route = 3
 YT_locations = {}
 Job_locations = {}
 # YT->Pick, Pick->Drop의 아크 객체(출발지, 도착지, 몇번째 경로인지, 경로 정보, cost)를 저장하는 딕셔너리
+
+# A1
 arcs_YT_to_Pick = []
+# A2
 arcs_Pick_to_Drop = []
+# A3
 arcs_Drop_to_Sink = []
+# A4
 arcs_YT_to_Sink = []
-
-
+# A5
+arcs_Drop_to_Pick = []
 
 
 class arc:
     def __init__(self, i, j, k, path, cost, index):
-        
         self.i = i
         self.j = j
         self.k = k
@@ -91,7 +97,7 @@ def penalty(prev_count, route, number_of_final_route, alpha1, alpha3):
 # 주어진 path의 cost 계산, 더미 아크(path의 길이 0)는 cost 무한대
 def cost(prev_count, now_count, path, alpha1, alpha2, alpha3):
     if len(path) == 0:
-        cost = solver.infinity()
+        cost = sys.maxsize
     else:
         sum_of_counter_of_prev_count = 0
         sum_of_counter_of_now_count = 0
@@ -104,6 +110,7 @@ def cost(prev_count, now_count, path, alpha1, alpha2, alpha3):
         cost = round((alpha1 * sum_of_counter_of_prev_count) + (alpha2 * sum_of_counter_of_now_count) + (alpha3 * sum_of_move))
 
     return cost
+
 
 # Experiment
 # 스케줄링 대상 YT 생성
@@ -125,16 +132,9 @@ for j in range(number_of_job):
 
 
 
-
-YT_locations = {0 : [(0,1)], 1: [(2,2)]}
-Job_locations = {0 : [(8,3), (4,6)], 1: [(5,6), (1,0)]}
-
-
-
-
-
 # YT에서 Pick으로 이동하는 경로 탐색, 아크 생성
 for i in range(number_of_YT):
+    kk = False
     for j in range(number_of_job):
         YT_location = YT_locations[i]
         Pick_location = Job_locations[j][0]
@@ -148,6 +148,14 @@ for i in range(number_of_YT):
         # 모든 경우의 경로 탐색
         ra.move(YT_location, Pick_location, grid, path_YT_to_Pick, route_YT_to_Pick)
         # print('length of route_YT_to_Pick : ', len(route_YT_to_Pick))
+
+        if len(route_YT_to_Pick) == 0:
+            print('YT Number : ', i, 'location : ', YT_location)
+            print('Pick Number : ', j, 'location : ', Pick_location)
+            kk = True
+            break
+        if kk == True:
+            break
 
         # 경로 수가 3개보다 많으면 패널티 함수 통해 3개로 줄이기
         if len(route_YT_to_Pick) > number_of_final_route :
@@ -176,7 +184,7 @@ for i in range(number_of_YT):
 
 
 # Pick에서 Drop으로 가는 경로 생성, 아크 생성
-# 위의 for loop와 분리한이유 : YT -> Pick은 YT 하나에 모든 Job과 경로를 생성해야하지만 하나의 Job 안에서 Pick과 Drop의 연결은 한번만(경로는 세개 생성) 일어나도 되기 때문
+# 위의 for loop와 분리한이유 : YT -> Pick은 YT 하나에 모든 Job과 경로를 생성해야하지만 하나의 Job 안에서 Pick과 Drop의 연결은 한번만(경로는 세개 생성) 일어나야하기 때문
 for j in range(number_of_job):
     Pick_location = Job_locations[j][0]
     Drop_location = Job_locations[j][1]
@@ -221,6 +229,65 @@ for j in range(number_of_job):
 
 
 
+# Drop에서 다른 Job의 Pick으로 가는 경로생성, 아크 생성
+
+# i : Drop, j : Pick 
+for i in range(number_of_job):
+    for j in range(number_of_job):
+        if i != j:
+            Drop_location = Job_locations[i][1]
+            Pick_location = Job_locations[j][0]
+            
+            path_Drop_to_Pick = []
+            route_Drop_to_Pick = []
+
+            # 모든 경우의 경로 탐색
+            ra.move(Drop_location, Pick_location, grid, path_Drop_to_Pick, route_Drop_to_Pick)
+            # print('length of route_Drop_to_Pick : ', len(route_Drop_to_Pick))
+            # print('route_Drop_to_Pick')
+            # for i in range(len(route_Drop_to_Pick)):
+            #     print(route_Drop_to_Pick[i])
+
+            # 경로 수가 3개보다 많으면 패널티 함수 통해 3개로 줄이기
+            if len(route_Drop_to_Pick) > number_of_final_route :
+                final_route_Drop_to_Pick = penalty(prev_count, route_Drop_to_Pick, number_of_final_route, alpha1=alpha1, alpha3=alpha3)
+            # 그렇지 않으면
+            elif len(route_Drop_to_Pick) < number_of_final_route:
+                for _ in range(3 - len(route_Drop_to_Pick)):
+                    # 빈 path 추가, 추후 해당 경로에 cost를 아주 큰 값으로 할당해서 해당 arc를 선택하지 않도록
+                    route_Drop_to_Pick.append([])
+                final_route_Drop_to_Pick = route_Drop_to_Pick
+
+            else :
+                final_route_Drop_to_Pick = route_Drop_to_Pick
+
+            # print('length of final_route_Drop_to_Pick : ', len(final_route_Drop_to_Pick))
+            # for i in range(len(final_route_Drop_to_Pick)):
+            #     print(final_route_Drop_to_Pick[i])
+
+            # 경로 1개당 arc 객체 생성(Drop -> Pick)
+            for k in range(len(final_route_Drop_to_Pick)):
+                arcname = 'Drop' + str(i) + 'to' + 'Pick' + str(j)
+                arcname = arc(i = ['Drop', i], j = ['Pick', j], k = k, path = final_route_Drop_to_Pick[k], cost = None, index=None)
+                arcs_Drop_to_Pick.append(arcname)
+                # print('i : ', arcname.i, 'j : ', arcname.j, 'k : ', arcname.k, 'path : ', arcname.path)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # !!! 현재는 YT->Pick 아크들 먼저 길이순 오름차순 정렬하여 cost 계산 후 Pick->Drop 아크들 길이순 오름차순 정렬하여 cost 계산하는 방식으로 진행
 # !!! 따라서 앞부분 아크들이 우선적으로 cost계산되어 더 높은 우선순위로 인식됨
 
@@ -259,14 +326,36 @@ for i in range(len(arcs_Pick_to_Drop)):
     for j in range(len(arcs_Pick_to_Drop[i].path)):
         now_count[(arcs_Pick_to_Drop[i].path[j][0], arcs_Pick_to_Drop[i].path[j][1])] += 1
 
+# Drop_to_Pick의 arc 객체들의 cost 계산
+
+# 객체들의 path 길이에 따른 sorting
+arcs_Drop_to_Pick.sort(key = lambda x : len(x.path))
+
+# 1. 각 arc들을 순회하며 cost 계산
+# 2. 각 arc를 순회하며 해당 path를 now_count에 반영(밟는칸에 +1씩 count)
+for i in range(len(arcs_Drop_to_Pick)):
+    # cost 계산
+    arcs_Drop_to_Pick[i].cost = cost(prev_count, now_count, arcs_Drop_to_Pick[i].path, alpha1=alpha1, alpha2=alpha2, alpha3=alpha3)
+    # print('cost : ', arcs_Drop_to_Pick[i].cost)
+
+    # now_count에 path 반영
+    for j in range(len(arcs_Drop_to_Pick[i].path)):
+        now_count[(arcs_Drop_to_Pick[i].path[j][0], arcs_Drop_to_Pick[i].path[j][1])] += 1
 
 
-# Sink노드로 가는 arc 객체 생성
+
+
+
+
+
+
+# Drop에서 Sink노드로 가는 arc 객체 생성
 for i in range(number_of_job):
     arcname = 'Drop' + str(i) + 'to' + 'Sink'
     arcname = arc(i = ['Drop', i], j = ['Sink'], k = 0, path = [], cost = 0, index=None)
     arcs_Drop_to_Sink.append(arcname)
 
+# YT에서  Sink노드로 가는 arc 객체 생성
 for i in range(number_of_YT):
     arcname = 'YT' + str(i) + 'to' + 'Sink'
     arcname = arc(i = ['YT', i], j = ['Sink'], k = 0, path = [], cost = 0, index=None)
@@ -275,23 +364,27 @@ for i in range(number_of_YT):
 
 # 모든 arc 객체들을 하나의 리스트에 저장, index부여
 
-all_arcs = arcs_YT_to_Pick + arcs_Pick_to_Drop + arcs_Drop_to_Sink + arcs_YT_to_Sink
-
-for i in range(len(all_arcs)):
-    all_arcs[i].index = i
+all_arcs = arcs_YT_to_Pick + arcs_Pick_to_Drop + arcs_Drop_to_Pick + arcs_Drop_to_Sink + arcs_YT_to_Sink
+# print('all_arcs : ', all_arcs)
+# print('lengt of all_arcs : ', len(all_arcs))
+for _ in range(len(all_arcs)):
+    all_arcs[_].index = _
+    #print('index : ', all_arcs[_].index)
 
 # 각 아크의 cost 출력
 for i in range(len(all_arcs)):
     print('i : ', all_arcs[i].i,
           'j : ', all_arcs[i].j,
           'k : ', all_arcs[i].k,
-          'path : ', all_arcs[i].path,
           'cost : ', all_arcs[i].cost,
           'index : ', all_arcs[i].index)
 
-Total_arc_num = len(arcs_YT_to_Pick) + len(arcs_Pick_to_Drop) + len(arcs_Drop_to_Sink) + len(arcs_YT_to_Sink)
+Total_arc_num = len(arcs_YT_to_Pick) + len(arcs_Pick_to_Drop) + len(arcs_Drop_to_Pick) + len(arcs_Drop_to_Sink) + len(arcs_YT_to_Sink)
 
 
+
+# for i in range(len(all_arcs)):
+#     print(all_arcs[i].index)
 
 
 
@@ -318,36 +411,58 @@ for i in range(Total_arc_num):
 for l in range(number_of_YT):
     list_for_const1 = []
     for a in all_arcs:
-        if a.i[0] == 'YT' and a.i[1] == l:
-            list_for_const1.append(x[a.index])
-    solver.Add(sum(list_for_const1) == 1)
-
+        if a.i == ['YT', l]:
+            list_for_const1.append(a.index)
+    # print('l : ', l)
+    # print('list_for_const1 : ', list_for_const1)
+    solver.Add(sum(x[j] for j in list_for_const1) == 1)
+    # print('sum(x[j] for j in list_for_const1) : ', sum(x[j] for j in list_for_const1))
 
 # Constraint 2 : sink node로 들어오는 아크들의 합은 YT의 수
+list_for_const2 = []
 for a in all_arcs:
-    list_for_const2 = []
     if a.j[0] == 'Sink':
-        list_for_const2.append(x[a.index])
-    solver.Add(sum(list_for_const2) == number_of_YT)
+        list_for_const2.append(a.index)
+
+solver.Add(sum(x[j] for j in list_for_const2) == number_of_YT)
+#print(list_for_const2)
+
 
 # Constraint 3 : Pick 노드와 Drop노드 대상으로,각 노드에 들어오는 아크와 나가는 아크의 수의 합이 같아야함
 for l in range(number_of_job):
-    list_for_const3_i = []
-    list_for_const3_j = []
+    list_for_const3_from_Pick = []
+    list_for_const3_to_Pick = []
+    list_for_const3_from_Drop = []
+    list_for_const3_to_Drop = []
+
     for a in all_arcs:
-        if a.i[0] == 'Pick' and a.i[1] == l:
-            list_for_const3_i.append(x[a.index])
-        elif a.j[0] == 'Pick' and a.j[1] == l:
-            list_for_const3_j.append(x[a.index])
-    solver.Add(sum(list_for_const3_i) == sum(list_for_const3_j))
+        if a.i == ['Pick', l]:
+            list_for_const3_from_Pick.append(a.index)
+        if a.j == ['Pick', l]:
+            list_for_const3_to_Pick.append(a.index)
+        if a.i == ['Drop', l]:
+            list_for_const3_from_Drop.append(a.index)
+        if a.j == ['Drop', l]:
+            list_for_const3_to_Drop.append(a.index)
+
+    solver.Add(sum(x[j] for j in list_for_const3_from_Pick) == sum(x[j] for j in list_for_const3_to_Pick))
+    solver.Add(sum(x[j] for j in list_for_const3_from_Drop) == sum(x[j] for j in list_for_const3_to_Drop))
+    # print('l : ', l)
+    # print('list_for_const3_from_Pick : ', list_for_const3_from_Pick)
+    # print('list_for_const3_to_Pick : ', list_for_const3_to_Pick)
+    # print('list_for_const3_from_Drop : ', list_for_const3_from_Drop)
+    # print('list_for_const3_to_Drop : ', list_for_const3_to_Drop)
+
+
 
 # Constraint 4 : Drop노드 대상으로, 각 Drop노드에 들어오는 아크의 합이 1
 for l in range(number_of_job):
     list_for_const4 = []
+
     for a in all_arcs:
-        if a.j[0] == 'Drop' and a.j[1] == l:
-            list_for_const4.append(x[a.index])
-    solver.Add(sum(list_for_const4) == 1)
+        if a.j == ['Drop', l]:
+            list_for_const4.append(a.index)
+    solver.Add(sum(x[j] for j in list_for_const4) == 1)
 
 
 
@@ -362,13 +477,15 @@ for l in range(number_of_job):
 
 
 
-
+# for i in range(len(all_arcs)):
+#     print(i == all_arcs[i].index)
 
 # Obejctive
 objective = solver.Objective()
 for i in range(Total_arc_num):
-    # i 인덱스를 가진 arc의 cost를 x[i]와 곱해서 objective에 추가
+    # 인덱스가 i인 arc의 cost를 x[i]와 곱해서 objective에 추가
     objective.SetCoefficient(x[i], all_arcs[i].cost)
+    
 
 objective.SetMinimization()
 
@@ -384,3 +501,13 @@ if status == pywraplp.Solver.OPTIMAL:
             print(x[i].name(), ' = ', x[i].solution_value())
 else:
     print('The problem does not have an optimal solution.')
+
+
+
+
+
+
+
+
+
+

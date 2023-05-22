@@ -479,44 +479,6 @@ for i in range(len(arcs_Pick_to_Drop)):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # #현재 시각
 # start_time = time.time()
 
