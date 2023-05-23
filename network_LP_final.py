@@ -9,7 +9,7 @@ if not solver:
 
 inf = solver.infinity()
 
-arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink = make_arc.create_arcs(YT_locations, Job_locations, number_of_final_route, alpha1, alpha3, prev_count, grid)
+
 
 # Decision Variables
 x = np.empty(len(all_arcs), dtype=object)

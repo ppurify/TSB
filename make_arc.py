@@ -58,7 +58,7 @@ def create_arcs(YT_locations, Job_locations, number_of_final_route, alpha1, alph
     arcs_Drop_to_Sink = []
     arcs_YT_to_Sink = []
 
-    get_index = 0
+    now_index = 0
 
 
     # 1. YT -> Pick 경로, 아크 생성
@@ -82,8 +82,9 @@ def create_arcs(YT_locations, Job_locations, number_of_final_route, alpha1, alph
             # 경로 1개당 arc 객체 생성(YT -> Pick)
             for k in range(len(final_route_YT_to_Pick)):
                 arcname = 'YT' + str(i) + 'to' + 'Pick' + str(j) + 'path' + str(k)
-                arcname = arc(i=['YT', i], j=['Pick', j], k=k, path=final_route_YT_to_Pick[k], cost=None, index=get_index)
-                get_index += 1
+                arcname = arc(i=['YT', i], j=['Pick', j], k=k, path=final_route_YT_to_Pick[k], cost=None, index = now_index)
+                print('now index : ', now_index)
+                now_index += 1
                 arcs_YT_to_Pick.append(arcname)
 
     # 2. Pick -> Drop 경로, 아크 생성
@@ -106,8 +107,8 @@ def create_arcs(YT_locations, Job_locations, number_of_final_route, alpha1, alph
         # 경로 1개당 arc 객체 생성(Pick -> Drop)
         for k in range(len(final_route_Pick_to_Drop)):
             arcname = 'Pick' + str(j) + 'to' + 'Drop' + str(j) + 'path' + str(k)
-            arcname = arc(i=['Pick', j], j=['Drop', j], k=k, path=final_route_Pick_to_Drop[k], cost=None, index=get_index)
-            get_index += 1
+            arcname = arc(i=['Pick', j], j=['Drop', j], k=k, path=final_route_Pick_to_Drop[k], cost=None, index=now_index)
+            now_index += 1
             arcs_Pick_to_Drop.append(arcname)
 
 
@@ -133,23 +134,23 @@ def create_arcs(YT_locations, Job_locations, number_of_final_route, alpha1, alph
                 # 경로 1개당 arc 객체 생성(Drop -> Pick)
                 for k in range(len(final_route_Drop_to_Pick)):
                     arcname = 'Drop' + str(i) + 'to' + 'Pick' + str(j) + 'path' + str(k)
-                    arcname = arc(i = ['Drop', i], j = ['Pick', j], k = k, path = final_route_Drop_to_Pick[k], cost = None, index=get_index)
-                    get_index += 1
+                    arcname = arc(i = ['Drop', i], j = ['Pick', j], k = k, path = final_route_Drop_to_Pick[k], cost = None, index=now_index)
+                    now_index += 1
                     arcs_Drop_to_Pick.append(arcname)
 
 
     # 4. Drop -> Sink 아크 생성
     for i in range(len(Job_locations)):
         arcname = 'Drop' + str(i) + 'to' + 'Sink'
-        arcname = arc(i = ['Drop', i], j = ['Sink'], k = 0, path = [], cost = 0, index=get_index)
-        get_index += 1
+        arcname = arc(i = ['Drop', i], j = ['Sink'], k = 0, path = [], cost = 0, index=now_index)
+        now_index += 1
         arcs_Drop_to_Sink.append(arcname)
 
     # 5. YT -> Sink 아크 생성
     for i in range(len(YT_locations)):
         arcname = 'YT' + str(i) + 'to' + 'Sink'
-        arcname = arc(i = ['YT', i], j = ['Sink'], k = 0, path = [], cost = 0, index=get_index)
-        get_index += 1
+        arcname = arc(i = ['YT', i], j = ['Sink'], k = 0, path = [], cost = 0, index=now_index)
+        now_index += 1
         arcs_YT_to_Sink.append(arcname)
 
     return arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink

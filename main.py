@@ -1,12 +1,13 @@
 import numpy as np
 
 import make_arc
-import network_LP_final
+# import network_LP_final
 import route_algorithm as ra
 
 def main():
 
-    
+    # Parameter
+
     YT_locations = {0 : (4,2)}
     Job_locations = {0 : [(2,4), (5,6)], 1 : [(4,2), (8,0)]}
     number_of_final_route = 3
@@ -51,14 +52,36 @@ def main():
 
 
     # Create arcs
-    arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink = make_arc.create_arcs(YT_locations = YT_locations, Job_locations = Job_locations, number_of_final_route = number_of_final_route, alpha1 = alpha1, alpha3 = alpha3, prev_count = prev_count, grid = grid)
-    # arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink, now_count = make_arc.sort_and_cost(arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink, prev_count=prev_count, now_count=now_count, alpha1=alpha1, alpha2=alpha2, alpha3=alpha3)
-    # all_arcs = make_arc.get_index(arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink)
-    
+    arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink = make_arc.create_arcs(
+        YT_locations=YT_locations,
+        Job_locations=Job_locations,
+        number_of_final_route=number_of_final_route,
+        alpha1=alpha1,
+        alpha3=alpha3,
+        prev_count=prev_count,
+        grid=grid,
+    )
+
+    # print(arcs_Drop_to_Pick[2].path)
     for i in range(len(arcs_YT_to_Pick)):
         print(arcs_YT_to_Pick[i].index)
-    # # Run network_LP_final
-    # network_LP_final.run(arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink)
+
+    # Run network_LP_final
+    # network_LP_final.run(
+    #     arcs_YT_to_Pick,
+    #     arcs_Pick_to_Drop,
+    #     arcs_Drop_to_Pick,
+    #     arcs_Drop_to_Sink,
+    #     arcs_YT_to_Sink,
+    # )
+
+
+
+
+
+
+
+
 
 if __name__ == "__main__":
     main()
