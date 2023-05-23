@@ -39,8 +39,8 @@ alpha1 = 0.4
 alpha2 = 0.3
 alpha3 = 0.3
 
-number_of_YT = 10
-number_of_job = 10
+number_of_YT = 1
+number_of_job = 2
 # 다수의 route에서 최종적으로 몇개의 arc만 남길지
 number_of_final_route = 3
 
@@ -112,21 +112,31 @@ def cost(prev_count, now_count, path, alpha1, alpha2, alpha3):
 
 
 # Experiment
-# 스케줄링 대상 YT 생성
-for i in range(number_of_YT):
-    YT_location = None
-    while YT_location is None or grid[YT_location] == -1:
-        YT_location = (np.random.randint(9), np.random.randint(7))
-    YT_locations[i] = YT_location
+
+
+
+YT_locations = {}
+YT_locations[0] = (4, 2)
+
+Job_locations = {}
+Job_locations[0] = [(2, 4), (4, 2)]
+Job_locations[1] = [(4, 2), (7, 4)]
+
+# # 스케줄링 대상 YT 생성
+# for i in range(number_of_YT):
+#     YT_location = None
+#     while YT_location is None or grid[YT_location] == -1:
+#         YT_location = (np.random.randint(9), np.random.randint(7))
+#     YT_locations[i] = YT_location
     
-# 스케줄링 대상 작업 생성
-for j in range(number_of_job):
-    Pick_location = None
-    Drop_location = None
-    while Pick_location is None or grid[Pick_location] == -1 or Drop_location is None or grid[Drop_location] == -1 or Pick_location == Drop_location:
-        Pick_location = (np.random.randint(9), np.random.randint(7))
-        Drop_location = (np.random.randint(9), np.random.randint(7))
-    Job_locations[j] = [Pick_location, Drop_location]
+# # 스케줄링 대상 작업 생성
+# for j in range(number_of_job):
+#     Pick_location = None
+#     Drop_location = None
+#     while Pick_location is None or grid[Pick_location] == -1 or Drop_location is None or grid[Drop_location] == -1 or Pick_location == Drop_location:
+#         Pick_location = (np.random.randint(9), np.random.randint(7))
+#         Drop_location = (np.random.randint(9), np.random.randint(7))
+#     Job_locations[j] = [Pick_location, Drop_location]
 
 
 
@@ -383,12 +393,12 @@ for _ in range(len(all_arcs)):
     #print('index : ', all_arcs[_].index)
 
 # 각 아크의 cost 출력
-# for i in range(len(all_arcs)):
-#     print('i : ', all_arcs[i].i,
-#           'j : ', all_arcs[i].j,
-#           'k : ', all_arcs[i].k,
-#           'cost : ', all_arcs[i].cost,
-#           'index : ', all_arcs[i].index)
+for i in range(len(all_arcs)):
+    print('i : ', all_arcs[i].i,
+          'j : ', all_arcs[i].j,
+          'k : ', all_arcs[i].k,
+          'cost : ', all_arcs[i].cost,
+          'index : ', all_arcs[i].index)
 
 
 
