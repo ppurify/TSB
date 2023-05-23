@@ -39,8 +39,8 @@ alpha1 = 0.4
 alpha2 = 0.3
 alpha3 = 0.3
 
-number_of_YT = 10
-number_of_job = 10
+number_of_YT = 100
+number_of_job = 150
 # 다수의 route에서 최종적으로 몇개의 arc만 남길지
 number_of_final_route = 3
 
@@ -94,9 +94,9 @@ def penalty(prev_count, route, number_of_final_route, alpha1, alpha3):
 
 
 # 주어진 path의 cost 계산, 더미 아크(path의 길이 0)는 cost 무한대
-def cost(prev_count, now_count, path, alpha1, alpha2, alpha3):
+def get_cost(prev_count, now_count, path, alpha1, alpha2, alpha3):
     if len(path) == 0:
-        cost = sys.maxsize
+        total_cost = sys.maxsize
     else:
         sum_of_counter_of_prev_count = 0
         sum_of_counter_of_now_count = 0
@@ -106,9 +106,9 @@ def cost(prev_count, now_count, path, alpha1, alpha2, alpha3):
             sum_of_counter_of_now_count += now_count[(path[i][0], path[i][1])]
 
         # cost 산출(반올림)
-        cost = round((alpha1 * sum_of_counter_of_prev_count) + (alpha2 * sum_of_counter_of_now_count) + (alpha3 * sum_of_move))
+        total_cost = round((alpha1 * sum_of_counter_of_prev_count) + (alpha2 * sum_of_counter_of_now_count) + (alpha3 * sum_of_move))
 
-    return cost
+    return total_cost
 
 
 # Experiment
@@ -154,14 +154,16 @@ for i in range(number_of_YT):
         if len(route_YT_to_Pick) > number_of_final_route :
             final_route_YT_to_Pick = penalty(prev_count, route_YT_to_Pick, number_of_final_route, alpha1=alpha1, alpha3=alpha3)
         
-        # 3개 미만이면
-        elif len(route_YT_to_Pick) < number_of_final_route:
-            for _ in range(number_of_final_route - len(route_YT_to_Pick)):
-                # 빈 path 추가, 추후 해당 경로에 cost를 아주 큰 값으로 할당해서 해당 arc를 선택하지 않도록
-                route_YT_to_Pick.append([])
-            final_route_YT_to_Pick = route_YT_to_Pick
+        # # 3개 미만이면
+        # elif len(route_YT_to_Pick) < number_of_final_route:
+        #     for _ in range(number_of_final_route - len(route_YT_to_Pick)):
+        #         # 빈 path 추가, 추후 해당 경로에 cost를 아주 큰 값으로 할당해서 해당 arc를 선택하지 않도록
+        #         route_YT_to_Pick.append([])
+        #     final_route_YT_to_Pick = route_YT_to_Pick
 
-        # 3개면 그대로
+        # # 3개면 그대로
+        # else:
+        #     final_route_YT_to_Pick = route_YT_to_Pick
         else:
             final_route_YT_to_Pick = route_YT_to_Pick
 
@@ -213,13 +215,15 @@ for j in range(number_of_job):
     if len(route_Pick_to_Drop) > number_of_final_route :
         final_route_Pick_to_Drop = penalty(prev_count, route_Pick_to_Drop, number_of_final_route, alpha1=alpha1, alpha3=alpha3)
     # 그렇지 않으면
-    elif len(route_Pick_to_Drop) < number_of_final_route:
-        for _ in range(number_of_final_route - len(route_Pick_to_Drop)):
-            # 빈 path 추가, 추후 해당 경로에 cost를 아주 큰 값으로 할당해서 해당 arc를 선택하지 않도록
-            route_Pick_to_Drop.append([])
-        final_route_Pick_to_Drop = route_Pick_to_Drop
+    # elif len(route_Pick_to_Drop) < number_of_final_route:
+    #     for _ in range(number_of_final_route - len(route_Pick_to_Drop)):
+    #         # 빈 path 추가, 추후 해당 경로에 cost를 아주 큰 값으로 할당해서 해당 arc를 선택하지 않도록
+    #         route_Pick_to_Drop.append([])
+    #     final_route_Pick_to_Drop = route_Pick_to_Drop
 
-    else :
+    # else :
+    #     final_route_Pick_to_Drop = route_Pick_to_Drop
+    else:
         final_route_Pick_to_Drop = route_Pick_to_Drop
 
     # print('length of final_route_Pick_to_Drop : ', len(final_route_Pick_to_Drop))
@@ -236,7 +240,6 @@ for j in range(number_of_job):
 
 
 # Drop에서 다른 Job의 Pick으로 가는 경로생성, 아크 생성
-
 # i : Drop, j : Pick 
 for i in range(number_of_job):
     kk = False
@@ -270,13 +273,15 @@ for i in range(number_of_job):
             if len(route_Drop_to_Pick) > number_of_final_route :
                 final_route_Drop_to_Pick = penalty(prev_count, route_Drop_to_Pick, number_of_final_route, alpha1=alpha1, alpha3=alpha3)
             # 그렇지 않으면
-            elif len(route_Drop_to_Pick) < number_of_final_route:
-                for _ in range(number_of_final_route - len(route_Drop_to_Pick)):
-                    # 빈 path 추가, 추후 해당 경로에 cost를 아주 큰 값으로 할당해서 해당 arc를 선택하지 않도록
-                    route_Drop_to_Pick.append([])
-                final_route_Drop_to_Pick = route_Drop_to_Pick
+            # elif len(route_Drop_to_Pick) < number_of_final_route:
+            #     for _ in range(number_of_final_route - len(route_Drop_to_Pick)):
+            #         # 빈 path 추가, 추후 해당 경로에 cost를 아주 큰 값으로 할당해서 해당 arc를 선택하지 않도록
+            #         route_Drop_to_Pick.append([])
+            #     final_route_Drop_to_Pick = route_Drop_to_Pick
 
-            else :
+            # else :
+            #     final_route_Drop_to_Pick = route_Drop_to_Pick
+            else:
                 final_route_Drop_to_Pick = route_Drop_to_Pick
 
             # print('length of final_route_Drop_to_Pick : ', len(final_route_Drop_to_Pick))
@@ -309,7 +314,7 @@ arcs_YT_to_Pick.sort(key = lambda x : len(x.path))
 # 2. 각 arc를 순회하며 해당 path를 now_count에 반영(밟는칸에 +1씩 count)
 for i in range(len(arcs_YT_to_Pick)):
     # cost 계산
-    arcs_YT_to_Pick[i].cost = cost(prev_count, now_count, arcs_YT_to_Pick[i].path, alpha1=alpha1, alpha2=alpha2, alpha3=alpha3)
+    arcs_YT_to_Pick[i].cost = get_cost(prev_count, now_count, arcs_YT_to_Pick[i].path, alpha1=alpha1, alpha2=alpha2, alpha3=alpha3)
     # print('cost : ', arcs_YT_to_Pick[i].cost)
 
     # now_count에 path 반영
@@ -328,7 +333,7 @@ arcs_Pick_to_Drop.sort(key = lambda x : len(x.path))
 # 2. 각 arc를 순회하며 해당 path를 now_count에 반영(밟는칸에 +1씩 count)
 for i in range(len(arcs_Pick_to_Drop)):
     # cost 계산
-    arcs_Pick_to_Drop[i].cost = cost(prev_count, now_count, arcs_Pick_to_Drop[i].path, alpha1=alpha1, alpha2=alpha2, alpha3=alpha3)
+    arcs_Pick_to_Drop[i].cost = get_cost(prev_count, now_count, arcs_Pick_to_Drop[i].path, alpha1=alpha1, alpha2=alpha2, alpha3=alpha3)
     # print('cost : ', arcs_Pick_to_Drop[i].cost)
 
     # now_count에 path 반영
@@ -345,7 +350,7 @@ arcs_Drop_to_Pick.sort(key = lambda x : len(x.path))
 # 2. 각 arc를 순회하며 해당 path를 now_count에 반영(밟는칸에 +1씩 count)
 for i in range(len(arcs_Drop_to_Pick)):
     # cost 계산
-    arcs_Drop_to_Pick[i].cost = cost(prev_count, now_count, arcs_Drop_to_Pick[i].path, alpha1=alpha1, alpha2=alpha2, alpha3=alpha3)
+    arcs_Drop_to_Pick[i].cost = get_cost(prev_count, now_count, arcs_Drop_to_Pick[i].path, alpha1=alpha1, alpha2=alpha2, alpha3=alpha3)
     # print('cost : ', arcs_Drop_to_Pick[i].cost)
 
     # now_count에 path 반영
@@ -395,14 +400,6 @@ for i in range(len(all_arcs)):
 
 # for i in range(len(all_arcs)):
 #     print(all_arcs[i].index)
-
-
-
-
-
-
-
-
 
 
 

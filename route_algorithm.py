@@ -171,14 +171,3 @@ def move(current, finish, grid, path, route):
             move(next_move, finish, grid, new_path, route)
 
     return route
-
-
-# route_YT_to_Pick = move(start, finish, grid, path, route_YT_to_Pick)
-# for i in range(len(result)):
-#     print('route', i, ' : ', result[i])
-
-# print(route_YT_to_Pick)
-# print(len(route_YT_to_Pick))
-
-# print(result)
-# print(len(result))
