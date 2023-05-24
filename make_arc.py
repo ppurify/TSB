@@ -11,7 +11,7 @@ class arc:
         self.k = k
         self.path = path
         self.cost = 0
-        self.index = None
+        self.index = index
         return
     
 
@@ -49,9 +49,73 @@ def get_cost(prev_count, now_count, path, alpha1, alpha2, alpha3):
         # cost 산출(반올림)
         total_cost = round((alpha1 * sum_of_counter_of_prev_count) + (alpha2 * sum_of_counter_of_now_count) + (alpha3 * sum_of_move))
     return total_cost
-    
 
-def create_arcs(YT_locations, Job_locations, number_of_final_route, alpha1, alpha3, prev_count, grid):
+
+
+
+# !!! 현재는 YT->Pick 아크들 먼저 길이순 오름차순 정렬하여 cost 계산 후 Pick->Drop 아크들 길이순 오름차순 정렬하여 cost 계산하는 방식으로 진행
+# !!! 따라서 앞부분 아크들(YT->Pick, Pick->Drop, Drop->다른 Pick 순서)이 우선적으로 cost계산되어 더 높은 우선순위로 인식됨
+def sort_and_cost(arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink, prev_count, now_count, alpha1, alpha2, alpha3):
+
+    # YT_to_Pick 아크들의 cost 계산
+    # 객체들의 path 길이에 따른 sorting
+    arcs_YT_to_Pick.sort(key = lambda x : len(x.path))
+
+    # 1. 각 arc들을 순회하며 cost 계산
+    # 2. 각 arc를 순회하며 해당 path를 now_count에 반영(밟는칸에 +1씩 count)
+    for i in range(len(arcs_YT_to_Pick)):
+        # cost 계산
+        arcs_YT_to_Pick[i].cost = get_cost(prev_count, now_count, arcs_YT_to_Pick[i].path, alpha1=alpha1, alpha2=alpha2, alpha3=alpha3)
+
+        # now_count에 path 반영
+        for j in range(len(arcs_YT_to_Pick[i].path)):
+            now_count[(arcs_YT_to_Pick[i].path[j][0], arcs_YT_to_Pick[i].path[j][1])] += 1
+
+
+    # Pick_to_Drop 아크들의 cost 계산
+    # 객체들의 path 길이에 따른 sorting
+    arcs_Pick_to_Drop.sort(key = lambda x : len(x.path))
+
+    # 1. 각 arc들을 순회하며 cost 계산
+    # 2. 각 arc를 순회하며 해당 path를 now_count에 반영(밟는칸에 +1씩 count)
+    for i in range(len(arcs_Pick_to_Drop)):
+        # cost 계산
+        arcs_Pick_to_Drop[i].cost = get_cost(prev_count, now_count, arcs_Pick_to_Drop[i].path, alpha1=alpha1, alpha2=alpha2, alpha3=alpha3)
+
+        # now_count에 path 반영
+        for j in range(len(arcs_Pick_to_Drop[i].path)):
+            now_count[(arcs_Pick_to_Drop[i].path[j][0], arcs_Pick_to_Drop[i].path[j][1])] += 1
+
+
+    # Drop_to_Pick의 아크들의 cost 계산
+    # 객체들의 path 길이에 따른 sorting
+    arcs_Drop_to_Pick.sort(key = lambda x : len(x.path))
+
+    # 1. 각 arc들을 순회하며 cost 계산
+    # 2. 각 arc를 순회하며 해당 path를 now_count에 반영(밟는칸에 +1씩 count)
+    for i in range(len(arcs_Drop_to_Pick)):
+        # cost 계산
+        arcs_Drop_to_Pick[i].cost = get_cost(prev_count, now_count, arcs_Drop_to_Pick[i].path, alpha1=alpha1, alpha2=alpha2, alpha3=alpha3)
+
+        # now_count에 path 반영
+        for j in range(len(arcs_Drop_to_Pick[i].path)):
+            now_count[(arcs_Drop_to_Pick[i].path[j][0], arcs_Drop_to_Pick[i].path[j][1])] += 1
+
+    for i in range(len(arcs_Drop_to_Sink)):
+        # cost 계산
+        arcs_Drop_to_Sink[i].cost = 0
+
+    for i in range(len(arcs_YT_to_Sink)):
+        # cost 계산
+        arcs_YT_to_Sink[i].cost = 0
+
+    return arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink, now_count
+
+
+
+
+
+def create_arcs(YT_locations, Job_locations, number_of_final_route, alpha1, alpha2, alpha3, grid, prev_count, now_count):
     arcs_YT_to_Pick = []
     arcs_Pick_to_Drop = []
     arcs_Drop_to_Pick = []
@@ -86,6 +150,8 @@ def create_arcs(YT_locations, Job_locations, number_of_final_route, alpha1, alph
                 print('now index : ', now_index)
                 now_index += 1
                 arcs_YT_to_Pick.append(arcname)
+
+
 
     # 2. Pick -> Drop 경로, 아크 생성
     for j in range(len(Job_locations)):
@@ -153,73 +219,10 @@ def create_arcs(YT_locations, Job_locations, number_of_final_route, alpha1, alph
         now_index += 1
         arcs_YT_to_Sink.append(arcname)
 
-    return arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink
 
-
-
-# !!! 현재는 YT->Pick 아크들 먼저 길이순 오름차순 정렬하여 cost 계산 후 Pick->Drop 아크들 길이순 오름차순 정렬하여 cost 계산하는 방식으로 진행
-# !!! 따라서 앞부분 아크들(YT->Pick, Pick->Drop, Drop->다른 Pick 순서)이 우선적으로 cost계산되어 더 높은 우선순위로 인식됨
-def sort_and_cost(arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink, prev_count, now_count, alpha1, alpha2, alpha3):
-
-    # YT_to_Pick 아크들의 cost 계산
-    # 객체들의 path 길이에 따른 sorting
-    arcs_YT_to_Pick.sort(key = lambda x : len(x.path))
-
-    # 1. 각 arc들을 순회하며 cost 계산
-    # 2. 각 arc를 순회하며 해당 path를 now_count에 반영(밟는칸에 +1씩 count)
-    for i in range(len(arcs_YT_to_Pick)):
-        # cost 계산
-        arcs_YT_to_Pick[i].cost = get_cost(prev_count, now_count, arcs_YT_to_Pick[i].path, alpha1=alpha1, alpha2=alpha2, alpha3=alpha3)
-
-        # now_count에 path 반영
-        for j in range(len(arcs_YT_to_Pick[i].path)):
-            now_count[(arcs_YT_to_Pick[i].path[j][0], arcs_YT_to_Pick[i].path[j][1])] += 1
-
-
-    # Pick_to_Drop 아크들의 cost 계산
-    # 객체들의 path 길이에 따른 sorting
-    arcs_Pick_to_Drop.sort(key = lambda x : len(x.path))
-
-    # 1. 각 arc들을 순회하며 cost 계산
-    # 2. 각 arc를 순회하며 해당 path를 now_count에 반영(밟는칸에 +1씩 count)
-    for i in range(len(arcs_Pick_to_Drop)):
-        # cost 계산
-        arcs_Pick_to_Drop[i].cost = get_cost(prev_count, now_count, arcs_Pick_to_Drop[i].path, alpha1=alpha1, alpha2=alpha2, alpha3=alpha3)
-
-        # now_count에 path 반영
-        for j in range(len(arcs_Pick_to_Drop[i].path)):
-            now_count[(arcs_Pick_to_Drop[i].path[j][0], arcs_Pick_to_Drop[i].path[j][1])] += 1
-
-
-    # Drop_to_Pick의 아크들의 cost 계산
-    # 객체들의 path 길이에 따른 sorting
-    arcs_Drop_to_Pick.sort(key = lambda x : len(x.path))
-
-    # 1. 각 arc들을 순회하며 cost 계산
-    # 2. 각 arc를 순회하며 해당 path를 now_count에 반영(밟는칸에 +1씩 count)
-    for i in range(len(arcs_Drop_to_Pick)):
-        # cost 계산
-        arcs_Drop_to_Pick[i].cost = get_cost(prev_count, now_count, arcs_Drop_to_Pick[i].path, alpha1=alpha1, alpha2=alpha2, alpha3=alpha3)
-
-        # now_count에 path 반영
-        for j in range(len(arcs_Drop_to_Pick[i].path)):
-            now_count[(arcs_Drop_to_Pick[i].path[j][0], arcs_Drop_to_Pick[i].path[j][1])] += 1
-
-    for i in range(len(arcs_Drop_to_Sink)):
-        # cost 계산
-        arcs_Drop_to_Sink[i].cost = 0
-
-    for i in range(len(arcs_YT_to_Sink)):
-        # cost 계산
-        arcs_YT_to_Sink[i].cost = 0
+    sort_and_cost(arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink, prev_count, now_count, alpha1, alpha2, alpha3)
 
     return arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink, now_count
 
 
-# def get_index(arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink):
-#     # 모든 arc 객체들을 하나의 리스트에 저장, index부여
-#     all_arcs = arcs_YT_to_Pick + arcs_Pick_to_Drop + arcs_Drop_to_Pick + arcs_Drop_to_Sink + arcs_YT_to_Sink
-#     for _ in range(len(all_arcs)):
-#         all_arcs[_].index = _
 
-#     return all_arcs
