@@ -78,15 +78,23 @@ def solve(all_arcs, number_of_YT, number_of_Job):
     objective.SetMinimization()
 
     status = solver.Solve()
-    print("Number of arcs : " , len(all_arcs))
-    print()
+    # print("Number of arcs : " , len(all_arcs))
+    # print()
+
     if status == pywraplp.Solver.OPTIMAL:
-        print('Objective value =', solver.Objective().Value())
-        print()
+        objective_value = solver.Objective().Value()
+        activated_arcs = []
+        # print('Objective value =', solver.Objective().Value())
+        # print()
+
         for i in range(len(all_arcs)):
             if x[i].solution_value() > 0:
+                activated_arcs.append(all_arcs[i])
                 print(x[i].name(), ' = ', x[i].solution_value())
                 # index가 i인 아크의 i, j, k, path 출력
                 print(all_arcs[i].i, all_arcs[i].j, all_arcs[i].k, all_arcs[i].path)
     else:
         print('The problem does not have an optimal solution.')
+
+
+    return objective_value, activated_arcs
