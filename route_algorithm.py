@@ -7,21 +7,11 @@ def set_grid(input_grid):
     global grid
     grid = input_grid
 
-
-
-
 dx = [0, 1, 0, -1]
 dy = [1, 0, -1, 0]
 
 to_right = (0,1)
 
-# start, finish 위치 랜덤 생성 + 블럭위치에는 생성 안되게 + start, finish가 같지 않게
-# start = None
-# finish = None
-
-# while start is None or grid[start] == -1 or finish is None or grid[finish] == -1 or finish == start:
-#     start = (np.random.randint(9), np.random.randint(7))
-#     finish = (np.random.randint(9), np.random.randint(7))
 
 
 

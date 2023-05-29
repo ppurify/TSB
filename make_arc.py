@@ -147,7 +147,6 @@ def create_arcs(YT_locations, Job_locations, number_of_final_route, alpha1, alph
             for k in range(len(final_route_YT_to_Pick)):
                 arcname = 'YT' + str(i) + 'to' + 'Pick' + str(j) + 'path' + str(k)
                 arcname = arc(i=['YT', i], j=['Pick', j], k=k, path=final_route_YT_to_Pick[k], cost=None, index = now_index)
-                print('now index : ', now_index)
                 now_index += 1
                 arcs_YT_to_Pick.append(arcname)
 
