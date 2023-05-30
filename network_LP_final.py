@@ -10,6 +10,22 @@ def solve(all_arcs, number_of_YT, number_of_Job):
 
     inf = solver.infinity()
 
+    
+
+    # sort all_arcs by index
+    all_arcs.sort(key=lambda x: x.index)
+
+    # print('lenght of all_arcs : ', len(all_arcs))
+    # for i in range(len(all_arcs)):
+    #     print('i : ', all_arcs[i].i
+    #     , 'j : ', all_arcs[i].j
+    #     , 'k : ', all_arcs[i].k
+    #     , 'path : ', all_arcs[i].path
+    #     , 'cost : ', all_arcs[i].cost
+    #     , 'index : ', all_arcs[i].index)
+    #     print('')
+
+
     # Decision Variables
     x = np.empty(len(all_arcs), dtype=object)
     for i in range(len(all_arcs)):
@@ -40,6 +56,7 @@ def solve(all_arcs, number_of_YT, number_of_Job):
     for l in range(number_of_Job):
         list_for_const3_from_Pick = []
         list_for_const3_to_Pick = []
+
         list_for_const3_from_Drop = []
         list_for_const3_to_Drop = []
 
@@ -52,6 +69,13 @@ def solve(all_arcs, number_of_YT, number_of_Job):
                 list_for_const3_from_Drop.append(a.index)
             if a.j == ['Drop', l]:
                 list_for_const3_to_Drop.append(a.index)
+
+        # print('l : ', l)
+        # print('list_for_const3_from_Pick : ', list_for_const3_from_Pick)
+        # print('list_for_const3_to_Pick : ', list_for_const3_to_Pick)
+        # print('list_for_const3_from_Drop : ', list_for_const3_from_Drop)
+        # print('list_for_const3_to_Drop : ', list_for_const3_to_Drop)
+        # print('')
 
         solver.Add(sum(x[j] for j in list_for_const3_from_Pick) == sum(x[j] for j in list_for_const3_to_Pick))
         solver.Add(sum(x[j] for j in list_for_const3_from_Drop) == sum(x[j] for j in list_for_const3_to_Drop))
@@ -84,7 +108,7 @@ def solve(all_arcs, number_of_YT, number_of_Job):
     if status == pywraplp.Solver.OPTIMAL:
         objective_value = solver.Objective().Value()
         activated_arcs = []
-        # print('Objective value =', solver.Objective().Value())
+        print('Objective value =', solver.Objective().Value())
         # print()
 
         for i in range(len(all_arcs)):
@@ -92,7 +116,7 @@ def solve(all_arcs, number_of_YT, number_of_Job):
                 activated_arcs.append(all_arcs[i])
                 print(x[i].name(), ' = ', x[i].solution_value())
                 # index가 i인 아크의 i, j, k, path 출력
-                print(all_arcs[i].i, all_arcs[i].j, all_arcs[i].k, all_arcs[i].path)
+                print(all_arcs[i].i, all_arcs[i].j, all_arcs[i].k, all_arcs[i].path, all_arcs[i].cost, all_arcs[i].index)
     else:
         print('The problem does not have an optimal solution.')
 
