@@ -7,7 +7,7 @@ import route_algorithm as ra
 
 def main():
     # Parameter
-    YT_locations = {0 : (4,2), 1 : (8,0)}
+    YT_locations = {0 : (4,2), 1 : (8,0), 2: (5, 6)}
     Job_locations = {0 : [(2,4), (5,6)], 1 : [(4,2), (8,0)]}
     number_of_final_route = 3
     alpha1 = 0.4
@@ -121,9 +121,37 @@ def main():
                         arcs_for_YT_traverse.remove(arc)
                         break
 
-    # for v in YT_traversing_arc.values():
-    #     for arc in v:
-    #         print(arc.i, arc.j)
+    for v in YT_traversing_arc.values():
+        print('')
+        for arc in v:
+            print(arc.i, arc.j)
+
+    YT_traverse_path = {}
+
+    # YT_traversing_arc을 순회하며 key값은 그대로 가져오고 value값은 각 arc의 path를 이어붙인다.
+    for key, value in YT_traversing_arc.items():
+        path = []
+        # 1. path를 이어붙일때는 아크 간의 겹치는 좌표 한칸은 제거한다.
+        # 2. 중간중간 pick 혹은 drop 목적지 좌표를 pick_station 혹은 drop_station으로 따로 저장해준다.
+        for arc in value:
+            # 만약 path가 비어있으면
+            if path == []:
+                path.extend(arc.path)
+            else:
+                # path의 마지막 원소와 arc의 첫번째 원소가 겹치는지 확인
+                if path[-1] == arc.path[0]:
+                    path.extend(arc.path[1:])
+                else:
+                    path.extend(arc.path)
+                    
+        YT_traverse_path[key] = path
+
+    # print(YT_traversing_arc)
+
+    # YT_traversing_arc의 각 value를 구성하는 아크들의 path를 이어붙여서 YT_traversing_path를 만든다.
+    # 단 path를 이어붙일때는 아크 간의 겹치는 좌표 한칸은 제거한다.
+    # 
+    Job_traversing_arc = {}
 
 if __name__ == "__main__":
     main()

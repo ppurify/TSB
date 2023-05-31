@@ -114,9 +114,9 @@ def solve(all_arcs, number_of_YT, number_of_Job):
         for i in range(len(all_arcs)):
             if x[i].solution_value() > 0:
                 activated_arcs.append(all_arcs[i])
-                print(x[i].name(), ' = ', x[i].solution_value())
+                # print(x[i].name(), ' = ', x[i].solution_value())
                 # index가 i인 아크의 i, j, k, path 출력
-                print(all_arcs[i].i, all_arcs[i].j, all_arcs[i].k, all_arcs[i].path, all_arcs[i].cost, all_arcs[i].index)
+                # print(all_arcs[i].i, all_arcs[i].j, all_arcs[i].k, all_arcs[i].path, all_arcs[i].cost, all_arcs[i].index)
     else:
         print('The problem does not have an optimal solution.')
 
