@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import csv
 
 import make_arc
 import network_LP_final
@@ -159,15 +160,58 @@ def main():
 
 
     
-    /print('YT_traverse_path: ', YT_traverse_path)
+    print('YT_traverse_path: ', YT_traverse_path)
 
     # Unity simulation에 넘겨줄 csv파일 생성
     # 1. Trucks.csv : Truck의 id, Route id, pick station, drop station, ...
     # 2. RoutePoints.csv : Route id, x, y, z
-    
+        
+    tile_size = 75
 
     # 1. Trucks.csv
-    # 유니티 규격에 맞게 좌표를 수정해준다
+    # station에 좌표를 입력할때는 유니티 규격에 맞게 좌표를 수정해준다
+    Trucks = [['Truck_id', 'Route_id', 'Pick_station', 'Drop_station']]
+
+    for key, value in YT_traversing_arc.items():
+        # print('key: ', key)
+        # print('value: ', value)
+        if len(value) != 1:
+            # 해당 경로가 곧바로 sink노드로 가는 경로가 아니라면
+            temp_list = []
+            for arc in value:
+                # print('i : ', arc.i, 'j : ', arc.j)
+                # arc의 i가 YT라면
+                if arc.i[0] == 'YT':
+                    temp_list.append(arc.i[1])
+                    temp_list.append(arc.i[1])
+                # arc의 i가 Pick이라면
+                elif arc.i[0] == 'Pick':
+                    # 유니티 규격에 맞게 좌표를 수정
+                    x = ((len(grid)-1) - arc.path[0][0])*tile_size
+                    y = 0
+                    z = arc.path[0][1]*tile_size
+                    temp_list.append((x, y, z))
+
+                # arc의 j가 Drop이라면
+                if arc.j[0] == 'Drop':
+                    # 유니티 규격에 맞게 좌표를 수정
+                    x = ((len(grid)-1) - arc.path[-1][0])*tile_size
+                    y = 0
+                    z = arc.path[-1][1]*tile_size
+                    temp_list.append((x, y, z))
+
+            Trucks.append(temp_list)
+        
+
+    filename = 'Trucks.csv'
+    # 이중 리스트를 CSV 파일로 저장
+    with open(filename, mode='w', newline='') as file:
+        writer = csv.writer(file)
+        
+        # 이중 리스트의 각 행을 CSV 파일에 씁니다.
+        for row in Trucks:
+            writer.writerow(row)
+
 
 
 
@@ -181,18 +225,32 @@ def main():
         'z' : []
     }
 
-    tile_size = 75
+    
     for key, value in YT_traverse_path.items():
         # 해당 key의 value가 비어있지않다면
         if value != []:
             # x축 대칭, 가로세로 75배 확대
             for point in value:
                 RoutePoints['Route_id'].append(key[1])
-                RoutePoints['x'].append((len(grid) - point[0])*tile_size)
-                RoutePoints['y'].append()
+                RoutePoints['x'].append(((len(grid)-1) - point[0])*tile_size)
+                RoutePoints['y'].append(0)
                 RoutePoints['z'].append(point[1]*tile_size)
 
+    filename = 'RoutePoints.csv'
 
+    # 딕셔너리의 키를 CSV 파일의 헤더로 사용합니다.
+    header = list(RoutePoints.keys())
+
+    # CSV 파일을 쓰기 모드로 엽니다.
+    with open(filename, mode='w', newline='') as file:
+        writer = csv.writer(file)
+        
+        # 헤더를 CSV 파일에 씁니다.
+        writer.writerow(header)
+        
+        # 딕셔너리의 값을 한 줄씩 CSV 파일에 씁니다.
+        for row in zip(*RoutePoints.values()):
+            writer.writerow(row)
 
 
 
