@@ -19,34 +19,64 @@ def main():
         [2, -1, -1, -1, -1, -1, 2, -1, -1, -1, -1, -1, 2, -1, -1, -1, -1, -1, 2],
         [4, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2 ,3, 2, 2, 2, 2, 2, 4]
     ])
-
-    YT_locations = {}
-    Job_locations = {}
+    
+    # 3, 9, 15열이면서 블럭이 아닌 임의의 좌표에 YT, Job 생성
+    YT_locations = {0: (0, 15), 1: (0, 9), 2: (0, 15), 3: (8, 9), 4: (2, 3),
+                    5: (4, 9),6: (2, 9), 7: (6, 9), 8: (2, 9), 9: (6, 9),
+                    10: (8, 15), 11: (8, 9),12: (6, 9), 13: (4, 3), 14: (6, 3),
+                    15: (0, 3), 16: (2, 9), 17: (4, 9), 18: (0, 3), 19: (4, 15)}
+    
+    Job_locations = {0: [(2, 3), (6, 15)], 1: [(4, 3), (6, 3)], 2: [(2, 3), (0, 9)],
+                     3: [(8, 9), (0, 9)], 4: [(4, 15), (4, 9)], 5: [(0, 15), (2, 15)],
+                     6: [(2, 9), (6, 3)], 7: [(8, 9), (6, 3)], 8: [(0, 3), (8, 9)],
+                     9: [(4, 9), (4, 15)], 10: [(6, 15), (0, 15)], 11: [(6, 3), (2, 15)],
+                     12: [(4, 3), (2, 15)], 13: [(8, 9), (6, 9)], 14: [(0, 15), (2, 15)],
+                     15: [(4, 3), (8, 3)], 16: [(0, 15), (6, 15)], 17: [(8, 9), (0, 9)],
+                     18: [(8, 15), (2, 9)], 19: [(8, 15), (6, 15)]}
 
     # 스케줄링 대상 YT 생성
     number_of_YT = 20
-    number_of_Job = 30
+    number_of_Job = 20
+    
+    # 3, 9, 15열이면서 블럭이 아닌 임의의 좌표에 YT, Job 생성
+    # for i in range(number_of_YT):
+    #     YT_location = None
+    #     while YT_location is None or grid[YT_location] == -1 or YT_location[1] not in [3, 9, 15]:
+    #         YT_location = (np.random.randint(len(grid)), np.random.randint(len(grid[0])))
+    #     YT_locations[i] = YT_location
 
-    for i in range(number_of_YT):
-        YT_location = None
-        while YT_location is None or grid[YT_location] == -1:
-            YT_location = (np.random.randint(9), np.random.randint(7))
-        YT_locations[i] = YT_location
+    # for j in range(number_of_Job):
+    #     Pick_location = None
+    #     Drop_location = None
+    #     while Pick_location is None or grid[Pick_location] == -1 or Drop_location is None or grid[Drop_location] == -1 or Pick_location == Drop_location or Pick_location[1] not in [3, 9, 15] or Drop_location[1] not in [3, 9, 15]:
+    #         Pick_location = (np.random.randint(len(grid)), np.random.randint(len(grid[0])))
+    #         Drop_location = (np.random.randint(len(grid)), np.random.randint(len(grid[0])))
+    #     Job_locations[j] = [Pick_location, Drop_location]
+
+
+
+    # for i in range(number_of_YT):
+    #     YT_location = None
+    #     while YT_location is None or grid[YT_location] == -1:
+    #         YT_location = (np.random.randint(9), np.random.randint(7))
+    #     YT_locations[i] = YT_location
         
-    # 스케줄링 대상 작업 생성
-    for j in range(number_of_Job):
-        Pick_location = None
-        Drop_location = None
-        while Pick_location is None or grid[Pick_location] == -1 or Drop_location is None or grid[Drop_location] == -1 or Pick_location == Drop_location:
-            Pick_location = (np.random.randint(9), np.random.randint(7))
-            Drop_location = (np.random.randint(9), np.random.randint(7))
-        Job_locations[j] = [Pick_location, Drop_location]
+    # # 스케줄링 대상 작업 생성
+    # for j in range(number_of_Job):
+    #     Pick_location = None
+    #     Drop_location = None
+    #     while Pick_location is None or grid[Pick_location] == -1 or Drop_location is None or grid[Drop_location] == -1 or Pick_location == Drop_location:
+    #         Pick_location = (np.random.randint(9), np.random.randint(7))
+    #         Drop_location = (np.random.randint(9), np.random.randint(7))
+    #     Job_locations[j] = [Pick_location, Drop_location]
 
+    # print("YT_locations: ", YT_locations)
+    # print("Job_locations: ", Job_locations)
   
     number_of_final_route = 3
-    alpha1 = 0.4
-    alpha2 = 0.4
-    alpha3 = 0.3
+    alpha1 = 0.8
+    alpha2 = 0.1
+    alpha3 = 0.1
     prev_count = np.array([
         [4, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 4],
         [2, -1, -1, -1, -1, -1, 2, -1, -1, -1, -1, -1, 2, -1, -1, -1, -1, -1, 2],
@@ -116,7 +146,8 @@ def main():
     # print('activated_arcs: ', activated_arcs)
 
     # Create csv file for Unity simulation
-    make_csv.create_csv(activated_arcs, number_of_YT, grid)
+    YT_traversing_arc, YT_traverse_path, Trucks, RoutePoints = make_csv.create_csv(activated_arcs, number_of_YT, grid)
+
 
 if __name__ == "__main__":
     main()
