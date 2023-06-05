@@ -3,13 +3,46 @@ import pandas as pd
 import csv
 
 import make_arc
-import network_LP_final
+import network_LP
 import route_algorithm as ra
 import make_csv
 def main():
     # Parameter
-    YT_locations = {0 : (4,2), 1 : (8,0), 2: (5, 6)}
-    Job_locations = {0 : [(2,4), (5,6)], 1 : [(4,2), (8,0)]}
+    grid = np.array([
+        [4, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 4],
+        [2, -1, -1, -1, -1, -1, 2, -1, -1, -1, -1, -1, 2, -1, -1, -1, -1, -1, 2],
+        [4, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 4],
+        [2, -1, -1, -1, -1, -1, 2, -1, -1, -1, -1, -1, 2, -1, -1, -1, -1, -1, 2],
+        [4, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 4],
+        [2, -1, -1, -1, -1, -1, 2, -1, -1, -1, -1, -1, 2, -1, -1, -1, -1, -1, 2],
+        [4, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 4],
+        [2, -1, -1, -1, -1, -1, 2, -1, -1, -1, -1, -1, 2, -1, -1, -1, -1, -1, 2],
+        [4, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2 ,3, 2, 2, 2, 2, 2, 4]
+    ])
+
+    YT_locations = {}
+    Job_locations = {}
+
+    # 스케줄링 대상 YT 생성
+    number_of_YT = 20
+    number_of_Job = 30
+
+    for i in range(number_of_YT):
+        YT_location = None
+        while YT_location is None or grid[YT_location] == -1:
+            YT_location = (np.random.randint(9), np.random.randint(7))
+        YT_locations[i] = YT_location
+        
+    # 스케줄링 대상 작업 생성
+    for j in range(number_of_Job):
+        Pick_location = None
+        Drop_location = None
+        while Pick_location is None or grid[Pick_location] == -1 or Drop_location is None or grid[Drop_location] == -1 or Pick_location == Drop_location:
+            Pick_location = (np.random.randint(9), np.random.randint(7))
+            Drop_location = (np.random.randint(9), np.random.randint(7))
+        Job_locations[j] = [Pick_location, Drop_location]
+
+  
     number_of_final_route = 3
     alpha1 = 0.4
     alpha2 = 0.4
@@ -25,6 +58,11 @@ def main():
         [2, -1, -1, -1, -1, -1, 2, -1, -1, -1, -1, -1, 2, -1, -1, -1, -1, -1, 2],
         [4, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2 ,3, 2, 2, 2, 2, 2, 4]
     ])
+    now_count = np.zeros((len(grid), len(grid[0])))
+    ra.set_grid(grid)
+    
+    # YT_locations = {0 : (4,2), 1 : (8,0), 2: (5, 6)}
+    # Job_locations = {0 : [(2,4), (5,6)], 1 : [(4,2), (8,0)]}
 
     # grid = np.array([
     # [4, 2, 3, 2, 3, 2, 4],
@@ -38,39 +76,23 @@ def main():
     # [4, 2, 3, 2, 3, 2, 4],
     # ])
 
-    grid = np.array([
-        [4, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 4],
-        [2, -1, -1, -1, -1, -1, 2, -1, -1, -1, -1, -1, 2, -1, -1, -1, -1, -1, 2],
-        [4, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 4],
-        [2, -1, -1, -1, -1, -1, 2, -1, -1, -1, -1, -1, 2, -1, -1, -1, -1, -1, 2],
-        [4, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 4],
-        [2, -1, -1, -1, -1, -1, 2, -1, -1, -1, -1, -1, 2, -1, -1, -1, -1, -1, 2],
-        [4, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 4],
-        [2, -1, -1, -1, -1, -1, 2, -1, -1, -1, -1, -1, 2, -1, -1, -1, -1, -1, 2],
-        [4, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2 ,3, 2, 2, 2, 2, 2, 4]
-    ])
+    # grid = np.array([
+    #     [4, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 4],
+    #     [2, -1, -1, -1, -1, -1, 2, -1, -1, -1, -1, -1, 2, -1, -1, -1, -1, -1, 2],
+    #     [4, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 4],
+    #     [2, -1, -1, -1, -1, -1, 2, -1, -1, -1, -1, -1, 2, -1, -1, -1, -1, -1, 2],
+    #     [4, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 4],
+    #     [2, -1, -1, -1, -1, -1, 2, -1, -1, -1, -1, -1, 2, -1, -1, -1, -1, -1, 2],
+    #     [4, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 4],
+    #     [2, -1, -1, -1, -1, -1, 2, -1, -1, -1, -1, -1, 2, -1, -1, -1, -1, -1, 2],
+    #     [4, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2 ,3, 2, 2, 2, 2, 2, 4]
+    # ])
 
-    ra.set_grid(grid)
-    now_count = np.zeros((len(grid), len(grid[0])))
+    
 
-    number_of_YT = len(YT_locations)
-    number_of_Job = len(Job_locations)
+    # number_of_YT = len(YT_locations)
+    # number_of_Job = len(Job_locations)
 
-    # # 스케줄링 대상 YT 생성
-    # for i in range(number_of_YT):
-    #     YT_location = None
-    #     while YT_location is None or grid[YT_location] == -1:
-    #         YT_location = (np.random.randint(9), np.random.randint(7))
-    #     YT_locations[i] = YT_location
-        
-    # # 스케줄링 대상 작업 생성
-    # for j in range(number_of_job):
-    #     Pick_location = None
-    #     Drop_location = None
-    #     while Pick_location is None or grid[Pick_location] == -1 or Drop_location is None or grid[Drop_location] == -1 or Pick_location == Drop_location:
-    #         Pick_location = (np.random.randint(9), np.random.randint(7))
-    #         Drop_location = (np.random.randint(9), np.random.randint(7))
-    #     Job_locations[j] = [Pick_location, Drop_location]
 
     # Create arcs
     arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink, now_count = make_arc.create_arcs(
@@ -87,12 +109,13 @@ def main():
 
     all_arcs = arcs_YT_to_Pick + arcs_Pick_to_Drop + arcs_Drop_to_Pick + arcs_Drop_to_Sink + arcs_YT_to_Sink
 
-    # Run network_LP_final
-    objective_value, activated_arcs = network_LP_final.solve(all_arcs, number_of_YT, number_of_Job)
+    # Run network_LP
+    objective_value, activated_arcs = network_LP.solve(all_arcs, number_of_YT, number_of_Job)
     
     # print('objective_value: ', objective_value)
     # print('activated_arcs: ', activated_arcs)
 
+    # Create csv file for Unity simulation
     make_csv.create_csv(activated_arcs, number_of_YT, grid)
 
 if __name__ == "__main__":
