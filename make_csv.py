@@ -29,10 +29,10 @@ def create_csv(activated_arcs, number_of_YT, grid):
                         arcs_for_YT_traverse.remove(arc)
                         break
 
-    for v in YT_traversing_arc.values():
-        print('')
-        for arc in v:
-            print(arc.i, arc.j)
+    # for v in YT_traversing_arc.values():
+    #     print('')
+    #     for arc in v:
+    #         print(arc.i, arc.j)
 
     YT_traverse_path = {}
 
