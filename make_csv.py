@@ -1,6 +1,6 @@
 import csv
 
-def create_csv(activated_arcs, number_of_YT, grid):
+def create_csv(activated_arcs, number_of_YT, grid, filename_Truck, filename_RoutePoints):
     # 각 YT들이 어떤 경로로 이동하는지 저장하는 dictionary
     YT_traversing_arc = {}
 
@@ -112,7 +112,7 @@ def create_csv(activated_arcs, number_of_YT, grid):
 
             Trucks.append(temp_list)
         
-    filename = 'Trucks.csv'
+    filename = filename_Truck
     # 이중 리스트를 CSV 파일로 저장
     with open(filename, mode='w', newline='') as file:
         writer = csv.writer(file)
@@ -141,7 +141,7 @@ def create_csv(activated_arcs, number_of_YT, grid):
                 RoutePoints['y'].append(0)
                 RoutePoints['z'].append(((len(grid)-1) - point[0])*tile_size)
 
-    filename = 'RoutePoints.csv'
+    filename = filename_RoutePoints
 
     # 딕셔너리의 키를 CSV 파일의 헤더로 사용합니다.
     header = list(RoutePoints.keys())
