@@ -101,10 +101,12 @@ def sort_and_cost(arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Dr
         for j in range(len(arcs_Drop_to_Pick[i].path)):
             now_count[(arcs_Drop_to_Pick[i].path[j][0], arcs_Drop_to_Pick[i].path[j][1])] += 1
 
+    # Drop_to_Sink의 아크들의 cost 계산
     for i in range(len(arcs_Drop_to_Sink)):
         # cost 계산
         arcs_Drop_to_Sink[i].cost = 0
 
+    # YT_to_Sink의 아크들의 cost 계산
     for i in range(len(arcs_YT_to_Sink)):
         # cost 계산
         arcs_YT_to_Sink[i].cost = 0
@@ -137,7 +139,7 @@ def create_arcs(YT_locations, Job_locations, number_of_final_route, alpha1, alph
             # 모든 경우의 경로 탐색
             route_YT_to_Pick = ra.move(YT_location, Pick_location, grid, path_YT_to_Pick, route_YT_to_Pick)
 
-            # 경로 수가 3개보다 많으면 패널티 함수 통해 3개로 줄이기
+            # 경로 수가 number_of_final_route개보다 많으면 패널티 함수 통해 number_of_final_route개로 줄이기
             if len(route_YT_to_Pick) > number_of_final_route:
                 final_route_YT_to_Pick = penalty(prev_count, route_YT_to_Pick, number_of_final_route, alpha1=alpha1, alpha3=alpha3)
             else:
