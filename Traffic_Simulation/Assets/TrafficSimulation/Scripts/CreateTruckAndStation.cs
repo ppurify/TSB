@@ -9,8 +9,8 @@ namespace TrafficSimulation{
     public class CreateTruckAndStation : MonoBehaviour
     {
 
-        private string truckFilePath = "C:\\Users\\USER\\workspace\\Truck_50_shortest.csv";
-
+        private string truckFilePath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\Truck_50_shortest.csv";
+        
         public static List<CreateTruckData> truckDataList = new List<CreateTruckData>();
 
         private static float truckRotation_y;
