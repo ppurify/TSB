@@ -30,15 +30,15 @@ namespace TrafficSimulation{
         public float short_slowingTime = 1.5f;
         public float long_slowingTime = 5f;
 
-        public float moveDelay = 1f;
+        // public float moveDelay = 3f;
         public float processTime = 10f;
 
 
         private Vector3 originalPos;
         
         private float toStationNum = 25f;
-        private float checkRange_1 = 15f;
-        private float checkRange_2 = 1f;
+        private float checkRange_1 = 20f;
+        private float checkRange_2 = 2f;
         // 현재 유턴 횟수
         [SerializeField] private int nowTurnNum;
         // public int turnNum;
@@ -118,7 +118,7 @@ namespace TrafficSimulation{
                 if((vehicleRotationY >= 0 - bias && vehicleRotationY <= 0 + bias)|| (vehicleRotationY >= 360 - bias && vehicleRotationY <= 360 + bias))
                 {
                     vehicle.transform.position = nowPos + new Vector3(0f, 0f, move);
-                    UnityEngine.Debug.Log(vehicle.name + " Move up side");
+                    // UnityEngine.Debug.Log(vehicle.name + " Move up side");
                     if(thisVehicleAI.vehicleStatus == Status.GO)
                     {
                         vehicle.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
@@ -129,7 +129,7 @@ namespace TrafficSimulation{
                 else if((vehicleRotationY >= 180 - bias && vehicleRotationY <= 180 + bias) || (vehicleRotationY >= -180 - bias && vehicleRotationY <= -180 + bias))
                 {
                     vehicle.transform.position = nowPos + new Vector3(0f, 0f, -move);
-                    UnityEngine.Debug.Log(vehicle.name + " Move down side");
+                    // UnityEngine.Debug.Log(vehicle.name + " Move down side");
                     if(thisVehicleAI.vehicleStatus == Status.GO)
                     {
                         vehicle.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
@@ -140,7 +140,7 @@ namespace TrafficSimulation{
                 else if((vehicleRotationY >= 90 - bias && vehicleRotationY <= 90 + bias) || (vehicleRotationY >= -270 - bias && vehicleRotationY <= -270 + bias))
                 {
                     vehicle.transform.position = nowPos + new Vector3(move, 0f, 0f);
-                    UnityEngine.Debug.Log(vehicle.name + " Move right side");
+                    // UnityEngine.Debug.Log(vehicle.name + " Move right side");
                     if(thisVehicleAI.vehicleStatus == Status.GO)
                     {
                         vehicle.transform.rotation = Quaternion.Euler(0f, 90f, 0f);
@@ -151,7 +151,7 @@ namespace TrafficSimulation{
                 else if((vehicleRotationY >= -90 - bias && vehicleRotationY <= -90 + bias) || (vehicleRotationY >= 270 - bias && vehicleRotationY <= 270 + bias))
                 {
                     vehicle.transform.position = nowPos + new Vector3(-move, 0f, 0f);
-                    UnityEngine.Debug.Log(vehicle.name + " Move left side");
+                    // UnityEngine.Debug.Log(vehicle.name + " Move left side");
                     if(thisVehicleAI.vehicleStatus == Status.GO)
                     {
                         vehicle.transform.rotation = Quaternion.Euler(0f, -90f, 0f);
@@ -199,6 +199,9 @@ namespace TrafficSimulation{
                         StartCoroutine(ReduceSpeed(vehicle, short_slowingTime));
                         thisVehicleAI.vehicleStatus = Status.STOP;
                         nowStatus = NowStatus.WAITING;
+
+                        StartCoroutine(AgainCheck(checkDelay, 15f, 3f));
+                        
                     }
 
                     else
@@ -221,6 +224,8 @@ namespace TrafficSimulation{
                         StartCoroutine(ReduceSpeed(vehicle, short_slowingTime));
                         thisVehicleAI.vehicleStatus = Status.STOP;
                         nowStatus = NowStatus.WAITING;
+
+                        StartCoroutine(AgainCheck(checkDelay, 15f, 3f));
                     }
 
                     else
@@ -414,6 +419,7 @@ namespace TrafficSimulation{
             // 작업이 끝나면 주변에 트럭이 있는지 확인
             while(ExistAnyTruck(originalPos, checkRange_1, checkRange_2))
             {   
+                UnityEngine.Debug.Log(this.name + " can't go to next station, has to wait ! ");
                 yield return new WaitForSeconds(checkDelay);
             }
 
@@ -534,6 +540,19 @@ namespace TrafficSimulation{
             rb.velocity = Vector3.zero; // Ensure velocity is set to zero
         }
 
+        private IEnumerator AgainCheck(float _checkDelay, float _checkRange_1, float _checkRange_2)
+        {
+            UnityEngine.Debug.Log(this.name + " Check Delay");
+            // 작업이 끝나면 주변에 트럭이 있는지 확인
+            while(ExistAnyTruck(vehicle.transform.position, _checkRange_1, _checkRange_2))
+            {   
+                UnityEngine.Debug.Log(this.name + " can't go to next station, has to wait ! ");
+                yield return new WaitForSeconds(_checkDelay);
+            }
+
+            thisVehicleAI.vehicleStatus = Status.GO;
+            nowStatus = NowStatus.NONE;
+        }
 
         private bool ExistAnyTruck(Vector3 _position, float _checkRange_1, float _checkRange_2)
         {   

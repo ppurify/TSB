@@ -11,7 +11,7 @@ namespace TrafficSimulation{
 
         // private string truckFilePath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\Truck_50_shortest.csv";
         private static string folderPath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\";
-        public static string truckFileName = "Truck_30_shortest.csv";
+        public static string truckFileName = "Truck_50_shortest.csv";
         private static string truckFilePath = Path.Combine(folderPath, truckFileName);
 
         public static List<CreateTruckData> truckDataList = new List<CreateTruckData>();
@@ -322,9 +322,9 @@ namespace TrafficSimulation{
         private void CreateTruck(string _truckName, string _routeName, List<Vector3> _workStaions)
         {
             // Generate a random number between 1 and 4 (inclusive)
-            int randomNumber = UnityEngine.Random.Range(1, 5);
-            string truckPrefabName = "Truck" + randomNumber.ToString();
-            // string truckPrefabName = "Truck1";
+            // int randomNumber = UnityEngine.Random.Range(1, 5);
+            // string truckPrefabName = "Truck" + randomNumber.ToString();
+            string truckPrefabName = "Truck5";
    
             GameObject truckPrefab = Resources.Load(truckPrefabName) as GameObject;
 
