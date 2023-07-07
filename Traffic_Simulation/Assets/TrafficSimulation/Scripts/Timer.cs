@@ -11,7 +11,7 @@ namespace TrafficSimulation{
     {
         // 파일 저장 위치
         public static string csvFileName;
-        public string filePath = "Assets/Results/result-" + csvFileName + ".csv";
+        public string filePath = "Assets/Results/result-" + csvFileName;
 
         public void SaveToCSV(string _filePath, string _truckName, string _routeName, Vector3 _origin, Vector3 _destination, float _totalTime, List<float> _arrivalTimeList)
         {

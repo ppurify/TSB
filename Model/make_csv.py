@@ -76,7 +76,7 @@ def create_csv(activated_arcs, number_of_YT, grid, filename_Truck, filename_Rout
     # 1. Trucks.csv : Truck의 id, Route id, pick station, drop station, ...
     # 2. RoutePoints.csv : Route id, x, y, z
         
-    tile_size = 75
+    tile_size = 25
 
     # 1. Trucks.csv
     # station에 좌표를 입력할때는 유니티 규격에 맞게 좌표를 수정해준다
