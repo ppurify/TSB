@@ -38,7 +38,7 @@ namespace TrafficSimulation{
         
         private float toStationNum = 25f;
         private float checkRange_1 = 20f;
-        private float checkRange_2 = 2f;
+        private float checkRange_2 = 3f;
         // 현재 유턴 횟수
         [SerializeField] private int nowTurnNum;
         // public int turnNum;
@@ -52,7 +52,8 @@ namespace TrafficSimulation{
         private int nowStation_FinishedVehicle_toRight;
 
         // To check Station's Status
-        private float checkDelay = 0.1f; 
+        // private float checkDelay = 0.1f; 
+        private float checkDelay = 1f; 
 
         private Timer truckTimer;
         private Stopwatch truckTotalWatch;
@@ -419,7 +420,7 @@ namespace TrafficSimulation{
             // 작업이 끝나면 주변에 트럭이 있는지 확인
             while(ExistAnyTruck(originalPos, checkRange_1, checkRange_2))
             {   
-                UnityEngine.Debug.Log(this.name + " can't go to next station, has to wait ! ");
+                UnityEngine.Debug.Log(this.name + " can't go to next station, has to wait ! -- MoveToOriginalPos Method ");
                 yield return new WaitForSeconds(checkDelay);
             }
 
@@ -554,33 +555,49 @@ namespace TrafficSimulation{
             nowStatus = NowStatus.NONE;
         }
 
+        // private bool ExistAnyTruck(Vector3 _position, float _checkRange_1, float _checkRange_2)
+        // {   
+        //     // // Perform a raycast to check for vehicles on both sides
+        //     // bool rightSide = CheckRaycast(_position, Vector3.right, _checkRange);
+        //     // bool leftSide = CheckRaycast(_position, Vector3.left, _checkRange);
+
+        //     // Perform a raycast to check for vehicles on both sides
+        //     bool rightSide = CheckRaycast(_position, new Vector3(1f, 0f, 0f), _checkRange_1);
+        //     bool leftSide = CheckRaycast(_position, new Vector3(-1f, 0f, 0f), _checkRange_1);
+        //     bool forwardSide = CheckRaycast(_position, new Vector3(0f, 0f, 1f), _checkRange_2);
+        //     bool backwardSide = CheckRaycast(_position, new Vector3(0f, 0f, -1f), _checkRange_2);
+
+        //     return rightSide || leftSide || forwardSide || backwardSide;
+
+        //     // return rightSide || leftSide;
+        // }
+
+
+        // private bool CheckRaycast(Vector3 _position, Vector3 _direction, float _range)
+        // {
+        //     // Perform a raycast in the specified direction
+        //     RaycastHit hit;
+        //     if (Physics.Raycast(_position, _direction, out hit, _range))
+        //     {   
+        //         return true;
+        //     }
+
+        //     return false;
+        // }
+
         private bool ExistAnyTruck(Vector3 _position, float _checkRange_1, float _checkRange_2)
-        {   
-            // // Perform a raycast to check for vehicles on both sides
-            // bool rightSide = CheckRaycast(_position, Vector3.right, _checkRange);
-            // bool leftSide = CheckRaycast(_position, Vector3.left, _checkRange);
-
-            // Perform a raycast to check for vehicles on both sides
-            bool rightSide = CheckRaycast(_position, new Vector3(1f, 0f, 0f), _checkRange_1);
-            bool leftSide = CheckRaycast(_position, new Vector3(-1f, 0f, 0f), _checkRange_1);
-            bool forwardSide = CheckRaycast(_position, new Vector3(0f, 0f, 1f), _checkRange_2);
-            bool backwardSide = CheckRaycast(_position, new Vector3(0f, 0f, -1f), _checkRange_2);
-
-            return rightSide || leftSide || forwardSide || backwardSide;
-
-            // return rightSide || leftSide;
-        }
-
-
-        private bool CheckRaycast(Vector3 _position, Vector3 _direction, float _range)
         {
-            // Perform a raycast in the specified direction
-            RaycastHit hit;
-            if (Physics.Raycast(_position, _direction, out hit, _range))
-            {   
-                return true;
+            Collider[] colliders = Physics.OverlapSphere(_position, Mathf.Max(_checkRange_1, _checkRange_2));
+            
+            foreach (Collider collider in colliders)
+            {
+                if (collider.CompareTag("AutonomousVehicle"))
+                {
+                    UnityEngine.Debug.Log("Truck detected: " + collider.gameObject.name);
+                    return true;
+                }
             }
-
+            
             return false;
         }
 

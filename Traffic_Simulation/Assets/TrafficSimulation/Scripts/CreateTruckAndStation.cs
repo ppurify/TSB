@@ -324,7 +324,7 @@ namespace TrafficSimulation{
             // Generate a random number between 1 and 4 (inclusive)
             // int randomNumber = UnityEngine.Random.Range(1, 5);
             // string truckPrefabName = "Truck" + randomNumber.ToString();
-            string truckPrefabName = "Truck5";
+            string truckPrefabName = "Truck6";
    
             GameObject truckPrefab = Resources.Load(truckPrefabName) as GameObject;
 

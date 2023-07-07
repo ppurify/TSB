@@ -1,3 +1,0 @@
-Truck_id, Route_id, Origin, Destination, Total Time, Arrival Time
-Truck-1,Route-1,(225.0 0.0 -7.5),(675.0 0.0 0.0),54.699,0,44.694
-Truck-1,Route-1,(225.0 0.0 -7.5),(675.0 0.0 0.0),58.428,0,48.424
