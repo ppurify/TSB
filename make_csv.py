@@ -14,21 +14,34 @@ def create_csv(activated_arcs, number_of_YT, grid, filename_Truck, filename_Rout
                 YT_traversing_arc[tuple(arc.i)] = [arc]
                 arcs_for_YT_traverse.remove(arc)
                 break
+    
+    # # YT_traversing_arc의 각 key,value 출력
+    # for i in range(len(YT_traversing_arc)):
+    #     print('YT_traversing_arc[', i, ']: ', YT_traversing_arc[tuple(['YT', i])])
 
-
+    # print('YT_traversing_arc: ', YT_traversing_arc)
     # arcs_for_YT_traverse에 원소가 남아있는 동안
     while arcs_for_YT_traverse != []:
+        # print('length of arcs_for_YT_traverse: ', len(arcs_for_YT_traverse))
+        # for i in range(len(arcs_for_YT_traverse)):
+            # 각 아크 정보 print
+            # print('i', arcs_for_YT_traverse[i].i)
+            # print('j', arcs_for_YT_traverse[i].j)
+        # print('arcs_for_YT_traverse: ', arcs_for_YT_traverse)
         for arc in arcs_for_YT_traverse:
+            # print('arc: ', arc.i, arc.j)
                 # YT_traversing_arc의 모든 value를 돌면서
             for values in YT_traversing_arc.values():
+                # print('values: ', values)
                 for value in values:
+                    # print('value: ', value.i, value.j)
                     # 만약 arc의 i가 value의 j와 같다면
                     if arc.i == value.j:
                         # 해당 value 뒤에 해당 arc를 추가
                         values.append(arc)
                         arcs_for_YT_traverse.remove(arc)
                         break
-
+    # print('YT_traversing_arc: ', YT_traversing_arc)
     # for v in YT_traversing_arc.values():
     #     print('')
     #     for arc in v:
