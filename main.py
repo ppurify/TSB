@@ -56,7 +56,8 @@ def main():
     # print("Job_locations =", Job_locations)
 
 
-    number_of_final_route = 10
+    number_of_final_route = 3
+
     alpha1 = 0 # prev counter
     alpha2 = 0 # now counter
     alpha3 = 1 # distance

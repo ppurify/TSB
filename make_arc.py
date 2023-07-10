@@ -53,6 +53,7 @@ def sort_and_cost(arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Dr
     # A1
     arcs_YT_to_Pick.sort(key=lambda x: len(x.path))
     calculate_cost(arcs_YT_to_Pick, alpha1, alpha2, alpha3)
+    # TO DO : now count 초기화, 새 변수 만들어서 하는게 나을듯?
     # A2
     arcs_Pick_to_Drop.sort(key=lambda x: len(x.path))
     calculate_cost(arcs_Pick_to_Drop, 0, alpha2, alpha3)
@@ -95,22 +96,30 @@ def create_arcs(YT_locations, Job_locations, number_of_final_route, alpha1, alph
             
         return final_routes
 
-    def generate_arcs(i, j, k, path, now_index, arc_list):
-        """경로를 받아서 아크 생성"""
-        arcname = 'YT' + str(i) + 'to' + 'Pick' + str(j) + 'path' + str(k)
-        arcname = arc(i=['YT', i], j=['Pick', j], k=k, path=path, cost=None, index = now_index)
-        # print('arcname : ',arcname)
-        # print('i : ',i)
-        # print('j : ',j)
-        # print('k : ',k)
-        # print('path : ',path)
-        # print('now_index : ',now_index)
-        # print('')
+    # def generate_arcs(i, j, k, path, now_index, arc_list):
+    #     """경로를 받아서 아크 생성"""
+    #     arcname = 'YT' + str(i) + 'to' + 'Pick' + str(j) + 'path' + str(k)
+    #     arcname = arc(i=['YT', i], j=['Pick', j], k=k, path=path, cost=None, index = now_index)
+    #     # print('arcname : ',arcname)
+    #     # print('i : ',i)
+    #     # print('j : ',j)
+    #     # print('k : ',k)
+    #     # print('path : ',path)
+    #     # print('now_index : ',now_index)
+    #     # print('')
 
-        now_index += 1
-        arc_list.append(arcname)
+    #     now_index += 1
+    #     arc_list.append(arcname)
 
-        return arc_list
+    #     # return arc_list
+
+    # def generate_arcs(i, j, k, path, now_index, arcs_list):
+    #     """i, j, k에 해당하는 정보를 가진 아크 객체 생성하여 arcs_list에 추가"""
+    #     arcname = 'YT' + str(i) + 'to' + 'Pick' + str(j) + 'path' + str(k)
+    #     arcname = arc(i=['YT', i], j=['Pick', j], k=k, path=path, cost=None, index=now_index)
+    #     now_index += 1
+    #     arcs_list.append(arcname)
+    #     return arcs_list
 
 
     # 1. YT -> Pick 경로, 아크 생성
@@ -118,27 +127,31 @@ def create_arcs(YT_locations, Job_locations, number_of_final_route, alpha1, alph
         for j in range(len(Job_locations)):
             route_YT_to_Pick = generate_routes(YT_locations[i], Job_locations[j][0])
 
+            # for i in range(len(route_YT_to_Pick)):
+            #     print('route_YT_to_Pick : ',route_YT_to_Pick[i])
+
+
             # 경로 1개당 arc 객체 생성
             for k in range(len(route_YT_to_Pick)):
-                arcs_YT_to_Pick = generate_arcs(i, j, k, route_YT_to_Pick[k], now_index, arcs_YT_to_Pick)
-                
-                # arcname = 'YT' + str(i) + 'to' + 'Pick' + str(j) + 'path' + str(k)
-                # arcname = arc(i=['YT', i], j=['Pick', j], k=k, path=route_YT_to_Pick[k], cost=None, index = now_index)
-                # now_index += 1
-                # arcs_YT_to_Pick.append(arcname)
+                # generate_arcs(i, j, k, route_YT_to_Pick[k], now_index, arcs_YT_to_Pick)
+                # print('arcs_YT_to_Pick : ',arcs_YT_to_Pick)
+                arcname = 'YT' + str(i) + 'to' + 'Pick' + str(j) + 'path' + str(k)
+                arcname = arc(i=['YT', i], j=['Pick', j], k=k, path=route_YT_to_Pick[k], cost=None, index = now_index)
+                now_index += 1
+                arcs_YT_to_Pick.append(arcname)
 
 
     # 2. Pick -> Drop 경로, 아크 생성
     for j in range(len(Job_locations)):
         route_Pick_to_Drop = generate_routes(Job_locations[j][0], Job_locations[j][1])
-        
+ 
         # 경로 1개당 arc 객체 생성(Pick -> Drop)
         for k in range(len(route_Pick_to_Drop)):
-            arcs_Pick_to_Drop = generate_arcs(j, j, k, route_Pick_to_Drop[k], now_index, arcs_Pick_to_Drop)
-            # arcname = 'Pick' + str(j) + 'to' + 'Drop' + str(j) + 'path' + str(k)
-            # arcname = arc(i=['Pick', j], j=['Drop', j], k=k, path=route_Pick_to_Drop[k], cost=None, index=now_index)
-            # now_index += 1
-            # arcs_Pick_to_Drop.append(arcname)
+            # arcs_Pick_to_Drop = generate_arcs(j, j, k, route_Pick_to_Drop[k], now_index, arcs_Pick_to_Drop)
+            arcname = 'Pick' + str(j) + 'to' + 'Drop' + str(j) + 'path' + str(k)
+            arcname = arc(i=['Pick', j], j=['Drop', j], k=k, path=route_Pick_to_Drop[k], cost=None, index=now_index)
+            now_index += 1
+            arcs_Pick_to_Drop.append(arcname)
 
 
     # 3. Drop -> 다른 Job의 Pick 경로, 아크 생성
