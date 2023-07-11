@@ -11,7 +11,7 @@ namespace TrafficSimulation{
 
         // private string truckFilePath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\Truck_50_shortest.csv";
         private static string folderPath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\";
-        public static string truckFileName = "Truck_50_shortest.csv";
+        public static string truckFileName = "Test-Truck.csv";
         private static string truckFilePath = Path.Combine(folderPath, truckFileName);
 
         public static List<CreateTruckData> truckDataList = new List<CreateTruckData>();
@@ -19,7 +19,11 @@ namespace TrafficSimulation{
         private static float truckRotation_y;
 
         // Station Parameters
-        private static Vector3 stationSize = new Vector3(75,10,30);
+        // 1. tile 75
+        // private static Vector3 stationSize = new Vector3(75,10,30);
+        // 2. tile 30
+        private static Vector3 stationSize = new Vector3(50,10,25);
+
         private static float stationPos_y = stationSize.y/2;
         private string stationTagName = "Station";
 
@@ -156,6 +160,7 @@ namespace TrafficSimulation{
                 }
             }
 
+            Debug.Log(routeName + " --> Truck Rotation: " + truckRotation_y);
             return truckRotation_y;
         }
 
@@ -373,12 +378,12 @@ namespace TrafficSimulation{
             int duplivatedTruckCount = 0;
 
             foreach (Tuple<string, string, List<Vector3>> value in _values)
-            {
+            {   
                 string truckName = value.Item1;
                 string routeName = value.Item2;
                 List<Vector3> truckWorkStations = value.Item3;
                 CreateTruck(truckName, routeName, truckWorkStations);
-
+                Debug.Log(truckName + " has duplicated position.");
                 if(duplivatedTruckCount > 0)
                 {
                     GameObject waitedTruck = GameObject.Find(truckName);
