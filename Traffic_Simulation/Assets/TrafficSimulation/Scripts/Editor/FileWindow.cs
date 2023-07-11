@@ -8,18 +8,29 @@ using System;
 namespace TrafficSimulation {    
     public class FileWindow : EditorWindow
     {   
-        private static string routefilePath;
-        private static string intersectionfilePath = "C:\\Users\\USER\\workspace\\intersectionPoints.csv";
+        private static string routefilePath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\Test-Route.csv";
+        // private static string intersectionfilePath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\intersectionPoints.csv";
+        private static string intersectionfilePath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\intersectionPoints - tile30.csv";
 
         private static TrafficSystem wps;
 
+
         // Intersection Collider Parameters
         private static List<Vector3> intersections = new List<Vector3>();
-        private static Vector3 intersectionSize = new Vector3(80,10,80);
+        // 1. tile 75
+        // private static Vector3 intersectionSize = new Vector3(80,10,80);
+        // 2. tile 38    
+        private static Vector3 intersectionSize = new Vector3(50,10,50);
+
         private static float intersectionPos_y = intersectionSize.y/2;
 
+
         // Station Collider Parameters
-        private static Vector3 placeSize = new Vector3(20,10,10);
+        // 1. tile 75
+        // private static Vector3 placeSize = new Vector3(20,10,10);
+        // 2. tile 38        
+        private static Vector3 placeSize = new Vector3(5,5,5);
+
         private static float placePos_y = placeSize.y/2;
         
         // Route Parameters
@@ -30,11 +41,19 @@ namespace TrafficSimulation {
         private static Vector3 newPoint;
         
         // Corner Positions
-        private static List<Vector3> cornerPositions = new List<Vector3>{new Vector3(0,0,0), new Vector3(1350,0,0), new Vector3(1350,0,600), new Vector3(0,0,600)};
+        // 1. tile 75
+        // private static List<Vector3> cornerPositions = new List<Vector3>{new Vector3(0,0,0), new Vector3(1800,0,0), new Vector3(1800,0,600), new Vector3(0,0,600)};
+        // 2. tile 30
+        private static List<Vector3> cornerPositions = new List<Vector3>{new Vector3(0,0,0), new Vector3(1800,0,0), new Vector3(1800,0,600), new Vector3(0,0,600)};
+
+        // private static List<Vector3> cornerPositions = new List<Vector3>{new Vector3(0,0,0), new Vector3(900,0,0), new Vector3(900,0,300), new Vector3(0,0,300)};
+
         
         // private static List<Vector3> checkingRotateList;
         private static bool isRotate;        
         private static Vector3 newRoPoint;
+
+        
         // ChangeToRotate Parameters
         private static float x1;
         private static float x2;
@@ -45,6 +64,11 @@ namespace TrafficSimulation {
         private static float z2;
         private static float z3;
         private static float z4;
+
+        // 1. tile 75
+        // private static float routeMoveScale = 7.5f;
+        // 2. tile 38
+        private static float routeMoveScale = 5.5f;
 
 
         
@@ -67,7 +91,7 @@ namespace TrafficSimulation {
                 routefilePath = EditorUtility.OpenFilePanel("Select File", "", "");
                 if(routefilePath != "")
                 {
-                    Debug.Log("Selected file path: " + routefilePath);
+                    // Debug.Log("Selected file path: " + routefilePath);
                 }
             }
             GUILayout.Label("File Path: " + routefilePath);
@@ -79,7 +103,7 @@ namespace TrafficSimulation {
                 intersectionfilePath = EditorUtility.OpenFilePanel("Select File", "", "");
                 if(intersectionfilePath != "")
                 {
-                    Debug.Log("Selected file path: " + intersectionfilePath);
+                    // Debug.Log("Selected file path: " + intersectionfilePath);
                 }
             }
             GUILayout.Label("File Path: " + intersectionfilePath);
@@ -93,6 +117,8 @@ namespace TrafficSimulation {
             GUILayout.Label("Route Count : " + routes.Count, GUILayout.Width(150));
             GUILayout.Space(10);
             GUILayout.Label("Intersection Count : " + intersections.Count, GUILayout.Width(150));
+            GUILayout.Space(60);
+            GUILayout.Label("Corners Count : " + cornerPositions.Count, GUILayout.Width(150));
             EditorGUILayout.EndHorizontal();
 
 
@@ -159,6 +185,10 @@ namespace TrafficSimulation {
                 intersections.Clear();
             }
             GUILayout.Space(10);
+            if(GUILayout.Button("Reset Corners", GUILayout.Width(200)))
+            {
+                cornerPositions.Clear();
+            }
             
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.Space(10);
@@ -170,7 +200,7 @@ namespace TrafficSimulation {
             {
                 if(routefilePath != null && intersectionfilePath != null)
                 {
-                    CreateAll(routefilePath, intersectionfilePath, routes, intersections);
+                    CreateAll(routefilePath, intersectionfilePath, routes, intersections, cornerPositions);
                 }
 
                 else
@@ -203,8 +233,158 @@ namespace TrafficSimulation {
             bool isExist = coordinateList.Contains(nowPo) && (case_1 || case_2);
             return isExist;
         }
+        
+        // // 1. tile 75
+        // private static List<Vector3> ChangeToRotate(Vector3 previousPoint, Vector3 nowPoint, Vector3 nextPoint)
+        // {   
+        //     float nowPoint_x = nowPoint.x;
+        //     float nowPoint_z = nowPoint.z;
 
-        private static List<Vector3> ChangeToRotate(Vector3 previousPoint, Vector3 nowPoint, Vector3 nextPoint)
+        //     float axis_x_pre_now = previousPoint.x - nowPoint_x;
+        //     float axis_x_next_now = nextPoint.x - nowPoint_x;
+
+        //     float axis_z_pre_now = previousPoint.z - nowPoint_z;
+        //     float axis_z_next_now = nextPoint.z - nowPoint_z;
+
+        //     List<Vector3> rotatePoints = new List<Vector3>();
+
+        //     float Num_1 = 2f;
+        //     float Num_2 = 12f;
+        //     float Num_3 = 40f;
+            
+        //     if(axis_x_pre_now == 0 && axis_z_next_now == 0)
+        //     {   
+        //         if(axis_z_pre_now > 0)
+        //         {
+        //             // Down Right (ㄴ 모양)
+        //             if(axis_x_next_now < 0)
+        //             {
+        //                 x2 = nowPoint_x - Num_1;
+        //                 x3 = nowPoint_x - Num_2;
+        //                 x4 = nowPoint_x - Num_3;
+
+        //             }
+
+        //             // Down Left (ㄴ 모양)
+        //             else if(axis_x_next_now > 0)
+        //             {                        
+        //                 x2 = nowPoint_x + Num_1;
+        //                 x3 = nowPoint_x + Num_2;
+        //                 x4 = nowPoint_x + Num_3;
+
+                     
+        //             }
+        //             x1 = nowPoint_x;
+
+        //             z1 = nowPoint_z + Num_3;
+        //             z2 = nowPoint_z + Num_2;
+        //             z3 = nowPoint_z + Num_1;
+        //             z4 = nowPoint_z;
+        //         }
+
+        //         else if(axis_z_pre_now < 0)
+        //         {
+        //             // Up left 2 (ㄱ 모양)
+        //             if(axis_x_next_now < 0)
+        //             {
+        //                 x2 = nowPoint_x - Num_1;
+        //                 x3 = nowPoint_x - Num_2;
+        //                 x4 = nowPoint_x - Num_3;
+
+        //             }
+
+        //             // Up right 2(ㄱ 반대모양)
+        //             else if(axis_x_next_now > 0)
+        //             {
+        //                 x2 = nowPoint_x + Num_1;
+        //                 x3 = nowPoint_x + Num_2;
+        //                 x4 = nowPoint_x + Num_3;
+
+        //             }
+        //             x1 = nowPoint_x;
+
+        //             z1 = nowPoint_z - Num_3;
+        //             z2 = nowPoint_z - Num_2;
+        //             z3 = nowPoint_z - Num_1;
+        //             z4 = nowPoint_z;
+        //         }
+                
+        //     }
+
+        //     else if(axis_z_pre_now == 0 && axis_x_next_now == 0)
+        //     {
+        //         if(axis_z_next_now > 0)
+        //         {
+        //             // Up left (ㄴ 반대 모양)
+        //             if(axis_x_pre_now < 0)
+        //             {
+        //                 x1 = nowPoint_x - Num_3;
+        //                 x2 = nowPoint_x - Num_2;
+        //                 x3 = nowPoint_x - Num_1;
+  
+        //             }
+
+        //             // Up right (ㄴ 모양)
+        //             else if(axis_x_pre_now > 0)
+        //             {
+        //                 x1 = nowPoint_x + Num_3;
+        //                 x2 = nowPoint_x + Num_2;
+        //                 x3 = nowPoint_x + Num_1;
+                     
+        //             }
+
+        //             x4 = nowPoint_x;
+
+        //             z1 = nowPoint_z;
+        //             z2 = nowPoint_z + Num_1;
+        //             z3 = nowPoint_z + Num_2;
+        //             z4 = nowPoint_z + Num_3;
+
+        //         }
+
+        //         else if(axis_z_next_now < 0)
+        //         {
+        //             // Down right 2 (ㄱ 모양)
+        //             if(axis_x_pre_now < 0)
+        //             {
+        //                 x1 = nowPoint_x - Num_3;
+        //                 x2 = nowPoint_x - Num_2;
+        //                 x3 = nowPoint_x - Num_1;
+              
+        //             }
+
+        //             // Down left 2 (ㄱ 반대 모양)
+        //             else if(axis_x_pre_now > 0)
+        //             {
+        //                 x1 = nowPoint_x + Num_3;
+        //                 x2 = nowPoint_x + Num_2;
+        //                 x3 = nowPoint_x + Num_1;
+               
+        //             }
+
+        //             x4 = nowPoint_x;
+
+
+        //             z1 = nowPoint_z;
+        //             z2 = nowPoint_z - Num_1;
+        //             z3 = nowPoint_z - Num_2;
+        //             z4 = nowPoint_z - Num_3;
+        //         }
+                
+        //     }
+     
+        //     rotatePoints.Add(new Vector3(x1, 0f, z1));
+        //     rotatePoints.Add(new Vector3(x2, 0f, z2));
+        //     rotatePoints.Add(new Vector3(x3, 0f, z3));
+        //     rotatePoints.Add(new Vector3(x4, 0f, z4));
+
+        //     return rotatePoints;
+        // }
+
+
+
+        // 2. tile 38
+          private static List<Vector3> ChangeToRotate(Vector3 previousPoint, Vector3 nowPoint, Vector3 nextPoint)
         {   
             float nowPoint_x = nowPoint.x;
             float nowPoint_z = nowPoint.z;
@@ -217,38 +397,47 @@ namespace TrafficSimulation {
 
             List<Vector3> rotatePoints = new List<Vector3>();
 
-            float Num_1 = 2f;
-            float Num_2 = 12f;
-            float Num_3 = 40f;
+            // float Num_1 = 2f;
+            // float Num_2 = 12f;
+            // float Num_3 = 40f;
             
             if(axis_x_pre_now == 0 && axis_z_next_now == 0)
             {   
                 if(axis_z_pre_now > 0)
                 {
-                    // Down Right (ㄴ 모양)
+                    // Down Right (ㄴ 반대 모양)
                     if(axis_x_next_now < 0)
                     {
-                        x2 = nowPoint_x - Num_1;
-                        x3 = nowPoint_x - Num_2;
-                        x4 = nowPoint_x - Num_3;
+                        // Debug.Log(_routeName + " --> Down Right (ㄴ 반대 모양)");
+                        x1 = nowPoint_x;
+                        z1 = nowPoint_z + 12.5f;
 
+                        x2 = nowPoint_x - 3f;
+                        z2 = nowPoint_z + 6.5f;
+
+                        x3 = nowPoint_x - 8f;
+                        z3 = nowPoint_z + 2.5f;
+
+                        x4 = nowPoint_x - 15f;
+                        z4 = nowPoint_z - 0.5f;
                     }
 
                     // Down Left (ㄴ 모양)
                     else if(axis_x_next_now > 0)
                     {                        
-                        x2 = nowPoint_x + Num_1;
-                        x3 = nowPoint_x + Num_2;
-                        x4 = nowPoint_x + Num_3;
+                        // Debug.Log(_routeName + " --> Down Left (ㄴ 모양)");
+                        x1 = nowPoint_x;
+                        z1 = nowPoint_z + 25.5f;
 
-                     
+                        x2 = nowPoint_x + 5f;
+                        z2 = nowPoint_z + 15.5f;
+
+                        x3 = nowPoint_x + 13f;
+                        z3 = nowPoint_z + 6.5f;
+
+                        x4 = nowPoint_x + 20f;
+                        z4 = nowPoint_z + 2.5f;
                     }
-                    x1 = nowPoint_x;
-
-                    z1 = nowPoint_z + Num_3;
-                    z2 = nowPoint_z + Num_2;
-                    z3 = nowPoint_z + Num_1;
-                    z4 = nowPoint_z;
                 }
 
                 else if(axis_z_pre_now < 0)
@@ -256,26 +445,38 @@ namespace TrafficSimulation {
                     // Up left 2 (ㄱ 모양)
                     if(axis_x_next_now < 0)
                     {
-                        x2 = nowPoint_x - Num_1;
-                        x3 = nowPoint_x - Num_2;
-                        x4 = nowPoint_x - Num_3;
+                        // Debug.Log(_routeName + " --> Up left 2 (ㄱ 모양)");
+                        x1 = nowPoint_x;
+                        z1 = nowPoint_z - 25.5f;
 
+                        x2 = nowPoint_x - 5f;
+                        z2 = nowPoint_z - 15.5f;
+
+                        x3 = nowPoint_x - 13f;
+                        z3 = nowPoint_z - 6.5f;
+
+                        x4 = nowPoint_x - 20f;
+                        z4 = nowPoint_z - 0.5f;
                     }
 
                     // Up right 2(ㄱ 반대모양)
                     else if(axis_x_next_now > 0)
                     {
-                        x2 = nowPoint_x + Num_1;
-                        x3 = nowPoint_x + Num_2;
-                        x4 = nowPoint_x + Num_3;
+                        // Debug.Log(_routeName + " --> Up right 2(ㄱ 반대모양)");
+                        x1 = nowPoint_x;
+                        z1 = nowPoint_z - 12.5f;
+
+                        x2 = nowPoint_x + 3f;
+                        z2 = nowPoint_z - 6.5f;
+
+                        x3 = nowPoint_x + 8f;
+                        z3 = nowPoint_z - 2.5f;
+
+                        x4 = nowPoint_x + 15f;
+                        z4 = nowPoint_z + 0.5f;
 
                     }
-                    x1 = nowPoint_x;
-
-                    z1 = nowPoint_z - Num_3;
-                    z2 = nowPoint_z - Num_2;
-                    z3 = nowPoint_z - Num_1;
-                    z4 = nowPoint_z;
+                    
                 }
                 
             }
@@ -286,29 +487,37 @@ namespace TrafficSimulation {
                 {
                     // Up left (ㄴ 반대 모양)
                     if(axis_x_pre_now < 0)
-                    {
-                        x1 = nowPoint_x - Num_3;
-                        x2 = nowPoint_x - Num_2;
-                        x3 = nowPoint_x - Num_1;
-  
+                    {   
+                        // Debug.Log(_routeName + " --> Up left (ㄴ 반대 모양)");
+                        x1 = nowPoint_x - 20f;
+                        z1 = nowPoint_z;
+
+                        x2 = nowPoint_x - 13f;
+                        z2 = nowPoint_z + 6.5f;
+
+                        x3 = nowPoint_x - 5f;
+                        z3 = nowPoint_z + 15.5f;
+
+                        x4 = nowPoint_x - 1f;
+                        z4 = nowPoint_z + 25.5f;
                     }
 
                     // Up right (ㄴ 모양)
                     else if(axis_x_pre_now > 0)
                     {
-                        x1 = nowPoint_x + Num_3;
-                        x2 = nowPoint_x + Num_2;
-                        x3 = nowPoint_x + Num_1;
-                     
+                        // Debug.Log(_routeName + " --> Up right (ㄴ 모양)");
+                        x1 = nowPoint_x + 15f;
+                        z1 = nowPoint_z;
+            
+                        x2 = nowPoint_x + 8f;
+                        z2 = nowPoint_z + 2.5f;
+
+                        x3 = nowPoint_x + 3.5f;
+                        z3 = nowPoint_z + 6.5f;
+
+                        x4 = nowPoint_x;
+                        z4 = nowPoint_z + 12.5f;
                     }
-
-                    x4 = nowPoint_x;
-
-                    z1 = nowPoint_z;
-                    z2 = nowPoint_z + Num_1;
-                    z3 = nowPoint_z + Num_2;
-                    z4 = nowPoint_z + Num_3;
-
                 }
 
                 else if(axis_z_next_now < 0)
@@ -316,28 +525,39 @@ namespace TrafficSimulation {
                     // Down right 2 (ㄱ 모양)
                     if(axis_x_pre_now < 0)
                     {
-                        x1 = nowPoint_x - Num_3;
-                        x2 = nowPoint_x - Num_2;
-                        x3 = nowPoint_x - Num_1;
+                        // Debug.Log(_routeName + " --> Down right 2 (ㄱ 모양)");
+                        x1 = nowPoint_x - 15f;
+                        z1 = nowPoint_z + 0.5f;
+
+                        x2 = nowPoint_x - 8f;
+                        z2 = nowPoint_z - 2.5f;
+
+                        x3 = nowPoint_x - 3f;
+                        z3 = nowPoint_z - 6.5f;
+
+                        x4 = nowPoint_x;
+                        z4 = nowPoint_z - 12.5f;
               
                     }
 
                     // Down left 2 (ㄱ 반대 모양)
                     else if(axis_x_pre_now > 0)
                     {
-                        x1 = nowPoint_x + Num_3;
-                        x2 = nowPoint_x + Num_2;
-                        x3 = nowPoint_x + Num_1;
-               
+                        // Debug.Log(_routeName + " --> Down left 2 (ㄱ 반대 모양)");
+                        x1 = nowPoint_x + 15f;
+                        z1 = nowPoint_z - 0.5f;
+
+                        x2 = nowPoint_x + 8f;
+                        z2 = nowPoint_z - 2.5f;
+
+                        x3 = nowPoint_x + 3f;
+                        z3 = nowPoint_z - 6.5f;
+
+                        x4 = nowPoint_x;
+                        z4 = nowPoint_z - 12.5f;
                     }
 
-                    x4 = nowPoint_x;
-
-
-                    z1 = nowPoint_z;
-                    z2 = nowPoint_z - Num_1;
-                    z3 = nowPoint_z - Num_2;
-                    z4 = nowPoint_z - Num_3;
+                    
                 }
                 
             }
@@ -350,7 +570,9 @@ namespace TrafficSimulation {
             return rotatePoints;
         }
 
-        public static List<Vector3> EditPathPoints(Vector3 nowPoint, Vector3 nextPoint)
+
+        
+        public static List<Vector3> EditPathPoints(Vector3 nowPoint, Vector3 nextPoint, float _routeMoveScale)
         {   
             float axis_x_next_now = nextPoint.x - nowPoint.x;
             float axis_z_next_now = nextPoint.z - nowPoint.z;
@@ -359,26 +581,26 @@ namespace TrafficSimulation {
 
             if(axis_x_next_now < 0)
             {
-                nowPoint.z += 7.5f;
-                nextPoint.z += 7.5f;
+                nowPoint.z += _routeMoveScale;
+                nextPoint.z += _routeMoveScale;
             }
 
             else if(axis_x_next_now > 0)
             {
-                nowPoint.z -= 7.5f;
-                nextPoint.z -= 7.5f;
+                nowPoint.z -= _routeMoveScale;
+                nextPoint.z -= _routeMoveScale;
             }
 
             if(axis_z_next_now < 0)
             {
-                nowPoint.x -= 7.5f;
-                nextPoint.x -= 7.5f;
+                nowPoint.x -= _routeMoveScale;
+                nextPoint.x -= _routeMoveScale;
             }
 
             else if(axis_z_next_now > 0)
             {
-                nowPoint.x += 7.5f;
-                nextPoint.x += 7.5f;
+                nowPoint.x += _routeMoveScale;
+                nextPoint.x += _routeMoveScale;
             }
 
             EditPoints.Add(nowPoint);
@@ -477,14 +699,17 @@ namespace TrafficSimulation {
             return intersections;
         }
 
-        public static void CreateAll(string routefilePath, string intersectionfilePath, List<List<Vector3>> routes, List<Vector3> intersections)
+        public static void CreateAll(string routefilePath, string intersectionfilePath, List<List<Vector3>> routes, List<Vector3> intersections, List<Vector3> _cornerPositions)
         {   
+            CreateCorners(_cornerPositions);
+
             intersections = CreateIntersectionList(intersectionfilePath, intersections);
             CreateIntersections(intersections);
+            
             // routes = CreateRouteList(routefilePath, routes, routeDictionary);
             routeDictionary = CreateRouteList(routefilePath);
             // if(routes == null) Debug.LogError("routes is null");
-            CreateRoutes(routeDictionary, cornerPositions, intersections);
+            CreateRoutes(routeDictionary, _cornerPositions, intersections);
         }
 
         // private static void CreateRoutes(List<List<Vector3>> routes, List<Vector3> corners, List<Vector3> intersections)
@@ -493,6 +718,7 @@ namespace TrafficSimulation {
             EditorHelper.SetUndoGroup("Create Routes");
 
             List<Vector3> checkingRotateList = new List<Vector3>();
+            
             if(_corners.Count > 0 && _intersections.Count > 0)
             {
                 checkingRotateList.AddRange(_corners);
@@ -503,14 +729,16 @@ namespace TrafficSimulation {
             {
                 Debug.LogError("There is no corners or intersections");
             }
+
+
             if(_routeDictionary == null) Debug.Log("routeDictionary is null");
 
-            Debug.Log("_routeDictionary.Keys.Count : " + _routeDictionary.Keys.Count);
+            // Debug.Log("_routeDictionary.Keys.Count : " + _routeDictionary.Keys.Count);
             foreach(int dict_key in _routeDictionary.Keys)
             {   
-                Debug.Log("dict_key : " + dict_key);
+                // Debug.Log("dict_key : " + dict_key);
                 List<Vector3> route = _routeDictionary[dict_key];
-                Debug.Log("route.Count : " + route.Count);
+                // Debug.Log("route.Count : " + route.Count);
                 if(route == null) Debug.LogError("route is null");
 
                 string routeName = "Route-" + dict_key.ToString();
@@ -532,21 +760,23 @@ namespace TrafficSimulation {
                 {  
                     List<Vector3> newRotationPoints = new List<Vector3>();
                     List<Vector3> paths = new List<Vector3>();
-         
+
+                    Debug.Log("routeName : " + routeName + ", route[p] : " + route[p]);
                     if(p > 0 && p+1 < route.Count)
                     {   
                         // 회전하는 위치인 경우
                         if(RotatePosition(route[p-1], route[p], route[p+1], checkingRotateList))
                         {
                             newRotationPoints = ChangeToRotate(route[p-1], route[p], route[p+1]);
-                            
+
+                            Debug.Log("routeName : " + routeName + ", route[p] : " + route[p] + " is rotate position");   
                             List<Vector3> rPoints = new List<Vector3>();
 
                             for(int rPoint = 0; rPoint <newRotationPoints.Count; rPoint++)
                             {   
                                 if(rPoint+1 < newRotationPoints.Count)
                                 {
-                                    rPoints = EditPathPoints(newRotationPoints[rPoint], newRotationPoints[rPoint+1]);
+                                    rPoints = EditPathPoints(newRotationPoints[rPoint], newRotationPoints[rPoint+1], routeMoveScale);
 
                                     newRoPoint = rPoints[0];
                                     newRoPoint.y = route_Pos_y;
@@ -569,14 +799,14 @@ namespace TrafficSimulation {
                             if(p-1 >= 0 && route[p-1] == route[p+1])
                             {   
                                 // routeInfo.uTurnNum ++;
-                                paths = EditPathPoints(route[p-1], route[p]);
+                                paths = EditPathPoints(route[p-1], route[p], routeMoveScale);
                                 newPoint = paths[1];
                                 newPoint.y = route_Pos_y;
                                 AddWaypoint(newPoint);
                                 routeInfo.uTurnStations.Add(route[p]);
                             }
 
-                            paths = EditPathPoints(route[p], route[p+1]);
+                            paths = EditPathPoints(route[p], route[p+1], routeMoveScale);
                             newPoint = paths[0];
                             newPoint.y = route_Pos_y;
                             AddWaypoint(newPoint);
@@ -589,7 +819,7 @@ namespace TrafficSimulation {
                     {   
                         if(p == 0)
                         {
-                            paths = EditPathPoints(route[p], route[p+1]);
+                            paths = EditPathPoints(route[p], route[p+1], routeMoveScale);
 
                             newPoint = paths[0];
                             newPoint.y = route_Pos_y;
@@ -599,7 +829,7 @@ namespace TrafficSimulation {
 
                         if(p+1 == route.Count)
                         {   
-                            paths = EditPathPoints(route[p-1], route[p]);
+                            paths = EditPathPoints(route[p-1], route[p], routeMoveScale);
 
                             newPoint = paths[1];
                             newPoint.y = route_Pos_y;
@@ -648,6 +878,12 @@ namespace TrafficSimulation {
 
             GameObject cornersGo = EditorHelper.CreateGameObject("Corners");
             cornersGo.transform.position = Vector3.zero;
+
+            if(cornersList == null)
+            {
+                Debug.LogError("cornersList is null");
+                cornersList = cornerPositions;
+            }
 
             int intId = 0;
             foreach(Vector3 point in cornersList)
