@@ -76,7 +76,7 @@ def create_csv(activated_arcs, number_of_YT, grid, filename_Truck, filename_Rout
     # 1. Trucks.csv : Truck의 id, Route id, pick station, drop station, ...
     # 2. RoutePoints.csv : Route id, x, y, z
         
-    tile_size = 25
+    tile_size = 30
 
     # 1. Trucks.csv
     # station에 좌표를 입력할때는 유니티 규격에 맞게 좌표를 수정해준다
@@ -116,6 +116,12 @@ def create_csv(activated_arcs, number_of_YT, grid, filename_Truck, filename_Rout
     filename = os.path.join(folder_path, filename_Truck)
     # filename = filename_Truck
     
+    print("Absolute path:", os.path.abspath(filename))
+    
+    if not os.path.exists(folder_path):
+        print(folder_path, " does not exist, make it")
+        os.makedirs(folder_path)
+        
     # 이중 리스트를 CSV 파일로 저장
     with open(filename, mode='w', newline='') as file:
         writer = csv.writer(file)
@@ -137,7 +143,7 @@ def create_csv(activated_arcs, number_of_YT, grid, filename_Truck, filename_Rout
     for key, value in YT_traverse_path.items():
         # 해당 key의 value가 비어있지않다면
         if value != []:
-            # x축 대칭, 가로세로 75배 확대
+            # x축 대칭, 가로세로 tile_size배 확대
             for point in value:
                 RoutePoints['Route_id'].append(key[1])
                 RoutePoints['x'].append(point[1]*tile_size)
@@ -150,6 +156,7 @@ def create_csv(activated_arcs, number_of_YT, grid, filename_Truck, filename_Rout
     header = list(RoutePoints.keys())
     filename = os.path.join(folder_path, filename_RoutePoints)
 
+    
     # CSV 파일을 쓰기 모드로 엽니다.
     with open(filename, mode='w', newline='') as file:
         writer = csv.writer(file)
