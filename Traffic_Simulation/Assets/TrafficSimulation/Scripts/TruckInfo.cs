@@ -27,8 +27,12 @@ namespace TrafficSimulation{
         private VehicleAI thisVehicleAI;
 
         
+        // public float short_slowingTime = 1.5f;
+        // public float long_slowingTime = 5f;
         public float short_slowingTime = 1.5f;
-        public float long_slowingTime = 5f;
+
+        public float long_slowingTime = 3f;
+
 
         // public float moveDelay = 3f;
         public float processTime = 10f;
@@ -37,7 +41,8 @@ namespace TrafficSimulation{
         private Vector3 originalPos;
         
         private float toStationNum = 25f;
-        private float checkRange_1 = 20f;
+        // private float checkRange_1 = 20f;
+        private float checkRange_1 = 80f;
         private float checkRange_2 = 3f;
         // 현재 유턴 횟수
         [SerializeField] private int nowTurnNum;
