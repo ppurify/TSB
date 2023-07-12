@@ -11,7 +11,7 @@ namespace TrafficSimulation{
 
         // private string truckFilePath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\Truck_50_shortest.csv";
         private static string folderPath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\";
-        public static string truckFileName = "Test-Truck.csv";
+        public static string truckFileName = "Truck_30_shortest.csv";
         private static string truckFilePath = Path.Combine(folderPath, truckFileName);
 
         public static List<CreateTruckData> truckDataList = new List<CreateTruckData>();

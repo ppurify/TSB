@@ -713,11 +713,11 @@ MonoBehaviour:
   trafficSystem: {fileID: 0}
   waypointThresh: 6
   raycastAnchor: {fileID: 4617705441392776722}
-  raycastLength: 5
+  raycastLength: 15
   raySpacing: 3
-  raysNumber: 6
-  emergencyBrakeThresh: 3
-  slowDownThresh: 4
+  raysNumber: 10
+  emergencyBrakeThresh: 10
+  slowDownThresh: 15
   vehicleStatus: 0
 --- !u!114 &6191599503789027035
 MonoBehaviour:

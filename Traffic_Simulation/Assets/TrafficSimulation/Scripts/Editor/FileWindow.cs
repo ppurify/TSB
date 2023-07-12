@@ -8,7 +8,7 @@ using System;
 namespace TrafficSimulation {    
     public class FileWindow : EditorWindow
     {   
-        private static string routefilePath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\Test-Route.csv";
+        private static string routefilePath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\RoutePoints_30_shortest.csv";
         // private static string intersectionfilePath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\intersectionPoints.csv";
         private static string intersectionfilePath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\intersectionPoints - tile30.csv";
 
@@ -44,7 +44,7 @@ namespace TrafficSimulation {
         // 1. tile 75
         // private static List<Vector3> cornerPositions = new List<Vector3>{new Vector3(0,0,0), new Vector3(1800,0,0), new Vector3(1800,0,600), new Vector3(0,0,600)};
         // 2. tile 30
-        private static List<Vector3> cornerPositions = new List<Vector3>{new Vector3(0,0,0), new Vector3(1800,0,0), new Vector3(1800,0,600), new Vector3(0,0,600)};
+        private static List<Vector3> cornerPositions = new List<Vector3>{new Vector3(0,0,0), new Vector3(540,0,0), new Vector3(540,0,240), new Vector3(0,0,240)};
 
         // private static List<Vector3> cornerPositions = new List<Vector3>{new Vector3(0,0,0), new Vector3(900,0,0), new Vector3(900,0,300), new Vector3(0,0,300)};
 
