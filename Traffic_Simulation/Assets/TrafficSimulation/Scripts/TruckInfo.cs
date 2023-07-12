@@ -39,10 +39,14 @@ namespace TrafficSimulation{
 
 
         private Vector3 originalPos;
-        
-        private float toStationNum = 25f;
-        // private float checkRange_1 = 20f;
-        private float checkRange_1 = 80f;
+
+        // 1. tile 75        
+        // private float toStationNum = 25f;
+        // 2. tile 25
+        private float toStationNum = 15f;
+
+        private float checkRange_1 = 20f;
+        // private float checkRange_1 = 80f;
         private float checkRange_2 = 3f;
         // 현재 유턴 횟수
         [SerializeField] private int nowTurnNum;
