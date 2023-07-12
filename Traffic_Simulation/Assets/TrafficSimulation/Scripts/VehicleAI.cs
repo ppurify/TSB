@@ -162,7 +162,7 @@ namespace TrafficSimulation {
                 if(vehicleStatus == Status.SLOW_DOWN){
                     // acc = .3f;
                     // acc가 클수록 속도는 더 적게 줄어듬
-                    acc = 1.5f;
+                    acc = 2.5f;
                     brake = 0f;
                     this.gameObject.GetComponent<TruckInfo>().nowStatus = NowStatus.WAITING;
                     // Debug.Log(this.name+ " SLOW DOWN");
