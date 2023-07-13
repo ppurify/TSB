@@ -29,13 +29,13 @@ namespace TrafficSimulation{
         
         // public float short_slowingTime = 1.5f;
         // public float long_slowingTime = 5f;
-        public float short_slowingTime = 1.5f;
+        private float short_slowingTime = 1f;
 
-        public float long_slowingTime = 3f;
+        private float long_slowingTime = 2.5f;
 
 
         // public float moveDelay = 3f;
-        public float processTime = 10f;
+        private float processTime = 60f;
 
 
         private Vector3 originalPos;
@@ -210,7 +210,7 @@ namespace TrafficSimulation{
                         thisVehicleAI.vehicleStatus = Status.STOP;
                         nowStatus = NowStatus.WAITING;
 
-                        StartCoroutine(AgainCheck(checkDelay, 15f, 3f));
+                        // StartCoroutine(AgainCheck(checkDelay, 15f, 3f));
                         
                     }
 
@@ -235,7 +235,7 @@ namespace TrafficSimulation{
                         thisVehicleAI.vehicleStatus = Status.STOP;
                         nowStatus = NowStatus.WAITING;
 
-                        StartCoroutine(AgainCheck(checkDelay, 15f, 3f));
+                        // StartCoroutine(AgainCheck(checkDelay, 15f, 3f));
                     }
 
                     else
