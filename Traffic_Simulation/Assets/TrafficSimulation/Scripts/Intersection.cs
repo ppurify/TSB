@@ -87,7 +87,7 @@ namespace TrafficSimulation{
                     vehicleAI.vehicleStatus = Status.SLOW_DOWN;
                     vehiclesQueue.Add(_vehicle);
 
-                    StartCoroutine(ReduceSpeed(_vehicle));
+                    // StartCoroutine(ReduceSpeed(_vehicle));
                     vehicleAI.vehicleStatus = Status.STOP;
                 }
 
