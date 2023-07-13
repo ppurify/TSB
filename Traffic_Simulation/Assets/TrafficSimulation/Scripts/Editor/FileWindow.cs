@@ -8,7 +8,7 @@ using System;
 namespace TrafficSimulation {    
     public class FileWindow : EditorWindow
     {   
-        private static string routefilePath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\RoutePoints_30_shortest.csv";
+        private static string routefilePath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\RoutePoints_20_LP.csv";
         // private static string intersectionfilePath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\intersectionPoints.csv";
         private static string intersectionfilePath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\intersectionPoints - tile25.csv";
 
@@ -20,18 +20,10 @@ namespace TrafficSimulation {
         // 1. tile 75
         // private static Vector3 intersectionSize = new Vector3(80,10,80);
         // 2. tile 38    
-        private static Vector3 intersectionSize = new Vector3(50,10,50);
+        private static Vector3 intersectionSize = new Vector3(50,10,30);
 
         private static float intersectionPos_y = intersectionSize.y/2;
 
-
-        // Station Collider Parameters
-        // 1. tile 75
-        // private static Vector3 placeSize = new Vector3(20,10,10);
-        // 2. tile 38        
-        private static Vector3 placeSize = new Vector3(5,5,5);
-
-        private static float placePos_y = placeSize.y/2;
         
         // Route Parameters
         private static List<List<Vector3>> routes = new List<List<Vector3>>();
@@ -743,7 +735,9 @@ namespace TrafficSimulation {
                 // Debug.Log("route.Count : " + route.Count);
                 if(route == null) Debug.LogError("route is null");
 
-                string routeName = "Route-" + dict_key.ToString();
+                // string routeName = "Route-" + dict_key.ToString();
+                int newRouteNum = dict_key + 100;
+                string routeName = "Route-" + newRouteNum.ToString();
 
                 GameObject mainGo = EditorHelper.CreateGameObject(routeName);
                 mainGo.transform.position = Vector3.zero;
@@ -763,7 +757,7 @@ namespace TrafficSimulation {
                     List<Vector3> newRotationPoints = new List<Vector3>();
                     List<Vector3> paths = new List<Vector3>();
 
-                    Debug.Log("routeName : " + routeName + ", route[p] : " + route[p]);
+                    // Debug.Log("routeName : " + routeName + ", route[p] : " + route[p]);
                     if(p > 0 && p+1 < route.Count)
                     {   
                         // 회전하는 위치인 경우
@@ -771,7 +765,7 @@ namespace TrafficSimulation {
                         {
                             newRotationPoints = ChangeToRotate(route[p-1], route[p], route[p+1]);
 
-                            Debug.Log("routeName : " + routeName + ", route[p] : " + route[p] + " is rotate position");   
+                            // Debug.Log("routeName : " + routeName + ", route[p] : " + route[p] + " is rotate position");   
                             List<Vector3> rPoints = new List<Vector3>();
 
                             for(int rPoint = 0; rPoint <newRotationPoints.Count; rPoint++)

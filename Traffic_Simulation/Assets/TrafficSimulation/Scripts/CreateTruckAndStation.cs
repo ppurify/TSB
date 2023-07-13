@@ -11,10 +11,13 @@ namespace TrafficSimulation{
 
         // private string truckFilePath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\Truck_50_shortest.csv";
         private static string folderPath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\";
-        public static string truckFileName = "Truck_20_LP.csv";
-        private static string truckFilePath = Path.Combine(folderPath, truckFileName);
+        public static string truckFileName_1 = "Truck_20_LP.csv";
+        public static string truckFileName_2 = "Truck_30_LP.csv";
+        private static string truckFilePath_1 = Path.Combine(folderPath, truckFileName_1);
+        private static string truckFilePath_2 = Path.Combine(folderPath, truckFileName_2);
 
-        public static List<CreateTruckData> truckDataList = new List<CreateTruckData>();
+        public static List<CreateTruckData> truckDataList_1 = new List<CreateTruckData>();
+        public static List<CreateTruckData> truckDataList_2 = new List<CreateTruckData>();
 
         private static float truckRotation_y;
 
@@ -28,25 +31,101 @@ namespace TrafficSimulation{
         private string stationTagName = "Station";
 
         // 동일한 시작 위치를 가진 트럭들을 포함하는 딕셔너리
-        private static Dictionary<Vector3, List<Tuple<string, string, List<Vector3>>>> startPositionDict;
+        private static Dictionary<Vector3, List<Tuple<string, string, List<Vector3>>>> startPositionDict_1;
+        private static Dictionary<Vector3, List<Tuple<string, string, List<Vector3>>>> startPositionDict_2;
+
 
         // 동일한 시작 위치를 가진 트럭들의 생성 주기
-        private float createDelay = 2.5f;
+        private float createDelay = 30f;
+        
+        private int truckIndexPlus_1 = 0;
+        private int truckIndexPlus_2 = 100;
+
+        private float checkRange_1 = 6f;
+        private float checkRange_2 = 3f;
+        private float checkDelay = 0.1f;
+
         void Start()
         {
-            ReadFile(truckFilePath);
-            CreateStations(truckDataList, stationTagName);
-            if(ExistRoute(truckDataList))
+            ReadFile(truckFilePath_1, truckIndexPlus_1);
+            CreateStations(truckDataList_1, stationTagName);
+            if(ExistRoute(truckDataList_1))
             {   
-                IsDuplicateStartPosition(truckDataList);
-                CreateTrucks(startPositionDict, createDelay);
-                Debug.Log("All routes exist");
-                // CreateTrucks(truckDataList);
+                IsDuplicateStartPosition(truckDataList_1, truckIndexPlus_1);
+                // CreateTrucks(startPositionDict_1);
+                CreateTrucks(startPositionDict_1, checkRange_1, checkRange_2, checkDelay);
+
+                // Debug.Log("All routes exist");
             }
             // Timer.csvFileName = truckFileName;
+
+            StartCoroutine(CreateNewTrucksDelay(createDelay));
         }
 
-        public static void ReadFile(string filePath)
+        // public static void ReadFile(string filePath)
+        // {
+        //     if (!File.Exists(filePath))
+        //     {
+        //         Debug.LogError("File does not exist: " + filePath);
+        //         return;
+        //     }
+            
+        //     using (StreamReader reader = new StreamReader(filePath))
+        //     {
+        //         string line;
+        //         bool isFirstLine = true;
+
+        //         while ((line = reader.ReadLine()) != null)
+        //         {
+        //             if (isFirstLine)
+        //             {
+        //                 isFirstLine = false;
+        //                 continue; // Skip the first line
+        //             }
+
+        //             string[] values = line.Split(',');
+
+        //             string truckName = "Truck-" + values[0];
+        //             string truckRoute = values[1];
+
+        //             CreateTruckData truckData = ScriptableObject.CreateInstance<CreateTruckData>();
+                    
+        //             List<Vector3> workStations = new List<Vector3>();
+
+        //             for(int i=2; i<values.Length; i+=3)
+        //             {   
+        //                 if (values[i] != "" && values[i + 1] != "" && values[i + 2] != "")
+        //                 {
+        //                     string xStr = Regex.Match(values[i], @"\(\s*(-?\d+(\.\d+)?)").Groups[1].Value;
+        //                     string yStr = values[i + 1];
+        //                     string zStr = Regex.Match(values[i + 2], @"(-?\d+(\.\d+)?)\s*\)").Groups[1].Value;
+
+        //                     float x = float.Parse(xStr);
+        //                     float y = float.Parse(yStr);
+        //                     float z = float.Parse(zStr);
+
+        //                     Vector3 station = new Vector3(x, y, z);
+
+        //                     workStations.Add(station);
+        //                 }
+                        
+        //                 else
+        //                 {
+        //                     break; // No more values in the next column, exit the loop
+        //                 }
+        //             }
+
+        //             truckData.CreateData(truckName, truckRoute, workStations);
+        //             truckDataList.Add(truckData);
+        //         }
+        //     }
+
+        // }
+
+
+        // 경로 유무 확인 함수
+        
+        public static void ReadFile(string filePath, int _truckIndexPlus)
         {
             if (!File.Exists(filePath))
             {
@@ -69,8 +148,12 @@ namespace TrafficSimulation{
 
                     string[] values = line.Split(',');
 
-                    string truckName = "Truck-" + values[0];
-                    string truckRoute = values[1];
+                    int newTruckNum = int.Parse(values[0]) + _truckIndexPlus;
+                    string truckName = "Truck-" + newTruckNum.ToString();
+                    
+                    int newRouteNum = int.Parse(values[1]) + _truckIndexPlus;
+                    string truckRoute = newRouteNum.ToString();
+
 
                     CreateTruckData truckData = ScriptableObject.CreateInstance<CreateTruckData>();
                     
@@ -100,14 +183,22 @@ namespace TrafficSimulation{
                     }
 
                     truckData.CreateData(truckName, truckRoute, workStations);
-                    truckDataList.Add(truckData);
+                    // truckDataList_1.Add(truckData);
+
+                    if(_truckIndexPlus == 0)
+                    {
+                        truckDataList_1.Add(truckData);
+                    }
+
+                    else
+                    {
+                        truckDataList_2.Add(truckData);
+                    }
                 }
             }
 
         }
 
-
-        // 경로 유무 확인 함수
         public static bool ExistRoute(List<CreateTruckData> dataList)
         {
             // Print the truck data
@@ -160,7 +251,7 @@ namespace TrafficSimulation{
                 }
             }
 
-            Debug.Log(routeName + " --> Truck Rotation: " + truckRotation_y);
+            // Debug.Log(routeName + " --> Truck Rotation: " + truckRotation_y);
             return truckRotation_y;
         }
 
@@ -244,9 +335,19 @@ namespace TrafficSimulation{
         
         
         // 딕셔너리 생성 함수
-        private static void IsDuplicateStartPosition(List<CreateTruckData> dataList)
+        private static void IsDuplicateStartPosition(List<CreateTruckData> dataList, float _truckIndexPlus)
         {
-            startPositionDict = new Dictionary<Vector3, List<Tuple<string, string, List<Vector3>>>>();
+            // startPositionDict_1 = new Dictionary<Vector3, List<Tuple<string, string, List<Vector3>>>>();
+
+            if(_truckIndexPlus == 0)
+            {
+                startPositionDict_1 = new Dictionary<Vector3, List<Tuple<string, string, List<Vector3>>>>();
+            }
+
+            else
+            {
+                startPositionDict_2 = new Dictionary<Vector3, List<Tuple<string, string, List<Vector3>>>>();
+            }
 
             foreach(CreateTruckData data in dataList)
             {   
@@ -265,15 +366,32 @@ namespace TrafficSimulation{
 
                         Tuple<string, string, List<Vector3>> _truckData = Tuple.Create(data.Name, parentName, data.WorkStations);
 
-                        if(startPositionDict.ContainsKey(startPoint))
-                        {  
-                            startPositionDict[startPoint].Add(_truckData);
+                        if(_truckIndexPlus == 0)
+                        {
+                            if(startPositionDict_1.ContainsKey(startPoint))
+                            {  
+                                startPositionDict_1[startPoint].Add(_truckData);
+                            }
+
+                            else
+                            {
+                                startPositionDict_1[startPoint] = new List<Tuple<string, string, List<Vector3>>> { _truckData };
+                            }
                         }
 
                         else
                         {
-                            startPositionDict[startPoint] = new List<Tuple<string, string, List<Vector3>>> { _truckData };
+                            if(startPositionDict_2.ContainsKey(startPoint))
+                            {  
+                                startPositionDict_2[startPoint].Add(_truckData);
+                            }
+
+                            else
+                            {
+                                startPositionDict_2[startPoint] = new List<Tuple<string, string, List<Vector3>>> { _truckData };
+                            }
                         }
+                        
                     }
 
                     else
@@ -291,7 +409,7 @@ namespace TrafficSimulation{
 
         
         // 출발 위치가 동일한 트럭이 있는지 확인한 후 트럭 생성하는 함수
-        private void CreateTrucks(Dictionary<Vector3, List<Tuple<string, string, List<Vector3>>>> _dictionary, float _createDelay)
+        private void CreateTrucks(Dictionary<Vector3, List<Tuple<string, string, List<Vector3>>>> _dictionary, float _checkRange_1, float _checkRange_2, float _checkDelay)
         {
             // Print the duplicate start positions
             foreach (KeyValuePair<Vector3, List<Tuple<string, string, List<Vector3>>>> kvp in _dictionary)
@@ -304,21 +422,14 @@ namespace TrafficSimulation{
                 // 출발 위치가 동일한 트럭이 있는 경우
                 if(values.Count > 1)
                 {   
-                    StartCoroutine(DuplicatePositionCreateTruck(values, _createDelay));
+                    StartCoroutine(DuplicatePositionCreateTruck(values));
                 }
 
                 // 출발 위치가 동일한 트럭이 없는 경우
                 else
-                {
-                    string truckName = values[0].Item1;
-                    string routeName = values[0].Item2;
-                    List<Vector3> truckWorkStations = values[0].Item3;
-
-                    CreateTruck(truckName, routeName, truckWorkStations);
+                {   
+                    StartCoroutine(CreateOneTruck(values[0], _checkRange_1, _checkRange_2, _checkDelay));
                 }
-                
-                
-           
             }
         }
         
@@ -373,7 +484,7 @@ namespace TrafficSimulation{
 
         
         // 출발 위치가 동일한 트럭이 있는 경우 트럭 생성 함수
-        private IEnumerator DuplicatePositionCreateTruck(List<Tuple<string, string, List<Vector3>>> _values, float _createDelay)
+        private IEnumerator DuplicatePositionCreateTruck(List<Tuple<string, string, List<Vector3>>> _values)
         {
             int duplivatedTruckCount = 0;
 
@@ -381,9 +492,10 @@ namespace TrafficSimulation{
             {   
                 string truckName = value.Item1;
                 string routeName = value.Item2;
+                
                 List<Vector3> truckWorkStations = value.Item3;
                 CreateTruck(truckName, routeName, truckWorkStations);
-                Debug.Log(truckName + " has duplicated position.");
+                // Debug.Log(truckName + " has duplicated position.");
                 if(duplivatedTruckCount > 0)
                 {
                     GameObject waitedTruck = GameObject.Find(truckName);
@@ -392,8 +504,15 @@ namespace TrafficSimulation{
                     {
                         waitedTruck.GetComponent<BoxCollider>().enabled = false;
                         waitedTruck.GetComponent<VehicleAI>().vehicleStatus = Status.STOP;
+                        
+                        yield return new WaitForSeconds(0.5f);
 
-                        yield return new WaitForSeconds(_createDelay);
+                        while(ExistAnyTruck(waitedTruck.transform.position, 6f, 3f))
+                        {
+                            yield return new WaitForSeconds(0.1f);
+                        }
+
+                        // yield return new WaitForSeconds(_createDelay);
                         waitedTruck.GetComponent<BoxCollider>().enabled = true;
                         waitedTruck.GetComponent<VehicleAI>().vehicleStatus = Status.GO;
                     }
@@ -418,9 +537,63 @@ namespace TrafficSimulation{
                     return true;
                 }
             }
+            return false;
+        }
 
+        private bool ExistAnyTruck(Vector3 _position, float _checkRange_1, float _checkRange_2)
+        {
+            Collider[] colliders = Physics.OverlapSphere(_position, Mathf.Max(_checkRange_1, _checkRange_2));
+            
+            foreach (Collider collider in colliders)
+            {
+                if (collider.CompareTag("AutonomousVehicle"))
+                {
+                    // UnityEngine.Debug.Log("Truck detected: " + collider.gameObject.name);
+                    return true;
+                }
+            }
+            
             return false;
         }
     
+        private IEnumerator CreateNewTrucksDelay(float _createDelay)
+        {
+            yield return new WaitForSeconds(_createDelay);
+
+            // Create new trucks
+
+            ReadFile(truckFilePath_2, truckIndexPlus_2);
+            CreateStations(truckDataList_2, stationTagName);
+
+            if(ExistRoute(truckDataList_2))
+            {   
+                IsDuplicateStartPosition(truckDataList_2, truckIndexPlus_2);
+                CreateTrucks(startPositionDict_2, checkRange_1, checkRange_2, checkDelay);
+            }
+
+            else
+            {
+                Debug.LogError("truckDataList_2's Route doesn't found.");
+            }
+        }
+
+
+        private IEnumerator CreateOneTruck(Tuple<string, string, List<Vector3>> _value, float _checkRange_1, float _checkRange_2, float _checkDelay)
+        {
+            string _truckName = _value.Item1;
+            string _routeName = _value.Item2;
+            List<Vector3> _truckWorkStations =_value.Item3;
+
+            Transform _routeTransform = GameObject.Find(_routeName).transform;
+            Vector3 _routePosition = _routeTransform.Find(_routeName + "/Waypoint-0").transform.position;
+            Vector3 _position = new Vector3(_routePosition.x, 0f, _routePosition.z);
+
+            while(ExistAnyTruck(_position, _checkRange_1, _checkRange_2))
+            {
+                yield return new WaitForSeconds(_checkDelay);
+            }
+
+            CreateTruck(_truckName, _routeName, _truckWorkStations);
+        }
     }
 }

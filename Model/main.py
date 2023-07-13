@@ -35,10 +35,10 @@ def main():
         [4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4]
     ])
 
-    number_of_YT = 30
-    number_of_Job = 30
-    filename_Truck = 'Truck_30_shortest.csv'
-    filename_RoutePoints = 'RoutePoints_30_shortest.csv'
+    number_of_YT = 20
+    number_of_Job = 20
+    filename_Truck = 'Truck_20_LP.csv'
+    filename_RoutePoints = 'RoutePoints_20_LP.csv'
 
     # 스케줄링 대상 YT 생성
     # YT_locations = {0: (4, 3), 1: (6, 14), 2: (0, 15), 3: (8, 17), 4: (4, 2), 5: (0, 1), 6: (4, 7), 7: (8, 13), 8: (0, 18), 9: (0, 16), 10: (6, 2), 11: (0, 3), 12: (1, 18), 13: (7, 18), 14: (2, 12), 15: (2, 15), 16: (4, 3), 17: (0, 18), 18: (8, 13), 19: (8, 16), 20: (8, 16), 21: (2, 3), 22: (0, 9), 23: (1, 0), 24: (0, 18), 25: (1, 6), 26: (2, 3), 27: (8, 10), 28: (2, 12), 29: (0, 0)}
@@ -72,9 +72,9 @@ def main():
 
 
     number_of_final_route = 10
-    alpha1 = 0 # prev counter
-    alpha2 = 0 # now counter
-    alpha3 = 1 # distance
+    alpha1 = 0.5 # prev counter
+    alpha2 = 0.5 # now counter
+    alpha3 = 0 # distance
 
     # prev_count = np.array([
     #     [3095, 3095, 3566, 4074, 3722, 3867, 5144, 4172, 4172, 4712, 4372, 4331, 5299, 3495, 3495, 3714, 3260, 3260, 3122],
@@ -100,9 +100,6 @@ def main():
         grid=grid, prev_count=prev_count, now_count=now_count)
 
     all_arcs = arcs_YT_to_Pick + arcs_Pick_to_Drop + arcs_Drop_to_Pick + arcs_Drop_to_Sink + arcs_YT_to_Sink
-
-    # print('now_count')
-    # print(now_count)
 
     # Run network_LP
     objective_value, activated_arcs = network_LP.solve(all_arcs, number_of_YT, number_of_Job)
