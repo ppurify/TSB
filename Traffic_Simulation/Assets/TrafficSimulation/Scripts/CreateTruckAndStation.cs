@@ -11,7 +11,7 @@ namespace TrafficSimulation{
 
         // private string truckFilePath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\Truck_50_shortest.csv";
         private static string folderPath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\";
-        public static string truckFileName = "Truck_30_shortest.csv";
+        public static string truckFileName = "Truck_20_LP.csv";
         private static string truckFilePath = Path.Combine(folderPath, truckFileName);
 
         public static List<CreateTruckData> truckDataList = new List<CreateTruckData>();
@@ -22,7 +22,7 @@ namespace TrafficSimulation{
         // 1. tile 75
         // private static Vector3 stationSize = new Vector3(75,10,30);
         // 2. tile 30
-        private static Vector3 stationSize = new Vector3(50,10,25);
+        private static Vector3 stationSize = new Vector3(50,10,30);
 
         private static float stationPos_y = stationSize.y/2;
         private string stationTagName = "Station";
@@ -43,7 +43,7 @@ namespace TrafficSimulation{
                 Debug.Log("All routes exist");
                 // CreateTrucks(truckDataList);
             }
-            Timer.csvFileName = truckFileName;
+            // Timer.csvFileName = truckFileName;
         }
 
         public static void ReadFile(string filePath)
