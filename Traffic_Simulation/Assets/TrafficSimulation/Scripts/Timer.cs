@@ -10,7 +10,7 @@ namespace TrafficSimulation{
     public class Timer : MonoBehaviour
     {
         // 파일 저장 위치
-        public static string csvFileName;
+        public static string csvFileName = CreateTruckAndStation.truckFileName;
         public string filePath = "Assets/Results/result-" + csvFileName;
 
         public void SaveToCSV(string _filePath, string _truckName, string _routeName, Vector3 _origin, Vector3 _destination, float _totalTime, List<float> _arrivalTimeList)
