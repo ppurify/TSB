@@ -8,7 +8,7 @@ using System;
 namespace TrafficSimulation {    
     public class FileWindow : EditorWindow
     {   
-        private static string routefilePath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\RoutePoints_20_LP.csv";
+        private static string routefilePath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\RoutePoints_30_shortest.csv";
         // private static string intersectionfilePath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\intersectionPoints.csv";
         private static string intersectionfilePath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\intersectionPoints - tile25.csv";
 
@@ -31,6 +31,9 @@ namespace TrafficSimulation {
         
         private static float route_Pos_y = 1.5f;
         private static Vector3 newPoint;
+        
+        
+        [SerializeField] private static int routePlusNum = 0;
         
         // Corner Positions
         // 1. tile 75
@@ -103,7 +106,8 @@ namespace TrafficSimulation {
             GUILayout.Label("File Path: " + intersectionfilePath);
             EditorGUILayout.Space(10);
 
-
+            GUILayout.Label("Route plus Number", EditorStyles.boldLabel);
+            routePlusNum = EditorGUILayout.IntField("Enter a number:", routePlusNum);
 
             // Create the buttons
             GUILayout.FlexibleSpace();
@@ -736,7 +740,7 @@ namespace TrafficSimulation {
                 if(route == null) Debug.LogError("route is null");
 
                 // string routeName = "Route-" + dict_key.ToString();
-                int newRouteNum = dict_key + 100;
+                int newRouteNum = dict_key + routePlusNum;
                 string routeName = "Route-" + newRouteNum.ToString();
 
                 GameObject mainGo = EditorHelper.CreateGameObject(routeName);
