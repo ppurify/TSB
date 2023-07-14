@@ -14,7 +14,6 @@ to_right = (0,1)
 
 
 
-
 def blue(current, finish, grid, path):
     candidate = []
 
@@ -104,7 +103,6 @@ def move(current, finish, grid, path, route):
     if current == finish:
         route = [[current]]
         return route
-    
     
     #print('current : ', current)
 

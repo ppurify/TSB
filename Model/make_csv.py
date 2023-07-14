@@ -21,7 +21,7 @@ def create_csv(activated_arcs, number_of_YT, grid, filename_Truck, filename_Rout
                 break
 
     # Trucks.csv : 각 YT들이 거치는 경로, pick, drop station정보를 저장
-    tile_size = 25
+    tile_size = 75
     Trucks = [['Truck_id', 'Route_id', 'Pick_station', 'Drop_station']]
 
     # Iterate over Traversing_info
@@ -49,7 +49,7 @@ def create_csv(activated_arcs, number_of_YT, grid, filename_Truck, filename_Rout
     # filename = filename_Truck
     folder_path = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data"
     filename = os.path.join(folder_path, filename_Truck)
-
+    
     with open(filename, mode='w', newline='') as file:
         writer = csv.writer(file)
         writer.writerows(Trucks)
