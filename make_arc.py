@@ -19,10 +19,12 @@ def get_penalty(prev_count, route, number_of_final_route, alpha1, alpha3):
     penalty_list = []
 
     for i in range(len(route)):
+        # print('lenght of route : ', len(route[i]))
         sum_of_counter_of_prev_count = sum(prev_count[coordinate] for coordinate in route[i])
         sum_of_move = len(route[i])
         penalty = alpha1 * sum_of_counter_of_prev_count + alpha3 * sum_of_move
         penalty_list.append(penalty)
+        # print('penalty : ', penalty)
 
     final_route_idx = heapq.nsmallest(number_of_final_route, range(len(penalty_list)), key=penalty_list.__getitem__)
     final_route = [route[i] for i in final_route_idx]
@@ -44,34 +46,50 @@ def get_cost(prev_count, now_count, path, alpha1, alpha2, alpha3):
 
 # !!! 현재는 YT->Pick 아크들 먼저 길이순 오름차순 정렬하여 cost 계산 후 Pick->Drop 아크들 길이순 오름차순 정렬하여 cost 계산하는 방식으로 진행
 # !!! 따라서 앞부분 아크들(YT->Pick, Pick->Drop, Drop->다른 Pick 순서)이 우선적으로 cost계산되어 더 높은 우선순위로 인식됨
-def sort_and_cost(arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink, prev_count, now_count, alpha1, alpha2, alpha3):
-    def calculate_cost(arcs, alpha1, alpha2, alpha3):
-        for arc in arcs:
-            arc.cost = get_cost(prev_count, now_count, arc.path, alpha1=alpha1, alpha2=alpha2, alpha3=alpha3)
-            for node in arc.path:
-                now_count[node] += 1
+def sort_and_cost(arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink,
+                  prev_count, now_count_A1, now_count_A2, now_count_A3, alpha1, alpha2, alpha3):
     # A1
     arcs_YT_to_Pick.sort(key=lambda x: len(x.path))
-    calculate_cost(arcs_YT_to_Pick, alpha1, alpha2, alpha3)
-    # TO DO : now count 초기화, 새 변수 만들어서 하는게 나을듯?
+    for arc in arcs_YT_to_Pick:
+        arc.cost = get_cost(prev_count, now_count_A1, arc.path, alpha1=alpha1, alpha2=alpha2, alpha3=alpha3)
+        for node in arc.path:
+            now_count_A1[node] += 1
+    # print('now_count_A1 : ')
+    # print(now_count_A1)
+
     # A2
     arcs_Pick_to_Drop.sort(key=lambda x: len(x.path))
-    calculate_cost(arcs_Pick_to_Drop, 0, alpha2, alpha3)
+    for arc in arcs_Pick_to_Drop:
+        arc.cost = get_cost(prev_count, now_count_A2, arc.path, alpha1=0, alpha2=alpha2, alpha3=alpha3)
+        for node in arc.path:
+            now_count_A2[node] += 1
+    # print('now_count_A2 : ')
+    # print(now_count_A2)
     # A3
     arcs_Drop_to_Pick.sort(key=lambda x: len(x.path))
-    calculate_cost(arcs_Drop_to_Pick, 0, alpha2, alpha3)
+    for arc in arcs_Drop_to_Pick:
+        arc.cost = get_cost(prev_count, now_count_A3, arc.path, alpha1=0, alpha2=alpha2, alpha3=alpha3)
+        for node in arc.path:
+            now_count_A3[node] += 1
+    # print('now_count_A3 : ')
+    # print(now_count_A3)
+    
     # A4
     for arc in arcs_Drop_to_Sink:
         arc.cost = 0
+
     # A5
     for arc in arcs_YT_to_Sink:
         arc.cost = 0
 
-    return arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink, now_count
+    return arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink
+
 
 
 # 아크생성, penalty 계산, cost 계산
-def create_arcs(YT_locations, Job_locations, number_of_final_route, alpha1, alpha2, alpha3, grid, prev_count, now_count):
+def create_arcs(YT_locations, Job_locations, number_of_final_route, alpha1, alpha2, alpha3,
+                grid, prev_count, now_count_A1, now_count_A2, now_count_A3):
+    
     arcs_YT_to_Pick = []
     arcs_Pick_to_Drop = []
     arcs_Drop_to_Pick = []
@@ -126,9 +144,10 @@ def create_arcs(YT_locations, Job_locations, number_of_final_route, alpha1, alph
     for i in range(len(YT_locations)):
         for j in range(len(Job_locations)):
             route_YT_to_Pick = generate_routes(YT_locations[i], Job_locations[j][0])
-
-            # for i in range(len(route_YT_to_Pick)):
-            #     print('route_YT_to_Pick : ',route_YT_to_Pick[i])
+    
+            # for _ in range(len(route_YT_to_Pick)):
+            #     print('route_YT_to_Pick : ',route_YT_to_Pick[_])
+                
 
 
             # 경로 1개당 arc 객체 생성
@@ -144,7 +163,10 @@ def create_arcs(YT_locations, Job_locations, number_of_final_route, alpha1, alph
     # 2. Pick -> Drop 경로, 아크 생성
     for j in range(len(Job_locations)):
         route_Pick_to_Drop = generate_routes(Job_locations[j][0], Job_locations[j][1])
- 
+
+        # for _ in range(len(route_Pick_to_Drop)):
+        #     print('route_Pick_to_Drop : ',route_Pick_to_Drop[_])
+
         # 경로 1개당 arc 객체 생성(Pick -> Drop)
         for k in range(len(route_Pick_to_Drop)):
             # arcs_Pick_to_Drop = generate_arcs(j, j, k, route_Pick_to_Drop[k], now_index, arcs_Pick_to_Drop)
@@ -182,14 +204,14 @@ def create_arcs(YT_locations, Job_locations, number_of_final_route, alpha1, alph
         now_index += 1
         arcs_YT_to_Sink.append(arcname)
 
-    sort_and_cost(arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink, prev_count, now_count, alpha1, alpha2, alpha3)
-
+    arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink = sort_and_cost(arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink,
+                    prev_count, now_count_A1, now_count_A2, now_count_A3, alpha1, alpha2, alpha3)
+    
     return (arcs_YT_to_Pick,
             arcs_Pick_to_Drop,
             arcs_Drop_to_Pick,
             arcs_Drop_to_Sink,
-            arcs_YT_to_Sink,
-            now_count)
+            arcs_YT_to_Sink)
 
 
 
