@@ -13,6 +13,9 @@ public class StationsInfo : MonoBehaviour
     // 작업 대기 중인 트럭 리스트
     public List<GameObject> processQueueList;
 
+    // 작업 중인 트럭 리스트
+    public List<GameObject> processList;
+
     // 작업 끝난 트럭 리스트
     public List<GameObject> finishedQueueList_toLeft;
     public List<GameObject> finishedQueueList_toRight;
@@ -23,6 +26,8 @@ public class StationsInfo : MonoBehaviour
         stationCapacity = 2;
     
         processQueueList = new List<GameObject>();
+
+        processList = new List<GameObject>();
         finishedQueueList_toLeft = new List<GameObject>();
         finishedQueueList_toRight = new List<GameObject>();
     }
