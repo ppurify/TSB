@@ -20,17 +20,37 @@ public class StationsInfo : MonoBehaviour
     public List<GameObject> finishedQueueList_toLeft;
     public List<GameObject> finishedQueueList_toRight;
 
+    public float craneProcessTime;
+    private float quayCranePosition_z = 200f;
+
+
     void Awake()
     {
         stationStatus = 0;
-        stationCapacity = 2;
+        // Randomly assign 2 or 3 to the 'stationCapacity' variable
+        stationCapacity = Random.Range(2, 4);
+
+        AssignProcessTime(quayCranePosition_z);
+        // stationCapacity = 2;
     
         processQueueList = new List<GameObject>();
-
         processList = new List<GameObject>();
         finishedQueueList_toLeft = new List<GameObject>();
         finishedQueueList_toRight = new List<GameObject>();
     }
 
+    private void AssignProcessTime(float quayCranePos_z)
+    {
+        // Assign process time to each crane
+        if(this.transform.position.z == quayCranePos_z)
+        {
+            craneProcessTime = 180f;
+        }
+
+        else
+        {
+            craneProcessTime = 120f;
+        }
+    }
     
 }
