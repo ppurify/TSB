@@ -36,7 +36,7 @@ namespace TrafficSimulation{
 
 
         // 동일한 시작 위치를 가진 트럭들의 생성 주기
-        private float createDelay = 30f;
+        private float createDelay = 120f;
         
         private int truckIndexPlus_1 = 0;
         private int truckIndexPlus_2 = 100;
@@ -49,6 +49,10 @@ namespace TrafficSimulation{
         {
             ReadFile(truckFilePath_1, truckIndexPlus_1);
             CreateStations(truckDataList_1, stationTagName);
+
+            ReadFile(truckFilePath_2, truckIndexPlus_2);
+            CreateStations(truckDataList_2, stationTagName);
+            
             if(ExistRoute(truckDataList_1))
             {   
                 IsDuplicateStartPosition(truckDataList_1, truckIndexPlus_1);
@@ -562,8 +566,8 @@ namespace TrafficSimulation{
 
             // Create new trucks
 
-            ReadFile(truckFilePath_2, truckIndexPlus_2);
-            CreateStations(truckDataList_2, stationTagName);
+            // ReadFile(truckFilePath_2, truckIndexPlus_2);
+            // CreateStations(truckDataList_2, stationTagName);
 
             if(ExistRoute(truckDataList_2))
             {   
