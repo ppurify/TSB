@@ -35,7 +35,7 @@ namespace TrafficSimulation{
 
 
         // public float moveDelay = 3f;
-        private float processTime = 60f;
+        private float processTime = 130f;
 
 
         private Vector3 originalPos;
@@ -45,7 +45,7 @@ namespace TrafficSimulation{
         // 2. tile 25
         private float toStationNum = 15f;
 
-        private float checkRange_1 = 20f;
+        private float checkRange_1 = 6f;
         // private float checkRange_1 = 80f;
         private float checkRange_2 = 3f;
         // 현재 유턴 횟수
@@ -210,7 +210,7 @@ namespace TrafficSimulation{
                         thisVehicleAI.vehicleStatus = Status.STOP;
                         nowStatus = NowStatus.WAITING;
 
-                        // StartCoroutine(AgainCheck(checkDelay, 15f, 3f));
+                        // StartCoroutine(AgainCheck(checkDelay, 6f, 1f));
                         
                     }
 
@@ -235,7 +235,7 @@ namespace TrafficSimulation{
                         thisVehicleAI.vehicleStatus = Status.STOP;
                         nowStatus = NowStatus.WAITING;
 
-                        // StartCoroutine(AgainCheck(checkDelay, 15f, 3f));
+                        // StartCoroutine(AgainCheck(checkDelay, 6f, 1f)); 
                     }
 
                     else
@@ -254,7 +254,6 @@ namespace TrafficSimulation{
                     // 트럭이 작업해야하는 곳인 경우
                     if(nowStationPos == toWorkStationPos)
                     {   
-                        nowStatus = NowStatus.PROCESSING;
                         StartCoroutine(WorkingProcess());
                     }
                 }
@@ -374,27 +373,31 @@ namespace TrafficSimulation{
 
             vehicle.transform.position = nowStationPos + new Vector3(0, 0, toStationNum);
             nowStationInfo.processQueueList.Add(vehicle);
-
         }
 
         private IEnumerator Processing()
         {   
             UnityEngine.Debug.Log(this.name + " processing ---> station : " + nowStationPos);
+            nowStatus = NowStatus.WAITING;
 
             // station이 작업 처리 할 수 있는 지 확인
             while(!IsStationAvailable(nowStation))
             {
                 yield return new WaitForSeconds(checkDelay);
             }
+            
+            nowStatus = NowStatus.PROCESSING;
 
             // Get Station information
             nowStationInfo.stationStatus += 1;
 
             nowStationInfo.processQueueList.Remove(vehicle);
+            nowStationInfo.processList.Add(vehicle);
 
             yield return new WaitForSeconds(processTime);
 
             nowStationInfo.stationStatus -= 1;
+            nowStationInfo.processList.Remove(vehicle);
 
             PlusFinishedVehicle(nowStationInfo, vehicle);
 
@@ -523,7 +526,8 @@ namespace TrafficSimulation{
             int _stationStatus = _stationInfo.stationStatus;
             int _stationCapacity = _stationInfo.stationCapacity;
 
-            if(_stationStatus <= _stationCapacity)
+            // UnityEngine.Debug.Log(_station.name + "  --- > _stationStatus : " + _stationStatus+", _stationCapacity : " + _stationCapacity);
+            if(_stationStatus < _stationCapacity)
             {
                 isAvailable = true;
             }
@@ -552,11 +556,11 @@ namespace TrafficSimulation{
 
         private IEnumerator AgainCheck(float _checkDelay, float _checkRange_1, float _checkRange_2)
         {
-            // UnityEngine.Debug.Log(this.name + " Check Delay");
+            UnityEngine.Debug.Log(this.name + " Check Delay");
             // 작업이 끝나면 주변에 트럭이 있는지 확인
             while(ExistAnyTruck(vehicle.transform.position, _checkRange_1, _checkRange_2))
             {   
-                // UnityEngine.Debug.Log(this.name + " can't go to next station, has to wait ! ");
+                UnityEngine.Debug.Log(this.name + " can't go to next station, has to wait ! ");
                 yield return new WaitForSeconds(_checkDelay);
             }
 
