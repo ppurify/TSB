@@ -15,7 +15,6 @@ namespace TrafficSimulation{
         {
             nowTruckCount = 0;
             totalTruckCount = CreateTruckAndStation.truckDataList_1.Count + CreateTruckAndStation.truckDataList_2.Count;
-            
         }
 
         // Update is called once per frame
