@@ -35,7 +35,8 @@ namespace TrafficSimulation{
 
 
         // public float moveDelay = 3f;
-        private float processTime = 130f;
+        // private float processTime = 180f;
+        private float processTime;
 
 
         private Vector3 originalPos;
@@ -84,6 +85,7 @@ namespace TrafficSimulation{
             vehicle = this.gameObject;
             thisVehicleAI = vehicle.GetComponent<VehicleAI>();
 
+            vehicle.AddComponent<Timer>();
             truckTimer = vehicle.GetComponent<Timer>();
 
             truckTotalWatch = new Stopwatch();
@@ -385,7 +387,7 @@ namespace TrafficSimulation{
             {
                 yield return new WaitForSeconds(checkDelay);
             }
-            
+
             nowStatus = NowStatus.PROCESSING;
 
             // Get Station information
@@ -394,6 +396,7 @@ namespace TrafficSimulation{
             nowStationInfo.processQueueList.Remove(vehicle);
             nowStationInfo.processList.Add(vehicle);
 
+            processTime = nowStationInfo.craneProcessTime;
             yield return new WaitForSeconds(processTime);
 
             nowStationInfo.stationStatus -= 1;
@@ -459,9 +462,16 @@ namespace TrafficSimulation{
 
             nowStationInfo.processQueueList.Remove(vehicle);
 
+            processTime = nowStationInfo.craneProcessTime;
             yield return new WaitForSeconds(processTime);
 
             nowStationInfo.stationStatus -= 1;
+
+            if(truckTimer == null)
+            {
+                truckTimer = vehicle.GetComponent<Timer>();
+                UnityEngine.Debug.LogError(this.name + " Timer 컴포넌트를 다시 할당했습니다.");
+            }
 
             if(truckTimer != null)
             {
@@ -488,7 +498,7 @@ namespace TrafficSimulation{
 
             else
             {
-                UnityEngine.Debug.LogError("Timer 컴포넌트를 찾을 수 없습니다.");
+                UnityEngine.Debug.LogError(this.name + " Timer 컴포넌트를 찾을 수 없습니다.");
             }
 
             vehicle.SetActive(false);
