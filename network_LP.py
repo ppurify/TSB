@@ -15,14 +15,16 @@ def solve(all_arcs, number_of_YT, number_of_Job):
     # sort all_arcs by index
     all_arcs.sort(key=lambda x: x.index)
 
+
+
     # print('lenght of all_arcs : ', len(all_arcs))
     # for i in range(len(all_arcs)):
-    #     print('i : ', all_arcs[i].i
-    #     , 'j : ', all_arcs[i].j
-    #     , 'k : ', all_arcs[i].k
-    #     , 'path : ', all_arcs[i].path
-    #     , 'cost : ', all_arcs[i].cost
-    #     , 'index : ', all_arcs[i].index)
+    #     print('i : ', all_arcs[i].i),
+    #     print('j : ', all_arcs[i].j)
+    #     print('k : ', all_arcs[i].k)
+    #     print('path : ', all_arcs[i].path)
+    #     print('cost : ', all_arcs[i].cost)
+    #     print('index : ', all_arcs[i].index)
     #     print('')
 
 
