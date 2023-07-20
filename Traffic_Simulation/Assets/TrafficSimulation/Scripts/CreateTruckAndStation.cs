@@ -11,8 +11,8 @@ namespace TrafficSimulation{
 
         // private string truckFilePath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\Truck_50_shortest.csv";
         private static string folderPath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\";
-        public static string truckFileName_1 = "Truck_20_LP.csv";
-        public static string truckFileName_2 = "Truck_30_LP.csv";
+        public static string truckFileName_1 = "Truck_30_shortest.csv";
+        public static string truckFileName_2 = "Truck_20_LP.csv";
         private static string truckFilePath_1 = Path.Combine(folderPath, truckFileName_1);
         private static string truckFilePath_2 = Path.Combine(folderPath, truckFileName_2);
 
@@ -36,7 +36,8 @@ namespace TrafficSimulation{
 
 
         // 동일한 시작 위치를 가진 트럭들의 생성 주기
-        private float createDelay = 120f;
+        // private float createDelay = 120f;
+        private float createDelay = 60f;
         
         private int truckIndexPlus_1 = 0;
         private int truckIndexPlus_2 = 100;
@@ -52,7 +53,7 @@ namespace TrafficSimulation{
 
             ReadFile(truckFilePath_2, truckIndexPlus_2);
             CreateStations(truckDataList_2, stationTagName);
-            
+
             if(ExistRoute(truckDataList_1))
             {   
                 IsDuplicateStartPosition(truckDataList_1, truckIndexPlus_1);
@@ -298,7 +299,7 @@ namespace TrafficSimulation{
                                 Debug.LogError("Tag does not exist: " + _stationTagName);
                             }
                             
-                            workStationOB.AddComponent<StationsInfo>();
+                            workStationOB.AddComponent<CranesInfo>();
                             AddCollider(workStationOB);
                         }
                     }
