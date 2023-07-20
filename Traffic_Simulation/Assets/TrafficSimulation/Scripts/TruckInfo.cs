@@ -57,7 +57,7 @@ namespace TrafficSimulation{
 
         private GameObject nowStation;
         private Vector3 nowStationPos;
-        private StationsInfo nowStationInfo;
+        private CranesInfo nowStationInfo;
         private int nowStation_FinishedVehicle_toLeft;
         private int nowStation_FinishedVehicle_toRight;
 
@@ -185,7 +185,7 @@ namespace TrafficSimulation{
                 // Get Station's Information
                 nowStation = _other.gameObject;
                 nowStationPos = nowStation.transform.position;
-                nowStationInfo = nowStation.GetComponent<StationsInfo>();
+                nowStationInfo = nowStation.GetComponent<CranesInfo>();
 
                 nowStation_FinishedVehicle_toLeft = nowStationInfo.finishedQueueList_toLeft != null ? nowStationInfo.finishedQueueList_toLeft.Count : 0;
                 nowStation_FinishedVehicle_toRight = nowStationInfo.finishedQueueList_toRight != null ? nowStationInfo.finishedQueueList_toRight.Count : 0;
@@ -391,7 +391,7 @@ namespace TrafficSimulation{
             nowStatus = NowStatus.PROCESSING;
 
             // Get Station information
-            nowStationInfo.stationStatus += 1;
+            nowStationInfo.craneStatus += 1;
 
             nowStationInfo.processQueueList.Remove(vehicle);
             nowStationInfo.processList.Add(vehicle);
@@ -399,7 +399,7 @@ namespace TrafficSimulation{
             processTime = nowStationInfo.craneProcessTime;
             yield return new WaitForSeconds(processTime);
 
-            nowStationInfo.stationStatus -= 1;
+            nowStationInfo.craneStatus -= 1;
             nowStationInfo.processList.Remove(vehicle);
 
             PlusFinishedVehicle(nowStationInfo, vehicle);
@@ -458,14 +458,14 @@ namespace TrafficSimulation{
             }
 
             // Get Station information
-            nowStationInfo.stationStatus += 1;
+            nowStationInfo.craneStatus += 1;
 
             nowStationInfo.processQueueList.Remove(vehicle);
 
             processTime = nowStationInfo.craneProcessTime;
             yield return new WaitForSeconds(processTime);
 
-            nowStationInfo.stationStatus -= 1;
+            nowStationInfo.craneStatus -= 1;
 
             if(truckTimer == null)
             {
@@ -532,12 +532,12 @@ namespace TrafficSimulation{
             bool isAvailable = false;
             
             // Get Station's Status
-            StationsInfo _stationInfo = _station.GetComponent<StationsInfo>();
-            int _stationStatus = _stationInfo.stationStatus;
-            int _stationCapacity = _stationInfo.stationCapacity;
+            CranesInfo _craneInfo = _station.GetComponent<CranesInfo>();
+            int _craneStatus = _craneInfo.craneStatus;
+            int _craneCapacity = _craneInfo.craneCapacity;
 
             // UnityEngine.Debug.Log(_station.name + "  --- > _stationStatus : " + _stationStatus+", _stationCapacity : " + _stationCapacity);
-            if(_stationStatus < _stationCapacity)
+            if(_craneStatus < _craneCapacity)
             {
                 isAvailable = true;
             }
@@ -625,7 +625,7 @@ namespace TrafficSimulation{
         }
 
 
-        private void PlusFinishedVehicle(StationsInfo _stationInfo, GameObject _vehicle)
+        private void PlusFinishedVehicle(CranesInfo _stationInfo, GameObject _vehicle)
         {   
             if(CheckRotation_IsToRight(vehicle))
             {
@@ -639,7 +639,7 @@ namespace TrafficSimulation{
         }
 
 
-        private void MinusFinishedVehicle(StationsInfo _stationInfo, GameObject _vehicle)
+        private void MinusFinishedVehicle(CranesInfo _stationInfo, GameObject _vehicle)
         {   
             if(CheckRotation_IsToRight(_vehicle))
             {
