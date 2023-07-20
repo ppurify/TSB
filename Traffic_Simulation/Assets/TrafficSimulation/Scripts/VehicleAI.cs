@@ -136,7 +136,7 @@ namespace TrafficSimulation {
 
             //Default, full acceleration, no break and no steering
             // float acc = 1;
-            float acc = 7;
+            float acc = 5;
             float brake = 0;
             float steering = 0;
             wheelDrive.maxSpeed = initMaxSpeed;
@@ -162,7 +162,7 @@ namespace TrafficSimulation {
                 if(vehicleStatus == Status.SLOW_DOWN){
                     // acc = .3f;
                     // acc가 클수록 속도는 더 적게 줄어듬
-                    acc = 1.5f;
+                    acc = 1.2f;
                     brake = 0f;
                     this.gameObject.GetComponent<TruckInfo>().nowStatus = NowStatus.WAITING;
                     // Debug.Log(this.name+ " SLOW DOWN");
