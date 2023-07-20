@@ -50,10 +50,13 @@ namespace TrafficSimulation{
         public UnitType unitType;
 
         [Tooltip("Min Speed - when driving (not including stops/brakes), in the unit choosen above. Should be > 0.")]
-        public float minSpeed = 35;
+        // public float minSpeed = 35;
+        public float minSpeed = 30;
+
 
         [Tooltip("Max Speed in the unit choosen above")]
-        public float maxSpeed = 75;
+        // public float maxSpeed = 75;
+        public float maxSpeed = 53;
 
         [Tooltip("Drag the wheel shape here.")]
         public GameObject leftWheelShape;
