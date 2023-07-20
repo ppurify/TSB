@@ -606,7 +606,6 @@ GameObject:
   - component: {fileID: -5547127286331881106}
   - component: {fileID: 6307610683011075250}
   - component: {fileID: 6191599503789027035}
-  - component: {fileID: -7705295612770202580}
   m_Layer: 9
   m_Name: Truck7
   m_TagString: AutonomousVehicle
@@ -678,9 +677,6 @@ MonoBehaviour:
   truckDestination: {x: 0, y: 0, z: 0}
   truckRouteName: 
   truckStatus: 0
-  short_slowingTime: 1.5
-  long_slowingTime: 5
-  processTime: 10
   nowTurnNum: 0
   turnStations: []
   truckStationWatchList: []
@@ -725,24 +721,11 @@ MonoBehaviour:
   maxTorque: 300
   brakeTorque: 10000
   unitType: 0
-  minSpeed: 35
-  maxSpeed: 75
+  minSpeed: 30
+  maxSpeed: 53
   leftWheelShape: {fileID: 6238161387211472396, guid: ccfaa9eec1c4f654d9224b3d6382e480,
     type: 3}
   rightWheelShape: {fileID: 1677003440194013298, guid: 3cef6b64b7157ee499c0487f1ba44903,
     type: 3}
   animateWheels: 1
   driveType: 2
---- !u!114 &-7705295612770202580
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6065543447552222051}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af482f02ca9d95a469871a6f4349c914, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  filePath: Assets/Results/result-Truck_20_LP.csv
