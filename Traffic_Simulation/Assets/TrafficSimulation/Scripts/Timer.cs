@@ -21,7 +21,7 @@ namespace TrafficSimulation{
                 // Create a new CSV file and write the data
                 using (StreamWriter sw = File.CreateText(_filePath))
                 {
-                    string header = "Truck_id, Route_id, Origin, Destination, Total Time, Arrival Time";
+                    string header = "Truck_id, Route_id, Origin, Destination, Total Time, PickupSta AT, DropSta AT";
 
                     // Write the header and data to the CSV file
                     sw.WriteLine(header);
