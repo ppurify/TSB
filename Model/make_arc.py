@@ -19,18 +19,25 @@ class arc:
 def min_max_normalization(data):
     min_val = np.min(data)
     max_val = np.max(data)
-    normalized_data = (data - min_val) / (max_val - min_val)
+    
+    if(min_val == max_val):
+    # 모든 원소값 0.5로 설정
+        normalized_data = np.full((len(data), len(data[0])), 0.5)
+    else:
+        normalized_data = (data - min_val) / (max_val - min_val)
     
     return normalized_data
 
 
 # route로 다수의 경로 받아서 최종 number_of_final_route개의 경로 final_route 반환
-def penalty(normalized_prev_count, route, number_of_final_route, alpha1, alpha3):
+# def penalty(normalized_prev_count, route, number_of_final_route, alpha1, alpha3):
+def penalty(normalized_prev_count, route, number_of_final_route, alpha1):
     penalty_list = []
 
     for i in range(len(route)):
         sum_of_counter_of_prev_count = 0
         sum_of_move = len(route[i])
+        
         for j in range(len(route[i])):
             sum_of_counter_of_prev_count += normalized_prev_count[(route[i][j][0], route[i][j][1])]
 
@@ -72,7 +79,6 @@ def get_cost(normalized_prev_count, normalized_now_count, path, alpha1, alpha2, 
         for i in range(len(path)):
             sum_of_counter_of_prev_count += normalized_prev_count[(path[i][0], path[i][1])]
             sum_of_counter_of_now_count += normalized_now_count[(path[i][0], path[i][1])]
-
         # cost 산출(반올림)
         total_cost = round((alpha1 * sum_of_counter_of_prev_count) + (alpha2 * sum_of_counter_of_now_count) + (alpha3 * sum_of_move))
     return total_cost

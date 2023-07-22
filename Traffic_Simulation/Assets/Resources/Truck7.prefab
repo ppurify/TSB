@@ -722,7 +722,7 @@ MonoBehaviour:
   brakeTorque: 10000
   unitType: 0
   minSpeed: 30
-  maxSpeed: 53
+  maxSpeed: 55
   leftWheelShape: {fileID: 6238161387211472396, guid: ccfaa9eec1c4f654d9224b3d6382e480,
     type: 3}
   rightWheelShape: {fileID: 1677003440194013298, guid: 3cef6b64b7157ee499c0487f1ba44903,

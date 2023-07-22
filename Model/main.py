@@ -22,11 +22,11 @@ def main():
         [2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, 2],
         [4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4]
     ])
-
-    number_of_YT = 30
-    number_of_Job = 30
-    filename_Truck = 'Test_Truck_30_solution.csv'
-    filename_RoutePoints = 'Test_RoutePoints_30_solution.csv'
+    
+    number_of_YT = 15
+    number_of_Job = 10
+    filename_Truck = 'Truck_10_shortest.csv'
+    filename_RoutePoints = 'RoutePoints_10_shortest.csv'
 
     # 스케줄링 대상 YT 생성
     # YT_locations = {0: (4, 3), 1: (6, 14), 2: (0, 15), 3: (8, 17), 4: (4, 2), 5: (0, 1), 6: (4, 7), 7: (8, 13), 8: (0, 18), 9: (0, 16), 10: (6, 2), 11: (0, 3), 12: (1, 18), 13: (7, 18), 14: (2, 12), 15: (2, 15), 16: (4, 3), 17: (0, 18), 18: (8, 13), 19: (8, 16), 20: (8, 16), 21: (2, 3), 22: (0, 9), 23: (1, 0), 24: (0, 18), 25: (1, 6), 26: (2, 3), 27: (8, 10), 28: (2, 12), 29: (0, 0)}
@@ -42,10 +42,10 @@ def main():
     for i in range(number_of_YT):
         YT_location = None
         while YT_location is None or grid[YT_location] == -1 or YT_location[1] not in [7, 17, 27]:
-          YT_location = (np.random.randint(len(grid)), np.random.randint(len(grid[0])))
+            YT_location = (np.random.randint(len(grid)), np.random.randint(len(grid[0])))
         YT_locations[i] = YT_location
 
-    # 3, 9, 15열이면서 블럭이 아닌 임의의 좌표에 Job 생성
+    # 5, 15, 25열이면서 블럭이 아닌 임의의 좌표에 Job 생성
     for j in range(number_of_Job):
         Pick_location = None
         Drop_location = None
@@ -74,7 +74,7 @@ def main():
     #     [3979, 1786, 1786, 1955, 1537, 1537, 4735, 1515, 1515, 1695, 1465, 1465, 5576, 1865, 1865, 1745, 1143,  988, 3279],
     #     [3244,    0,    0,    0,    0,    0, 1993,    0,    0,    0,    0,    0, 3128,    0,    0,    0,    0,    0, 3052],
     #     [3161, 3161, 3161, 3308, 3297, 3297, 4732, 4174, 4286, 4474, 4141, 4141, 5655, 4107, 3989, 4347, 3222, 3222, 3052]])
-    
+    # prev_count = np.zeros((len(grid), len(grid[0])))
     prev_count = np.zeros((len(grid), len(grid[0])))
     now_count = np.zeros((len(grid), len(grid[0])))
 
