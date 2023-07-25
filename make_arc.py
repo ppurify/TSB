@@ -19,7 +19,10 @@ class arc:
 def min_max_normalization(data):
     min_val = np.min(data)
     max_val = np.max(data)
-    normalized_data = (data - min_val) / (max_val - min_val)
+    if min_val == max_val:
+        normalized_data = np.zeros((len(data), len(data[0])))
+    else:
+        normalized_data = (data - min_val) / (max_val - min_val)
     
     return normalized_data
 
@@ -43,6 +46,14 @@ def penalty(normalized_prev_count, route, number_of_final_route, alpha1, alpha3)
     final_route = [route[i] for i in final_route_idx]
     return final_route
 
+# pseudo code of penalty function
+# for pair in pairs:
+#     for arc in pair:
+#         input : path, Q_(x,y)^prev count
+#         for coordinate in path:
+#             prev_count_sum += Q_(x,y)^prev count[coordinate]
+#         penalty = alpha1 * prev_count_sum + alpha3 * len(path)
+#     pick k' paths with the smallest penalty
 
 # # 주어진 path의 cost 계산, 더미 아크(path의 길이 0)는 cost 무한대
 # def get_cost(prev_count, now_count, path, alpha1, alpha2, alpha3):
