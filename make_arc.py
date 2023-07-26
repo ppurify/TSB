@@ -89,12 +89,13 @@ def get_cost(normalized_prev_count, normalized_now_count, path, alpha1, alpha2, 
     return total_cost
 
 
-def sort_and_cost(arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink, prev_count, now_count, alpha1, alpha2, alpha3):
+def sort_and_cost(YT_locations, Job_locations, arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink, prev_count, now_count, alpha1, alpha2, alpha3):
 
-    # A1 now_count에 path 반영
+    # A1를 now_count에 path 반영
     for i in range(len(arcs_YT_to_Pick)):
         for j in range(len(arcs_YT_to_Pick[i].path)):
             now_count[(arcs_YT_to_Pick[i].path[j][0], arcs_YT_to_Pick[i].path[j][1])] += 1
+
 
     normalized_prev_count = min_max_normalization(prev_count)
     normalized_A1_now_count = min_max_normalization(now_count)
@@ -107,34 +108,64 @@ def sort_and_cost(arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Dr
     # now_count 초기화
     now_count = np.zeros((len(prev_count), len(prev_count[0])))
     
-    # A2 now_count에 path 반영
+    # A2를 now_count에 path 반영
     for i in range(len(arcs_Pick_to_Drop)):
         for j in range(len(arcs_Pick_to_Drop[i].path)):
             now_count[(arcs_Pick_to_Drop[i].path[j][0], arcs_Pick_to_Drop[i].path[j][1])] += 1
 
+    # pair : 같은 출발지 i와 도착지 j를 가지는 arc들의 집합
+    # A1에서 각 pair마다 cost가 가장 작은 아크만 반영하여 prev count 생성
+    A2_prev_count = np.zeros((len(prev_count), len(prev_count[0])))
+    for i in range(len(YT_locations)):
+        for j in range(len(Job_locations)):
+            min_cost_in_pair = sys.maxsize
+            for k in range(len(arcs_YT_to_Pick)):
+                if arcs_YT_to_Pick[k].i == ['YT', i] and arcs_YT_to_Pick[k].j == ['Pick', j]:
+                    if min_cost_in_pair > arcs_YT_to_Pick[k].cost:
+                        min_cost_in_pair = arcs_YT_to_Pick[k].cost
+                        min_cost_in_pair_index = k
+            if min_cost_in_pair != sys.maxsize:
+                for l in range(len(arcs_YT_to_Pick[min_cost_in_pair_index].path)):
+                    A2_prev_count[(arcs_YT_to_Pick[min_cost_in_pair_index].path[l][0], arcs_YT_to_Pick[min_cost_in_pair_index].path[l][1])] += 1
+
+    normalized_A2_prev_count = min_max_normalization(now_count)
     normalized_A2_now_count = min_max_normalization(now_count)
-    max_A2_now_count = np.max(normalized_A2_now_count)
+    # max_A2_now_count = np.max(normalized_A2_now_count)
 
     # A2 cost 계산
     for i in range(len(arcs_Pick_to_Drop)):
-        arcs_Pick_to_Drop[i].cost = get_cost(normalized_A1_now_count, normalized_A2_now_count, arcs_Pick_to_Drop[i].path, alpha1=alpha1, alpha2=alpha2, alpha3=alpha3)
+        arcs_Pick_to_Drop[i].cost = get_cost(normalized_A2_prev_count, normalized_A2_now_count, arcs_Pick_to_Drop[i].path, alpha1=alpha1, alpha2=alpha2, alpha3=alpha3)
 
     # now_count 초기화
     now_count = np.zeros((len(prev_count), len(prev_count[0])))
 
-    # A3 now_count에 path 반영
+    # A3를 now_count에 path 반영
     for i in range(len(arcs_Drop_to_Pick)):
         for j in range(len(arcs_Drop_to_Pick[i].path)):
             now_count[(arcs_Drop_to_Pick[i].path[j][0], arcs_Drop_to_Pick[i].path[j][1])] += 1
 
+
+    # A2에서 각 pair마다 cost가 가장 작은 아크만 반영하여 prev count 생성
+    A3_prev_count = np.zeros((len(prev_count), len(prev_count[0])))
+    for i in range(len(Job_locations)):
+        min_cost_in_pair = sys.maxsize
+        for k in range(len(arcs_Pick_to_Drop)):
+            if arcs_Pick_to_Drop[k].i == ['Pick', i] and arcs_Pick_to_Drop[k].j == ['Drop', i]:
+                if min_cost_in_pair > arcs_Pick_to_Drop[k].cost:
+                    min_cost_in_pair = arcs_Pick_to_Drop[k].cost
+                    min_cost_in_pair_index = k
+        if min_cost_in_pair != sys.maxsize:
+            for l in range(len(arcs_Pick_to_Drop[min_cost_in_pair_index].path)):
+                A3_prev_count[(arcs_Pick_to_Drop[min_cost_in_pair_index].path[l][0], arcs_Pick_to_Drop[min_cost_in_pair_index].path[l][1])] += 1
+
+    normalized_A3_prev_count = min_max_normalization(now_count)
     normalized_A3_now_count = min_max_normalization(now_count)
-    max_A3_now_count = np.max(normalized_A3_now_count)
+
+    # max_A3_now_count = np.max(normalized_A3_now_count)/
 
     # A3 cost 계산
     for i in range(len(arcs_Drop_to_Pick)):
-        arcs_Drop_to_Pick[i].cost = get_cost((normalized_A1_now_count + normalized_A2_now_count + normalized_A3_now_count),
-                                             (normalized_A1_now_count + normalized_A2_now_count + normalized_A3_now_count),
-                                             arcs_Drop_to_Pick[i].path, alpha1=alpha1, alpha2=alpha2, alpha3=alpha3)+1000000
+        arcs_Drop_to_Pick[i].cost = get_cost((normalized_A3_prev_count), (normalized_A3_now_count), arcs_Drop_to_Pick[i].path, alpha1=alpha1, alpha2=alpha2, alpha3=alpha3)+1000000
 
     # A4 cost 계산
     for i in range(len(arcs_Drop_to_Sink)):
@@ -320,7 +351,7 @@ def create_arcs(YT_locations, Job_locations, number_of_final_route, alpha1, alph
         arcs_YT_to_Sink.append(arcname)
 
 
-    sort_and_cost(arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink, prev_count, now_count, alpha1, alpha2, alpha3)
+    sort_and_cost(YT_locations, Job_locations, arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink, prev_count, now_count, alpha1, alpha2, alpha3)
 
     return arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink, now_count
 
