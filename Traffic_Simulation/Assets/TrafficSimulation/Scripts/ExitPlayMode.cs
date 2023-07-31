@@ -14,7 +14,10 @@ namespace TrafficSimulation{
         void Start()
         {
             nowTruckCount = 0;
-            totalTruckCount = CreateTruckAndStation.truckDataList_1.Count + CreateTruckAndStation.truckDataList_2.Count;
+            totalTruckCount = CreateTruckAndStation.truckDataList_1.Count;
+            
+            // totalTruckCount = CreateTruckAndStation.truckDataList_1.Count + CreateTruckAndStation.truckDataList_2.Count;
+
         }
 
         // Update is called once per frame

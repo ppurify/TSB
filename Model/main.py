@@ -23,10 +23,10 @@ def main():
         [4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4]
     ])
     
-    number_of_YT = 40
-    number_of_Job = 40
-    filename_Truck = 'Truck_40_LP.csv'
-    filename_RoutePoints = 'RoutePoints_40_LP.csv'
+    number_of_YT = 10
+    number_of_Job = 10
+    filename_Truck = 'Truck_10_shortest.csv'
+    filename_RoutePoints = 'RoutePoints_10_shortest.csv'
 
     # 스케줄링 대상 YT 생성
     # YT_locations = {0: (4, 3), 1: (6, 14), 2: (0, 15), 3: (8, 17), 4: (4, 2), 5: (0, 1), 6: (4, 7), 7: (8, 13), 8: (0, 18), 9: (0, 16), 10: (6, 2), 11: (0, 3), 12: (1, 18), 13: (7, 18), 14: (2, 12), 15: (2, 15), 16: (4, 3), 17: (0, 18), 18: (8, 13), 19: (8, 16), 20: (8, 16), 21: (2, 3), 22: (0, 9), 23: (1, 0), 24: (0, 18), 25: (1, 6), 26: (2, 3), 27: (8, 10), 28: (2, 12), 29: (0, 0)}
@@ -60,38 +60,38 @@ def main():
 
 
     number_of_final_route = 3
-    alpha1 = 40 # prev counter
-    alpha2 = 30 # now counter
-    alpha3 = 30 # distance
+    alpha1 = 0 # prev counter
+    alpha2 = 0 # now counter
+    alpha3 = 100 # distance
 
-    prev_count = np.array([[ 2,  2,  2,  2,  2,  2,  9, 10, 10, 10, 12,  7,  7,  7,
-   7,  7,  8,  9,  7,  7,  8,  4,  4,  4,  4,  3,  3,  3,
-   2,  2,  2],
- [ 2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  7,  0,  0,  0,
-   0,  0,  0,  0,  0,  0,  5,  0,  0,  0,  0,  0,  0,  0,
-   0,  0,  2],
- [ 5,  5,  5,  5,  5,  5,  5,  5,  0,  0,  9,  3,  3,  3,
-   3,  3,  8,  8,  5,  5, 11,  3,  3,  3,  3,  3,  4,  4,
-   2,  2,  2],
- [ 3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  8,  0,  0,  0,
-   0,  0,  0,  0,  0,  0,  9,  0,  0,  0,  0,  0,  0,  0,
-   0,  0,  0],
- [ 6,  3,  3,  3,  3,  3,  4,  4,  1,  1, 11,  5,  5,  5,
-   5,  5,  5,  5,  4,  4, 13,  0,  0,  0,  0,  0,  2,  2,
-   2,  2,  2],
- [ 6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  8,  0,  0,  0,
-   0,  0,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0,
-   0,  0,  2],
- [ 7,  1,  1,  1,  1,  1,  4,  4,  3,  3, 10,  2,  2,  2,
-   2,  2,  3,  3,  3,  3, 13,  2,  2,  2,  2,  2,  3,  3,
-   1,  1,  3],
- [ 7,  0,  0,  0,  0,  0,  0,  0,  0,  0,  7,  0,  0,  0,
-   0,  0,  0,  0,  0,  0,  8,  0,  0,  0,  0,  0,  0,  0,
-   0,  0,  3],
- [ 7,  7,  7,  7,  7,  6,  7, 10, 10, 10, 16, 15, 15, 15,
-  15, 11, 11, 14, 13, 13, 16, 11, 11, 11, 11,  7,  4,  4,
-   3,  3,  3]])
-    prev_count = np.zeros((len(grid), len(grid[0])))
+#     prev_count = np.array([[ 2,  2,  2,  2,  2,  2,  9, 10, 10, 10, 12,  7,  7,  7,
+#    7,  7,  8,  9,  7,  7,  8,  4,  4,  4,  4,  3,  3,  3,
+#    2,  2,  2],
+#  [ 2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  7,  0,  0,  0,
+#    0,  0,  0,  0,  0,  0,  5,  0,  0,  0,  0,  0,  0,  0,
+#    0,  0,  2],
+#  [ 5,  5,  5,  5,  5,  5,  5,  5,  0,  0,  9,  3,  3,  3,
+#    3,  3,  8,  8,  5,  5, 11,  3,  3,  3,  3,  3,  4,  4,
+#    2,  2,  2],
+#  [ 3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  8,  0,  0,  0,
+#    0,  0,  0,  0,  0,  0,  9,  0,  0,  0,  0,  0,  0,  0,
+#    0,  0,  0],
+#  [ 6,  3,  3,  3,  3,  3,  4,  4,  1,  1, 11,  5,  5,  5,
+#    5,  5,  5,  5,  4,  4, 13,  0,  0,  0,  0,  0,  2,  2,
+#    2,  2,  2],
+#  [ 6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  8,  0,  0,  0,
+#    0,  0,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0,
+#    0,  0,  2],
+#  [ 7,  1,  1,  1,  1,  1,  4,  4,  3,  3, 10,  2,  2,  2,
+#    2,  2,  3,  3,  3,  3, 13,  2,  2,  2,  2,  2,  3,  3,
+#    1,  1,  3],
+#  [ 7,  0,  0,  0,  0,  0,  0,  0,  0,  0,  7,  0,  0,  0,
+#    0,  0,  0,  0,  0,  0,  8,  0,  0,  0,  0,  0,  0,  0,
+#    0,  0,  3],
+#  [ 7,  7,  7,  7,  7,  6,  7, 10, 10, 10, 16, 15, 15, 15,
+#   15, 11, 11, 14, 13, 13, 16, 11, 11, 11, 11,  7,  4,  4,
+#    3,  3,  3]])
+
     prev_count = np.zeros((len(grid), len(grid[0])))
     now_count = np.zeros((len(grid), len(grid[0])))
 
@@ -112,14 +112,18 @@ def main():
     # Run network_LP
     objective_value, activated_arcs = network_LP.solve(all_arcs, number_of_YT, number_of_Job)
     
+    activated_YT_count = 0
+
     # activated_arcs들의 각 정보 출력
-    # for arc in activated_arcs:
-    #     print('arc.i : ', arc.i)
-    #     print('arc.j : ', arc.j)
-    # #     print('arc.k : ', arc.k)
-    #     print('arc cost : ', arc.cost)
-    #     print('arc path : ', arc.path)
-    #     print("")
+    for arc in activated_arcs:
+        print('arc.i : ', arc.i)
+        if (arc.i[0] == "YT" ) & (len(arc.path) > 0):
+            activated_YT_count += 1
+        print('arc.j : ', arc.j)
+    #     print('arc.k : ', arc.k)
+        print('arc cost : ', arc.cost)
+        print('arc path : ', arc.path)
+        print("")
     # print('objective_value: ', objective_value)
     # print('activated_arcs: ', activated_arcs)
 
@@ -134,6 +138,7 @@ def main():
     print('next_prev_count')
     print(np.array2string(next_prev_count, separator=', ').replace('.', ''))
 
+    print("\n activated_YT_count : ", activated_YT_count)
 
     # Create csv file for Unity simulation
     YT_traversing_arc, YT_traverse_path, Trucks, RoutePoints = make_csv.create_csv(activated_arcs, number_of_YT, grid, filename_Truck, filename_RoutePoints)

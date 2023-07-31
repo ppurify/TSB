@@ -304,7 +304,7 @@ namespace TrafficSimulation{
             }
 
             
-            float stationArrivalTime = truckStationWatch.ElapsedMilliseconds / 1000f;
+            float stationArrivalTime = truckStationWatch.ElapsedMilliseconds / 1000f * Time.timeScale;
 
             truckStationWatchList.Add(stationArrivalTime);
             // UnityEngine.Debug.Log(vehicle.name + " stationWatch Stop !!! ---> now station : " + nowStation.name + " arrival time : " + stationArrivalTime);
@@ -480,8 +480,10 @@ namespace TrafficSimulation{
                     UnityEngine.Debug.LogError(this.name + " _truckTimer.totalWatch is null !!!");
                 }
                 truckTotalWatch.Stop();
-                float truckTotalTime = truckTotalWatch.ElapsedMilliseconds / 1000f;
-
+                float truckTotalTime = truckTotalWatch.ElapsedMilliseconds / 1000f * Time.timeScale;
+                UnityEngine.Debug.Log("Time.timeScale : " + Time.timeScale);
+                UnityEngine.Debug.Log("Before time : " + truckTotalWatch.ElapsedMilliseconds / 1000f);
+                UnityEngine.Debug.Log("After time : " + truckTotalTime);
                 // float totalTime = truckTimer.TimerStop(truckTimer.totalWatch);
                 // UnityEngine.Debug.Log(vehicle.name + " totalTime is " + truckTotalTime);
                 if(exitPlayMode == null)
