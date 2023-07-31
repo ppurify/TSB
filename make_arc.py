@@ -96,7 +96,7 @@ def sort_and_cost(YT_locations, Job_locations, arcs_YT_to_Pick, arcs_Pick_to_Dro
         for j in range(len(arcs_YT_to_Pick[i].path)):
             now_count[(arcs_YT_to_Pick[i].path[j][0], arcs_YT_to_Pick[i].path[j][1])] += 1
 
-
+    # ? t-1시점의 A3만 반영되야함
     normalized_prev_count = min_max_normalization(prev_count)
     normalized_A1_now_count = min_max_normalization(now_count)
     max_A1_now_count = np.max(normalized_A1_now_count)
@@ -175,7 +175,7 @@ def sort_and_cost(YT_locations, Job_locations, arcs_YT_to_Pick, arcs_Pick_to_Dro
     for i in range(len(arcs_YT_to_Sink)):
         arcs_YT_to_Sink[i].cost = 0
 
-
+ 
     # print('A1_now_count : ', normalized_A1_now_count)
     # print('')
     # print('A2_now_count : ', normalized_A2_now_count)
