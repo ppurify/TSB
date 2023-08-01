@@ -56,7 +56,7 @@ namespace TrafficSimulation{
 
         [Tooltip("Max Speed in the unit choosen above")]
         // public float maxSpeed = 75;
-        public float maxSpeed = 55;
+        public float maxSpeed = 57;
 
         [Tooltip("Drag the wheel shape here.")]
         public GameObject leftWheelShape;

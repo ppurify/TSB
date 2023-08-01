@@ -23,10 +23,10 @@ def main():
         [4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4]
     ])
     
-    number_of_YT = 30
-    number_of_Job = 30
-    filename_Truck = 'Truck_30_shortest.csv'
-    filename_RoutePoints = 'RoutePoints_30_shortest.csv'
+    number_of_YT = 40
+    number_of_Job = 40
+    filename_Truck = 'Truck_40_shortest.csv'
+    filename_RoutePoints = 'RoutePoints_40_shortest.csv'
 
     # 스케줄링 대상 YT 생성
     # YT_locations = {0: (4, 3), 1: (6, 14), 2: (0, 15), 3: (8, 17), 4: (4, 2), 5: (0, 1), 6: (4, 7), 7: (8, 13), 8: (0, 18), 9: (0, 16), 10: (6, 2), 11: (0, 3), 12: (1, 18), 13: (7, 18), 14: (2, 12), 15: (2, 15), 16: (4, 3), 17: (0, 18), 18: (8, 13), 19: (8, 16), 20: (8, 16), 21: (2, 3), 22: (0, 9), 23: (1, 0), 24: (0, 18), 25: (1, 6), 26: (2, 3), 27: (8, 10), 28: (2, 12), 29: (0, 0)}

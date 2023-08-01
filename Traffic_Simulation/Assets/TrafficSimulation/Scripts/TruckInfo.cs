@@ -31,7 +31,7 @@ namespace TrafficSimulation{
         // public float long_slowingTime = 5f;
         private float short_slowingTime = 1f;
 
-        private float long_slowingTime = 2.5f;
+        private float long_slowingTime = 2f;
 
 
         // public float moveDelay = 3f;
@@ -46,7 +46,7 @@ namespace TrafficSimulation{
         // 2. tile 25
         private float toStationNum = 15f;
 
-        private float checkRange_1 = 6f;
+        private float checkRange_1 = 4f;
         // private float checkRange_1 = 80f;
         private float checkRange_2 = 3f;
         // 현재 유턴 횟수
