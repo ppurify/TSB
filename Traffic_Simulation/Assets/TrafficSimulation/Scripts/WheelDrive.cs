@@ -22,7 +22,7 @@ namespace TrafficSimulation{
     public class WheelDrive : MonoBehaviour
     {
         [Tooltip("Downforce applied to the vehicle")]
-        public float downForce = 150f;
+        public float downForce = 200f;
 
         [Tooltip("Maximum steering angle of the wheels")]
         public float maxAngle = 95f;
