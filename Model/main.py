@@ -95,8 +95,7 @@ def main():
 
     ra.set_grid(grid)
     
- 
-    # Create arcs
+  # Create arcs
     arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink, now_count = make_arc.create_arcs(
         YT_locations=YT_locations, Job_locations=Job_locations, number_of_final_route=number_of_final_route,
         alpha1=alpha1, alpha2=alpha2, alpha3=alpha3,
@@ -110,33 +109,36 @@ def main():
     # Run network_LP
     objective_value, activated_arcs = network_LP.solve(all_arcs, number_of_YT, number_of_Job)
     
-    activated_YT_count = 0
-
     # activated_arcs들의 각 정보 출력
     for arc in activated_arcs:
         print('arc.i : ', arc.i)
-        if (arc.i[0] == "YT" ) & (len(arc.path) > 0):
-            activated_YT_count += 1
         print('arc.j : ', arc.j)
-    #     print('arc.k : ', arc.k)
+        print('arc.k : ', arc.k)
         print('arc cost : ', arc.cost)
         print('arc path : ', arc.path)
         print("")
     # print('objective_value: ', objective_value)
     # print('activated_arcs: ', activated_arcs)
 
-    # 다음번 스케줄링을 위한 next_prev_count
+    # 다음번 스케줄링을 위한 next_prev_count : A2 + A3의 누적 path정보
     next_prev_count = np.zeros((len(grid), len(grid[0])))
     for arc in activated_arcs:
-        for i in range(len(arc.path)-1):
-            next_prev_count[arc.path[i][0]][arc.path[i][1]] += 1
-    
+        # A2이거나 A3이면
+        if arc.i[0] == 'Pick':
+            # arc.path에 있는 모든 좌표에 1씩 더해줌
+            for i in range(len(arc.path)):
+                next_prev_count[arc.path[i][0]][arc.path[i][1]] += 1   
+        elif arc.i[0] == 'Drop' and arc.j[0] == 'Pick':
+            for i in range(len(arc.path)):
+                next_prev_count[arc.path[i][0]][arc.path[i][1]] += 1
 
-    # 붙여넣기 쉽게 원소사이에 , 추가하여 출력
     print('next_prev_count')
-    print(np.array2string(next_prev_count, separator=', ').replace('.', ''))
+    print(next_prev_count)
 
-    print("\n activated_YT_count : ", activated_YT_count)
+    # # 붙여넣기 쉽게 원소사이에 , 추가하여 출력
+    # print('next_prev_count')
+    # print(np.array2string(next_prev_count, separator=', ').replace('.', ''))
+
 
     # Create csv file for Unity simulation
     YT_traversing_arc, YT_traverse_path, Trucks, RoutePoints = make_csv.create_csv(activated_arcs, number_of_YT, grid, filename_Truck, filename_RoutePoints)
