@@ -10,8 +10,8 @@ namespace TrafficSimulation{
     public class Timer : MonoBehaviour
     {
         // 파일 저장 위치
-        // public static string csvFileName = CreateTruckAndStation.truckFileName_1 + "-" + CreateTruckAndStation.truckFileName_2;
-        public static string csvFileName = CreateTruckAndStation.truckFileName_1;
+        public static string csvFileName = CreateTruckAndStation.truckFileName_1 + "-" + CreateTruckAndStation.truckFileName_2;
+        // public static string csvFileName = CreateTruckAndStation.truckFileName_1;
 
         public string filePath = "Assets/Results/result-" + csvFileName;
 

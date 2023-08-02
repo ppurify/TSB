@@ -8,8 +8,8 @@ using System;
 namespace TrafficSimulation {    
     public class FileWindow : EditorWindow
     {   
-        private static string routefilePath = "C:\\Users\\purify\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\RoutePoints_30_shortest.csv";    
-        private static string intersectionfilePath = "C:\\Users\\purify\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\intersectionPoints-tile25.csv";
+        private static string routefilePath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\compared_RoutePoints_30_LP_50_40_10.csv";    
+        private static string intersectionfilePath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\intersectionPoints-tile25.csv";
 
         private static TrafficSystem wps;
 
@@ -19,7 +19,7 @@ namespace TrafficSimulation {
         // 1. tile 75
         // private static Vector3 intersectionSize = new Vector3(80,10,80);
         // 2. tile 38    
-        private static Vector3 intersectionSize = new Vector3(50,10,30);
+        private static Vector3 intersectionSize = new Vector3(45,10,30);
 
         private static float intersectionPos_y = intersectionSize.y/2;
 

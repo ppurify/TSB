@@ -23,76 +23,74 @@ def main():
         [4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4]
     ])
     
-    number_of_YT = 20
-    number_of_Job = 20
-    filename_Truck = 'Truck_20_shortest.csv'
-    filename_RoutePoints = 'RoutePoints_20_shortest.csv'
+    number_of_YT = 30
+    number_of_Job = 30
+    
+    filename_Truck = 'compared_Truck_30_LP_50_40_10.csv'
+    filename_RoutePoints = 'compared_RoutePoints_30_LP_50_40_10.csv'
 
     # 스케줄링 대상 YT 생성
-    # YT_locations = {0: (4, 3), 1: (6, 14), 2: (0, 15), 3: (8, 17), 4: (4, 2), 5: (0, 1), 6: (4, 7), 7: (8, 13), 8: (0, 18), 9: (0, 16), 10: (6, 2), 11: (0, 3), 12: (1, 18), 13: (7, 18), 14: (2, 12), 15: (2, 15), 16: (4, 3), 17: (0, 18), 18: (8, 13), 19: (8, 16), 20: (8, 16), 21: (2, 3), 22: (0, 9), 23: (1, 0), 24: (0, 18), 25: (1, 6), 26: (2, 3), 27: (8, 10), 28: (2, 12), 29: (0, 0)}
-    # Job_locations =  {0: [(6, 15), (6, 9)], 1: [(6, 3), (0, 3)], 2: [(2, 9), (0, 3)], 3: [(2, 9), (6, 15)], 4: [(0, 15), (2, 9)], 5: [(2, 15), (6, 15)], 6: [(4, 9), (4, 3)], 7: [(6, 9), (2, 3)], 8: [(6, 15), (0, 15)], 9: [(0, 9), (4, 3)], 10: [(4, 15), (2, 3)], 11: [(6, 9), (8, 15)], 12: [(6, 15), (6, 9)], 13: [(8, 3), (6, 15)], 14: [(4, 9), (6, 9)], 15: [(2, 3), (4, 9)], 16: [(6, 9), (4, 9)], 17: [(6, 15), (4, 9)], 18: [(6, 3), (8, 15)], 19: [(4, 9), (8, 3)], 20: [(0, 3), (2, 3)], 21: [(4, 15), (8, 3)], 22: [(2, 3), (8, 3)], 23: [(8, 3), (6, 15)], 24: [(8, 9), (6, 9)], 25: [(4, 15), (4, 9)], 26: [(4, 9), (6, 9)], 27: [(2, 15), (6, 3)], 28: [(2, 9), (6, 9)], 29: [(0, 3), (2, 9)]}
+    YT_locations = {0: (6, 27), 1: (4, 7), 2: (2, 17), 3: (8, 27), 4: (4, 7), 5: (2, 17), 6: (2, 7), 7: (4, 17), 8: (8, 27), 9: (6, 7), 10: (8, 17), 11: (0, 17), 12: (2, 17), 13: (2, 17), 14: (0, 27), 15: (6, 27), 16: (8, 7), 17: (0, 27), 18: (2, 17), 19: (6, 7), 20: (8, 17), 21: (6, 7), 22: (8, 27), 23: (0, 7), 24: (0, 17), 25: (2, 27), 26: (8, 17), 27: (4, 7), 28: (8, 7), 29: (0, 27)}
+    Job_locations = {0: [(6, 25), (0, 15)], 1: [(6, 5), (6, 25)], 2: [(8, 5), (2, 25)], 3: [(8, 15), (6, 15)], 4: [(8, 15), (2, 25)], 5: [(4, 5), (8, 5)], 6: [(6, 15), (4, 5)], 7: [(8, 5), (8, 15)], 8: [(4, 15), (0, 15)], 9: [(2, 5), (2, 25)], 10: [(4, 5), (2, 15)], 11: [(4, 5), (0, 25)], 12: [(2, 5), (4, 25)], 13: [(6, 25), (0, 15)], 14: [(2, 25), (0, 5)], 15: [(8, 15), (4, 25)], 16: [(8, 5), (0, 15)], 17: [(8, 5), (6, 15)], 18: [(0, 25), (8, 25)], 19: [(0, 25), (0, 15)], 20: [(6, 25), (4, 15)], 21: [(2, 15), (4, 25)], 22: [(4, 5), (8, 15)], 23: [(2, 5), (6, 25)], 24: [(4, 5), (2, 15)], 25: [(0, 5), (0, 25)], 26: [(8, 15), (6, 15)], 27: [(8, 5), (8, 15)], 28: [(4, 5), (0, 25)], 29: [(8, 5), (0, 5)]}
+    
+    # YT_locations = {}
+    # Job_locations = {}
 
-    # YT_locations = {0: (4, 3), 1: (6, 14), 2 : (0, 3)}
-    # Job_locations =  {0: [(6, 15), (6, 9)], 1: [(6, 3), (0, 3)]}
+    # # 임의의 위치에 YT 생성
+    # for i in range(number_of_YT):
+    #     YT_location = None
+    #     while YT_location is None or grid[YT_location] == -1 or YT_location[1] not in [7, 17, 27]:
+    #         YT_location = (np.random.randint(len(grid)), np.random.randint(len(grid[0])))
+    #     YT_locations[i] = YT_location
 
-    YT_locations = {}
-    Job_locations = {}
-
-    # 임의의 위치에 YT 생성
-    for i in range(number_of_YT):
-        YT_location = None
-        while YT_location is None or grid[YT_location] == -1 or YT_location[1] not in [7, 17, 27]:
-            YT_location = (np.random.randint(len(grid)), np.random.randint(len(grid[0])))
-        YT_locations[i] = YT_location
-
-    # 5, 15, 25열이면서 블럭이 아닌 임의의 좌표에 Job 생성
-    for j in range(number_of_Job):
-        Pick_location = None
-        Drop_location = None
-        while Pick_location is None or grid[Pick_location] == -1 or Drop_location is None or grid[Drop_location] == -1 or Pick_location == Drop_location or Pick_location[1] not in [5, 15, 25] or Drop_location[1] not in [5, 15, 25]:
-            Pick_location = (np.random.randint(len(grid)), np.random.randint(len(grid[0])))
-            Drop_location = (np.random.randint(len(grid)), np.random.randint(len(grid[0])))
-        Job_locations[j] = [Pick_location, Drop_location]
+    # # 5, 15, 25열이면서 블럭이 아닌 임의의 좌표에 Job 생성
+    # for j in range(number_of_Job):
+    #     Pick_location = None
+    #     Drop_location = None
+    #     while Pick_location is None or grid[Pick_location] == -1 or Drop_location is None or grid[Drop_location] == -1 or Pick_location == Drop_location or Pick_location[1] not in [5, 15, 25] or Drop_location[1] not in [5, 15, 25]:
+    #         Pick_location = (np.random.randint(len(grid)), np.random.randint(len(grid[0])))
+    #         Drop_location = (np.random.randint(len(grid)), np.random.randint(len(grid[0])))
+    #     Job_locations[j] = [Pick_location, Drop_location]
 
 
-    print("YT_locations =", YT_locations)
-    print("Job_locations =", Job_locations)
+    # print("YT_locations =", YT_locations)
+    # print("Job_locations =", Job_locations)
 
 
     number_of_final_route = 3
-    alpha1 = 0 # prev counter
-    alpha2 = 0 # now counter
-    alpha3 = 100 # distance
+    alpha1 = 50 # prev counter
+    alpha2 = 40 # now counter
+    alpha3 = 10 # distance
 
-#     prev_count = np.array([[ 2,  2,  2,  2,  2,  2,  9, 10, 10, 10, 12,  7,  7,  7,
-#    7,  7,  8,  9,  7,  7,  8,  4,  4,  4,  4,  3,  3,  3,
-#    2,  2,  2],
-#  [ 2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  7,  0,  0,  0,
-#    0,  0,  0,  0,  0,  0,  5,  0,  0,  0,  0,  0,  0,  0,
-#    0,  0,  2],
-#  [ 5,  5,  5,  5,  5,  5,  5,  5,  0,  0,  9,  3,  3,  3,
-#    3,  3,  8,  8,  5,  5, 11,  3,  3,  3,  3,  3,  4,  4,
-#    2,  2,  2],
-#  [ 3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  8,  0,  0,  0,
-#    0,  0,  0,  0,  0,  0,  9,  0,  0,  0,  0,  0,  0,  0,
-#    0,  0,  0],
-#  [ 6,  3,  3,  3,  3,  3,  4,  4,  1,  1, 11,  5,  5,  5,
-#    5,  5,  5,  5,  4,  4, 13,  0,  0,  0,  0,  0,  2,  2,
-#    2,  2,  2],
-#  [ 6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  8,  0,  0,  0,
-#    0,  0,  0,  0,  0,  0, 13,  0,  0,  0,  0,  0,  0,  0,
-#    0,  0,  2],
-#  [ 7,  1,  1,  1,  1,  1,  4,  4,  3,  3, 10,  2,  2,  2,
-#    2,  2,  3,  3,  3,  3, 13,  2,  2,  2,  2,  2,  3,  3,
-#    1,  1,  3],
-#  [ 7,  0,  0,  0,  0,  0,  0,  0,  0,  0,  7,  0,  0,  0,
-#    0,  0,  0,  0,  0,  0,  8,  0,  0,  0,  0,  0,  0,  0,
-#    0,  0,  3],
-#  [ 7,  7,  7,  7,  7,  6,  7, 10, 10, 10, 16, 15, 15, 15,
-#   15, 11, 11, 14, 13, 13, 16, 11, 11, 11, 11,  7,  4,  4,
-#    3,  3,  3]])
+    prev_count = np.array([[ 2,  2,  2,  2,  2,  3,  6,  7,  5,  5,  7,  4,  4,  4,
+   4,  4,  4,  4,  4,  4,  9,  6,  6,  6,  6,  6,  6,  6,
+   2,  2,  2],
+ [ 2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  5,  0,  0,  0,
+   0,  0,  0,  0,  0,  0,  8,  0,  0,  0,  0,  0,  0,  0,
+   0,  0,  2],
+ [ 2,  1,  1,  1,  1,  1,  3,  3,  2,  2,  8,  2,  2,  2,
+   2,  2,  4,  4,  3,  3,  9,  1,  1,  1,  1,  1,  2,  2,
+   1,  1,  2],
+ [ 1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  7,  0,  0,  0,
+   0,  0,  0,  0,  0,  0,  6,  0,  0,  0,  0,  0,  0,  0,
+   0,  0,  1],
+ [ 3,  2,  2,  2,  2,  2,  4,  4,  3,  3,  9,  1,  1,  1,
+   1,  1,  1,  1,  0,  0,  8,  2,  2,  2,  2,  2,  2,  2,
+   0,  0,  1],
+ [ 3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  7,  0,  0,  0,
+   0,  0,  0,  0,  0,  0,  8,  0,  0,  0,  0,  0,  0,  0,
+   0,  0,  1],
+ [ 3,  1,  1,  1,  1,  1,  4,  4,  4,  4, 12,  6,  6,  6,
+   6,  6,  9,  9,  8,  8, 12,  3,  3,  3,  3,  3,  4,  4,
+   3,  3,  3],
+ [ 2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  7,  0,  0,  0,
+   0,  0,  0,  0,  0,  0,  5,  0,  0,  0,  0,  0,  0,  0,
+   0,  0,  2],
+ [ 2,  2,  2,  2,  2,  4,  8,  8,  6,  6, 10,  7,  7,  7,
+   7,  7,  7,  7,  6,  6,  8,  5,  5,  5,  5,  3,  3,  3,
+   2,  2,  2]])
 
-    prev_count = np.zeros((len(grid), len(grid[0])))
+    # prev_count = np.zeros((len(grid), len(grid[0])))
     now_count = np.zeros((len(grid), len(grid[0])))
 
     ra.set_grid(grid)

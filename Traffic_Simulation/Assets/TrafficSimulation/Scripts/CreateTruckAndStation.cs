@@ -8,11 +8,11 @@ using System;
 namespace TrafficSimulation{
     public class CreateTruckAndStation : MonoBehaviour
     {
-        // private static string folderPath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\";
-        private static string folderPath = "C:\\Users\\purify\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\";
+        private static string folderPath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\";
+        // private static string folderPath = "C:\\Users\\purify\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\";
 
-        public static string truckFileName_1 = "Truck_30_shortest.csv";
-        public static string truckFileName_2 = "Truck_40_LP.csv";
+        public static string truckFileName_1 = "prev_test_Truck_20_shortest.csv";
+        public static string truckFileName_2 = "compared_Truck_30_LP_50_40_10.csv";
         private static string truckFilePath_1 = Path.Combine(folderPath, truckFileName_1);
         private static string truckFilePath_2 = Path.Combine(folderPath, truckFileName_2);
 
@@ -37,7 +37,7 @@ namespace TrafficSimulation{
 
         // 동일한 시작 위치를 가진 트럭들의 생성 주기
         // private float createDelay = 120f;
-        // private float createDelay = 60f;
+        private float createDelay = 60f;
         
         private int truckIndexPlus_1 = 0;
         private int truckIndexPlus_2 = 100;
@@ -46,26 +46,38 @@ namespace TrafficSimulation{
         private float checkRange_2 = 3f;
         private float checkDelay = 0.1f;
 
+        // 1개 파일일때
         void Start()
         {
             ReadFile(truckFilePath_1, truckIndexPlus_1);
             CreateStations(truckDataList_1, stationTagName);
-
-            // ReadFile(truckFilePath_2, truckIndexPlus_2);
-            // CreateStations(truckDataList_2, stationTagName);
 
             if(ExistRoute(truckDataList_1))
             {   
                 IsDuplicateStartPosition(truckDataList_1, truckIndexPlus_1);
                 // CreateTrucks(startPositionDict_1);
                 CreateTrucks(startPositionDict_1, checkRange_1, checkRange_2, checkDelay);
-
-                // Debug.Log("All routes exist");
             }
-            // Timer.csvFileName = truckFileName;
-
-            // StartCoroutine(CreateNewTrucksDelay(createDelay));
         }
+
+        // 2개 파일일때
+        // void Start()
+        // {
+        //     ReadFile(truckFilePath_1, truckIndexPlus_1);
+        //     CreateStations(truckDataList_1, stationTagName);
+
+        //     ReadFile(truckFilePath_2, truckIndexPlus_2);
+        //     CreateStations(truckDataList_2, stationTagName);
+
+        //     if(ExistRoute(truckDataList_1))
+        //     {   
+        //         IsDuplicateStartPosition(truckDataList_1, truckIndexPlus_1);
+        //         // CreateTrucks(startPositionDict_1);
+        //         CreateTrucks(startPositionDict_1, checkRange_1, checkRange_2, checkDelay);
+        //     }
+
+        //     StartCoroutine(CreateNewTrucksDelay(createDelay));
+        // }
 
         // public static void ReadFile(string filePath)
         // {

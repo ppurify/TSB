@@ -45,14 +45,14 @@ public class CranesInfo : MonoBehaviour
         // Assign process time to each crane
         if(this.transform.position.z == quayCranePos_z)
         {
-            craneProcessTime = 80f;
-            // craneProcessTime = 127f;
+            // craneProcessTime = 80f;
+            craneProcessTime = 5f;
         }
 
         else
         {
-            craneProcessTime = 180f;
-            // craneProcessTime = 90f;
+            // craneProcessTime = 180f;
+            craneProcessTime = 5f;
         }
     }
     
