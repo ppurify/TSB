@@ -118,14 +118,14 @@ def sort_and_cost(YT_locations, Job_locations, arcs_YT_to_Pick, arcs_Pick_to_Dro
                 A2_prev_count_for_cost[(arcs_YT_to_Pick[min_cost_in_YT_index].path[k][0], arcs_YT_to_Pick[min_cost_in_YT_index].path[k][1])] += 1
 
 
-    for _ in range(len(arcs_YT_to_Pick)):
-        print(arcs_YT_to_Pick[_].i, arcs_YT_to_Pick[_].j, arcs_YT_to_Pick[_].k)
-        print(arcs_YT_to_Pick[_].cost)
-        print(arcs_YT_to_Pick[_].path)
-        print('')
+    # for _ in range(len(arcs_YT_to_Pick)):
+        # print(arcs_YT_to_Pick[_].i, arcs_YT_to_Pick[_].j, arcs_YT_to_Pick[_].k)
+        # print(arcs_YT_to_Pick[_].cost)
+        # print(arcs_YT_to_Pick[_].path)
+        # print('')
 
-    print('A2_prev_count_for_cost')
-    print(A2_prev_count_for_cost)
+    # print('A2_prev_count_for_cost')
+    # print(A2_prev_count_for_cost)
 
     normalized_A2_prev_count = min_max_normalization(A2_prev_count_for_cost)
     normalized_A2_now_count = min_max_normalization(now_count)
