@@ -8,8 +8,8 @@ using System;
 namespace TrafficSimulation {    
     public class FileWindow : EditorWindow
     {   
-        private static string routefilePath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\test_DH_RoutePoints_30_LP_40_50_10.csv";    
-        private static string intersectionfilePath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\intersectionPoints-tile25.csv";
+        private static string routefilePath = "C:\\Users\\purify\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\RoutePoints_1_LP_30_60_10.csv";    
+        private static string intersectionfilePath = "C:\\Users\\purify\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\intersectionPoints-tile25.csv";
 
         private static TrafficSystem wps;
 
@@ -19,7 +19,7 @@ namespace TrafficSimulation {
         // 1. tile 75
         // private static Vector3 intersectionSize = new Vector3(80,10,80);
         // 2. tile 38    
-        private static Vector3 intersectionSize = new Vector3(45,10,26);
+        private static Vector3 intersectionSize = new Vector3(30,10,27);
 
         private static float intersectionPos_y = intersectionSize.y/2;
 
@@ -424,10 +424,10 @@ namespace TrafficSimulation {
                     {                        
                         // Debug.Log(_routeName + " --> Down Left (ㄴ 모양)");
                         x1 = nowPoint_x;
-                        z1 = nowPoint_z + 25.5f;
+                        z1 = nowPoint_z + 17.5f;
 
                         x2 = nowPoint_x + 5f;
-                        z2 = nowPoint_z + 15.5f;
+                        z2 = nowPoint_z + 12.5f;
 
                         x3 = nowPoint_x + 13f;
                         z3 = nowPoint_z + 6.5f;
