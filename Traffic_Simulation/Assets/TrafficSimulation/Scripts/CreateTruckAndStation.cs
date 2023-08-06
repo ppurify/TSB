@@ -8,11 +8,11 @@ using System;
 namespace TrafficSimulation{
     public class CreateTruckAndStation : MonoBehaviour
     {
-        // private static string folderPath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\";
-        private static string folderPath = "C:\\Users\\purify\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\";
+        private static string folderPath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\";
+        // private static string folderPath = "C:\\Users\\purify\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\";
 
         public static string truckFileName_1 = "prev_Truck_30_shortest.csv";
-        public static string truckFileName_2 = "Truck_1_shortest.csv";
+        public static string truckFileName_2 = "Truck_1_LP_50_40_10.csv";
         private static string truckFilePath_1 = Path.Combine(folderPath, truckFileName_1);
         private static string truckFilePath_2 = Path.Combine(folderPath, truckFileName_2);
 
@@ -40,7 +40,7 @@ namespace TrafficSimulation{
         private float createDelay = 90f;
         
         private int truckIndexPlus_1 = 0;
-        private int truckIndexPlus_2 = 200;
+        private int truckIndexPlus_2 = 300;
 
         private float checkRange_1 = 6f;
         private float checkRange_2 = 3f;
