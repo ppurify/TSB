@@ -29,6 +29,7 @@ public class CranesInfo : MonoBehaviour
         craneStatus = 0;
         // Randomly assign 2 or 3 to the 'craneCapacity' variable
         // craneCapacity = Random.Range(2, 4);
+        // AssignCraneCapacity(quayCranePosition_z, 3, 2);
         AssignCraneCapacity(quayCranePosition_z, 3, 2);
 
         AssignProcessTime(quayCranePosition_z);
@@ -45,14 +46,14 @@ public class CranesInfo : MonoBehaviour
         // Assign process time to each crane
         if(this.transform.position.z == quayCranePos_z)
         {
-            craneProcessTime = 80f;
-            // craneProcessTime = 5f;
+            // craneProcessTime = 80f;
+            craneProcessTime = 100f;
         }
 
         else
         {
+            craneProcessTime = 100f;
             // craneProcessTime = 180f;
-            craneProcessTime = 80f;
         }
     }
     

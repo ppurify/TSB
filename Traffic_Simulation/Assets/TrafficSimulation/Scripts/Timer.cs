@@ -10,10 +10,26 @@ namespace TrafficSimulation{
     public class Timer : MonoBehaviour
     {
         // 파일 저장 위치
-        public static string csvFileName = CreateTruckAndStation.truckFileName_1 + "-" + CreateTruckAndStation.truckFileName_2;
+        // public static string csvFileName = CreateTruckAndStation.truckFileName_1 + "-" + CreateTruckAndStation.truckFileName_2;
         // public static string csvFileName = CreateTruckAndStation.truckFileName_1;
 
-        public string filePath = "Assets/Results/result-" + csvFileName;
+        public static string csvFileName;
+        public string filePath;
+
+        void Start()
+        {
+            if(CreateTruckAndStation.isTwoFile)
+            {
+                csvFileName = CreateTruckAndStation.truckFileName_1 + "-" + CreateTruckAndStation.truckFileName_2;
+            }
+
+            else
+            {
+                csvFileName = CreateTruckAndStation.truckFileName_1;
+            }
+
+            filePath = "Assets/Results/result-NoCongestions-" + csvFileName;
+        }
 
         public void SaveToCSV(string _filePath, string _truckName, string _routeName, Vector3 _origin, Vector3 _destination, float _totalTime, List<float> _arrivalTimeList)
         {

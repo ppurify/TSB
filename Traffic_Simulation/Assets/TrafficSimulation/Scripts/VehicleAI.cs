@@ -173,7 +173,7 @@ namespace TrafficSimulation {
                 if(futureSteering > acc || futureSteering < -acc){
                     wheelDrive.maxSpeed = Mathf.Min(wheelDrive.maxSpeed, wheelDrive.steeringSpeedMax);
                 }
-
+                
                 //2. Check if there are obstacles which are detected by the radar
                 float hitDist;
                 GameObject obstacle = GetDetectedObstacles(out hitDist);

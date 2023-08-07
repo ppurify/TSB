@@ -9,14 +9,14 @@ namespace TrafficSimulation{
     public class ExitPlayMode : MonoBehaviour
     {
         public int nowTruckCount;
-        [SerializeField] private int totalTruckCount;
+        public int totalTruckCount;
 
         void Start()
         {
             nowTruckCount = 0;
-            // totalTruckCount = CreateTruckAndStation.truckDataList_1.Count;
+            totalTruckCount = CreateTruckAndStation.truckDataList_1.Count;
             
-            totalTruckCount = CreateTruckAndStation.truckDataList_1.Count + CreateTruckAndStation.truckDataList_2.Count;
+            // totalTruckCount = CreateTruckAndStation.truckDataList_1.Count + CreateTruckAndStation.truckDataList_2.Count;
 
         }
 

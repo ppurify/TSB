@@ -11,7 +11,7 @@ namespace TrafficSimulation{
         private static string folderPath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\";
         // private static string folderPath = "C:\\Users\\purify\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\";
 
-        public static string truckFileName_1 = "Truck_40_shortest.csv";
+        public static string truckFileName_1 = "Truck_20_shortest.csv";
         public static string truckFileName_2 = "Truck_1_LP_50_40_10.csv";
         private static string truckFilePath_1 = Path.Combine(folderPath, truckFileName_1);
         private static string truckFilePath_2 = Path.Combine(folderPath, truckFileName_2);
@@ -45,114 +45,51 @@ namespace TrafficSimulation{
         private float checkRange_1 = 6f;
         private float checkRange_2 = 3f;
         private float checkDelay = 0.1f;
-
+        
+        // file 2개일 때
+        public static bool isTwoFile = false;
+        // file 1개 일 때
+        public static bool isOneFile = false;
         // 1대씩 돌릴 때
+        public static bool isOneByOne = true;
+
+        // // 2개 파일일때
         void Start()
         {
             ReadFile(truckFilePath_1, truckIndexPlus_1);
             CreateStations(truckDataList_1, stationTagName);
-            if(ExistRoute(truckDataList_1))
+
+            if(isTwoFile)
+            {
+                ReadFile(truckFilePath_2, truckIndexPlus_2);
+                CreateStations(truckDataList_2, stationTagName);
+
+                if(ExistRoute(truckDataList_1))
+                {   
+                    IsDuplicateStartPosition(truckDataList_1, truckIndexPlus_1);
+                    CreateTrucks(startPositionDict_1, checkRange_1, checkRange_2, checkDelay);
+                }
+                
+                StartCoroutine(CreateNewTrucksDelay(createDelay));
+            }
+            
+            else if(isOneFile)
+            {
+                if(ExistRoute(truckDataList_1))
+                {   
+                    IsDuplicateStartPosition(truckDataList_1, truckIndexPlus_1);
+                    CreateTrucks(startPositionDict_1, checkRange_1, checkRange_2, checkDelay);
+                }
+            }
+            
+            else if(isOneByOne)
             {
                 CreateOneTruck_1(truckDataList_1[0]);
             }
+            
         }
 
-        // 1개 파일일때
-        // void Start()
-        // {
-        //     ReadFile(truckFilePath_1, truckIndexPlus_1);
-        //     CreateStations(truckDataList_1, stationTagName);
-
-        //     if(ExistRoute(truckDataList_1))
-        //     {   
-        //         IsDuplicateStartPosition(truckDataList_1, truckIndexPlus_1);
-        //         // CreateTrucks(startPositionDict_1);
-        //         CreateTrucks(startPositionDict_1, checkRange_1, checkRange_2, checkDelay);
-        //     }
-        // }
-
-        // // 2개 파일일때
-        // void Start()
-        // {
-        //     ReadFile(truckFilePath_1, truckIndexPlus_1);
-        //     CreateStations(truckDataList_1, stationTagName);
-
-        //     ReadFile(truckFilePath_2, truckIndexPlus_2);
-        //     CreateStations(truckDataList_2, stationTagName);
-
-        //     if(ExistRoute(truckDataList_1))
-        //     {   
-        //         IsDuplicateStartPosition(truckDataList_1, truckIndexPlus_1);
-        //         // CreateTrucks(startPositionDict_1);
-        //         CreateTrucks(startPositionDict_1, checkRange_1, checkRange_2, checkDelay);
-        //     }
-
-        //     StartCoroutine(CreateNewTrucksDelay(createDelay));
-        // }
-
-        // public static void ReadFile(string filePath)
-        // {
-        //     if (!File.Exists(filePath))
-        //     {
-        //         Debug.LogError("File does not exist: " + filePath);
-        //         return;
-        //     }
-            
-        //     using (StreamReader reader = new StreamReader(filePath))
-        //     {
-        //         string line;
-        //         bool isFirstLine = true;
-
-        //         while ((line = reader.ReadLine()) != null)
-        //         {
-        //             if (isFirstLine)
-        //             {
-        //                 isFirstLine = false;
-        //                 continue; // Skip the first line
-        //             }
-
-        //             string[] values = line.Split(',');
-
-        //             string truckName = "Truck-" + values[0];
-        //             string truckRoute = values[1];
-
-        //             CreateTruckData truckData = ScriptableObject.CreateInstance<CreateTruckData>();
-                    
-        //             List<Vector3> workStations = new List<Vector3>();
-
-        //             for(int i=2; i<values.Length; i+=3)
-        //             {   
-        //                 if (values[i] != "" && values[i + 1] != "" && values[i + 2] != "")
-        //                 {
-        //                     string xStr = Regex.Match(values[i], @"\(\s*(-?\d+(\.\d+)?)").Groups[1].Value;
-        //                     string yStr = values[i + 1];
-        //                     string zStr = Regex.Match(values[i + 2], @"(-?\d+(\.\d+)?)\s*\)").Groups[1].Value;
-
-        //                     float x = float.Parse(xStr);
-        //                     float y = float.Parse(yStr);
-        //                     float z = float.Parse(zStr);
-
-        //                     Vector3 station = new Vector3(x, y, z);
-
-        //                     workStations.Add(station);
-        //                 }
-                        
-        //                 else
-        //                 {
-        //                     break; // No more values in the next column, exit the loop
-        //                 }
-        //             }
-
-        //             truckData.CreateData(truckName, truckRoute, workStations);
-        //             truckDataList.Add(truckData);
-        //         }
-        //     }
-
-        // }
-
-
         // 경로 유무 확인 함수
-        
         public static void ReadFile(string filePath, int _truckIndexPlus)
         {
             if (!File.Exists(filePath))
@@ -582,26 +519,26 @@ namespace TrafficSimulation{
             return false;
         }
     
-        // private IEnumerator CreateNewTrucksDelay(float _createDelay)
-        // {
-        //     yield return new WaitForSeconds(_createDelay);
+        private IEnumerator CreateNewTrucksDelay(float _createDelay)
+        {
+            yield return new WaitForSeconds(_createDelay);
 
-        //     // Create new trucks
+            // Create new trucks
 
-        //     // ReadFile(truckFilePath_2, truckIndexPlus_2);
-        //     // CreateStations(truckDataList_2, stationTagName);
+            // ReadFile(truckFilePath_2, truckIndexPlus_2);
+            // CreateStations(truckDataList_2, stationTagName);
 
-        //     if(ExistRoute(truckDataList_2))
-        //     {   
-        //         IsDuplicateStartPosition(truckDataList_2, truckIndexPlus_2);
-        //         CreateTrucks(startPositionDict_2, checkRange_1, checkRange_2, checkDelay);
-        //     }
+            if(ExistRoute(truckDataList_2))
+            {   
+                IsDuplicateStartPosition(truckDataList_2, truckIndexPlus_2);
+                CreateTrucks(startPositionDict_2, checkRange_1, checkRange_2, checkDelay);
+            }
 
-        //     else
-        //     {
-        //         Debug.LogError("truckDataList_2's Route doesn't found.");
-        //     }
-        // }
+            else
+            {
+                Debug.LogError("truckDataList_2's Route doesn't found.");
+            }
+        }
 
 
         private IEnumerator CreateOneTruck(Tuple<string, string, List<Vector3>> _value, float _checkRange_1, float _checkRange_2, float _checkDelay)
