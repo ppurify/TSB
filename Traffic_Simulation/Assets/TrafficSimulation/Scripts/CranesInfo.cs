@@ -32,7 +32,7 @@ public class CranesInfo : MonoBehaviour
         // AssignCraneCapacity(quayCranePosition_z, 3, 2);
         AssignCraneCapacity(quayCranePosition_z, 3, 2);
 
-        AssignProcessTime(quayCranePosition_z);
+        AssignProcessTime(quayCranePosition_z, 100f, 100f);
         // craneCapacity = 2;
     
         processQueueList = new List<GameObject>();
@@ -41,19 +41,17 @@ public class CranesInfo : MonoBehaviour
         finishedQueueList_toRight = new List<GameObject>();
     }
 
-    private void AssignProcessTime(float quayCranePos_z)
+    private void AssignProcessTime(float quayCranePos_z, float _quayCraneProcessTime, float _yardCraneProcessTime)
     {
         // Assign process time to each crane
         if(this.transform.position.z == quayCranePos_z)
         {
-            // craneProcessTime = 80f;
-            craneProcessTime = 100f;
+            craneProcessTime = _quayCraneProcessTime;
         }
 
         else
         {
-            craneProcessTime = 100f;
-            // craneProcessTime = 180f;
+            craneProcessTime = _yardCraneProcessTime;
         }
     }
     
