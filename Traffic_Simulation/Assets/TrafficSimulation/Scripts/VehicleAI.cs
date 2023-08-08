@@ -41,7 +41,7 @@ namespace TrafficSimulation {
         public Transform raycastAnchor;
 
         [Tooltip("Length of the casted rays")]
-        public float raycastLength = 7;
+        public float raycastLength = 10;
 
         [Tooltip("Spacing between each rays")]
         public int raySpacing = 3;
@@ -55,7 +55,7 @@ namespace TrafficSimulation {
         public float emergencyBrakeThresh = 4f;
 
         [Tooltip("If detected vehicle is below this distance (and above, above distance), ego vehicle will slow down")]
-        public float slowDownThresh = 5f;
+        public float slowDownThresh = 6f;
 
         // [HideInInspector] public Status vehicleStatus = Status.GO;
         public Status vehicleStatus = Status.GO;

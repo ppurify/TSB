@@ -215,7 +215,8 @@ namespace TrafficSimulation{
                         thisVehicleAI.vehicleStatus = Status.STOP;
                         nowStatus = NowStatus.WAITING;
 
-                        // StartCoroutine(AgainCheck(checkDelay, 6f, 1f));
+                        // StartCoroutine(AgainCheck(checkDelay, 1f, 1f));
+                        StartCoroutine(CheckFinishedQueue(checkDelay, nowStation_FinishedVehicle_toRight));
                         
                     }
 
@@ -236,6 +237,9 @@ namespace TrafficSimulation{
                         StartCoroutine(ReduceSpeed(vehicle, short_slowingTime));
                         thisVehicleAI.vehicleStatus = Status.STOP;
                         nowStatus = NowStatus.WAITING;
+
+                        // StartCoroutine(AgainCheck(checkDelay, 1f, 1f));
+                        StartCoroutine(CheckFinishedQueue(checkDelay, nowStation_FinishedVehicle_toLeft));
                     }
 
                     else
@@ -546,13 +550,25 @@ namespace TrafficSimulation{
             rb.velocity = Vector3.zero; // Ensure velocity is set to zero
         }
 
-        private IEnumerator AgainCheck(float _checkDelay, float _checkRange_1, float _checkRange_2)
+        // private IEnumerator AgainCheck(float _checkDelay, float _checkRange_1, float _checkRange_2)
+        // {
+        //     // 작업이 끝나면 주변에 트럭이 있는지 확인
+        //     while(ExistAnyTruck(vehicle.transform.position, _checkRange_1, _checkRange_2))
+        //     {   
+        //         UnityEngine.Debug.Log(this.name + " can't go to next station, has to wait ! ");
+        //         yield return new WaitForSeconds(_checkDelay);
+        //     }
+
+        //     thisVehicleAI.vehicleStatus = Status.GO;
+        //     nowStatus = NowStatus.NONE;
+        // }
+
+        private IEnumerator CheckFinishedQueue(float _checkDelay, int _nowStationFinshedQueueCount)
         {
-            // 작업이 끝나면 주변에 트럭이 있는지 확인
-            while(ExistAnyTruck(vehicle.transform.position, _checkRange_1, _checkRange_2))
-            {   
-                UnityEngine.Debug.Log(this.name + " can't go to next station, has to wait ! ");
+            while(_nowStationFinshedQueueCount > 0)
+            {
                 yield return new WaitForSeconds(_checkDelay);
+                UnityEngine.Debug.Log(this.name + " can't go to next station, has to wait ! ");
             }
 
             thisVehicleAI.vehicleStatus = Status.GO;
