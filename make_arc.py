@@ -20,7 +20,7 @@ def min_max_normalization(data):
     min_val = np.min(data)
     max_val = np.max(data)
     if min_val == max_val:
-        normalized_data = np.zeros((len(data), len(data[0])))
+        normalized_data = np.full((len(data), len(data[0])), 0.5)
     else:
         normalized_data = (data - min_val) / (max_val - min_val)
     
