@@ -603,7 +603,7 @@ GameObject:
   - component: {fileID: 6874449121000569305}
   - component: {fileID: 6157378396416738181}
   - component: {fileID: 6494037355815411564}
-  - component: {fileID: -5547127286331881106}
+  - component: {fileID: -4830223280452073790}
   - component: {fileID: 6307610683011075250}
   - component: {fileID: 6191599503789027035}
   m_Layer: 9
@@ -659,7 +659,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 4
   m_CollisionDetection: 0
---- !u!114 &-5547127286331881106
+--- !u!114 &-4830223280452073790
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -680,7 +680,7 @@ MonoBehaviour:
   nowTurnNum: 0
   turnStations: []
   truckStationWatchList: []
-  nowStatus: 2
+  nowStatus: 0
 --- !u!114 &6307610683011075250
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -696,11 +696,11 @@ MonoBehaviour:
   trafficSystem: {fileID: 0}
   waypointThresh: 6
   raycastAnchor: {fileID: 4617705441392776722}
-  raycastLength: 10
+  raycastLength: 7
   raySpacing: 3
   raysNumber: 10
-  emergencyBrakeThresh: 5
-  slowDownThresh: 7
+  emergencyBrakeThresh: 4
+  slowDownThresh: 5
   vehicleStatus: 0
 --- !u!114 &6191599503789027035
 MonoBehaviour:

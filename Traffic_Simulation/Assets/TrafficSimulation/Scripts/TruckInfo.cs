@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
+using UnityEditor;
 
 namespace TrafficSimulation{
 
@@ -65,7 +66,7 @@ namespace TrafficSimulation{
         // private float checkDelay = 0.1f; 
         private float checkDelay = 1f; 
 
-        private Timer truckTimer;
+        private SaveFile saveFile;
         private Stopwatch truckTotalWatch;
         private Stopwatch truckStationWatch;
         private Stopwatch noReasonStopWatch;
@@ -90,8 +91,8 @@ namespace TrafficSimulation{
             vehicle = this.gameObject;
             thisVehicleAI = vehicle.GetComponent<VehicleAI>();
 
-            vehicle.AddComponent<Timer>();
-            truckTimer = vehicle.GetComponent<Timer>();
+            vehicle.AddComponent<SaveFile>();
+            saveFile = vehicle.GetComponent<SaveFile>();
 
             truckTotalWatch = new Stopwatch();
             truckStationWatch = new Stopwatch();
@@ -117,7 +118,6 @@ namespace TrafficSimulation{
             bc = vehicle.GetComponent<BoxCollider>();
             nowStatus = NowStatus.NONE;
         }
-        
         
         void Update()
         {
@@ -180,7 +180,8 @@ namespace TrafficSimulation{
 
             }
         }
-
+        
+        
         void OnTriggerEnter(Collider _other)
         {   
             if(_other.gameObject.tag == "Station")
@@ -443,13 +444,12 @@ namespace TrafficSimulation{
 
             nowStationInfo.craneStatus -= 1;
 
-            if(truckTimer == null)
+            if(saveFile == null)
             {
-                truckTimer = vehicle.GetComponent<Timer>();
-                UnityEngine.Debug.LogError(this.name + " Timer 컴포넌트를 다시 할당했습니다.");
+                saveFile = vehicle.GetComponent<SaveFile>();
             }
 
-            if(truckTimer != null)
+            if(saveFile != null)
             {
                 if(truckTotalWatch == null)
                 {
@@ -469,7 +469,7 @@ namespace TrafficSimulation{
                 exitPlayMode.nowTruckCount += 1;
                 truckDestination = nowStationPos;
                 
-                truckTimer.SaveToCSV(truckTimer.filePath, vehicle.name, truckRouteName, truckOrigin, truckDestination, truckTotalTime, truckStationWatchList);
+                saveFile.SaveToCSV(saveFile.filePath, vehicle.name, truckRouteName, truckOrigin, truckDestination, truckTotalTime, truckStationWatchList);
                 
                 // 한대씩 돌릴 때
                 if(_isOneByOne)

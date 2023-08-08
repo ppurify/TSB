@@ -8,7 +8,7 @@ using System;
 namespace TrafficSimulation {    
     public class FileWindow : EditorWindow
     {   
-        private static string routefilePath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\RoutePoints_20_shortest.csv";    
+        private static string routefilePath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\RoutePoints_40_LP_70_20_10.csv";    
         private static string intersectionfilePath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\intersectionPoints-tile25.csv";
 
         private static TrafficSystem wps;
@@ -19,7 +19,7 @@ namespace TrafficSimulation {
         // 1. tile 75
         // private static Vector3 intersectionSize = new Vector3(80,10,80);
         // 2. tile 38    
-        private static Vector3 intersectionSize = new Vector3(30,10,27);
+        private static Vector3 intersectionSize = new Vector3(40,10,26);
 
         private static float intersectionPos_y = intersectionSize.y/2;
 
@@ -32,7 +32,7 @@ namespace TrafficSimulation {
         private static Vector3 newPoint;
         
         
-        [SerializeField] private static int routePlusNum = 0;
+        [SerializeField] private static int routePlusNum = 100;
         
         // Corner Positions
         // 1. tile 75
