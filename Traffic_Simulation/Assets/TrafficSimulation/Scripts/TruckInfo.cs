@@ -461,9 +461,6 @@ namespace TrafficSimulation{
                 }
                 truckTotalWatch.Stop();
                 float truckTotalTime = truckTotalWatch.ElapsedMilliseconds / 1000f * Time.timeScale;
-                UnityEngine.Debug.Log("Time.timeScale : " + Time.timeScale);
-                UnityEngine.Debug.Log("Before time : " + truckTotalWatch.ElapsedMilliseconds / 1000f);
-                UnityEngine.Debug.Log("After time : " + truckTotalTime);
                 
                 if(exitPlayMode == null)
                 {
@@ -502,7 +499,7 @@ namespace TrafficSimulation{
             }
 
             float _rotationY = _vehicle.transform.eulerAngles.y;
-            // Debug.Log(_vehicle.name + " _rotationY : " + _rotationY);
+
             if(_rotationY >= 85 && _rotationY <= 95)
             {
                 return true;
@@ -534,7 +531,6 @@ namespace TrafficSimulation{
 
         public IEnumerator ReduceSpeed(GameObject _vehicle, float _slowingTime)
         {   
-            // UnityEngine.Debug.Log(vehicle.name + " reduces Speed");
             Rigidbody rb = _vehicle.GetComponent<Rigidbody>();
             
             Vector3 initialVelocity = rb.velocity;
@@ -549,19 +545,6 @@ namespace TrafficSimulation{
 
             rb.velocity = Vector3.zero; // Ensure velocity is set to zero
         }
-
-        // private IEnumerator AgainCheck(float _checkDelay, float _checkRange_1, float _checkRange_2)
-        // {
-        //     // 작업이 끝나면 주변에 트럭이 있는지 확인
-        //     while(ExistAnyTruck(vehicle.transform.position, _checkRange_1, _checkRange_2))
-        //     {   
-        //         UnityEngine.Debug.Log(this.name + " can't go to next station, has to wait ! ");
-        //         yield return new WaitForSeconds(_checkDelay);
-        //     }
-
-        //     thisVehicleAI.vehicleStatus = Status.GO;
-        //     nowStatus = NowStatus.NONE;
-        // }
 
         private IEnumerator CheckFinishedQueue(float _checkDelay, int _nowStationFinshedQueueCount)
         {
