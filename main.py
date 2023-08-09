@@ -78,6 +78,8 @@ def main():
     
     now_count = np.zeros((len(grid), len(grid[0])))
 
+    time_consumed_per_grid = 2.35
+
     ra.set_grid(grid)
     
  
@@ -85,7 +87,7 @@ def main():
     arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink, now_count = make_arc.create_arcs(
         YT_locations=YT_locations, Job_locations=Job_locations, number_of_final_route=number_of_final_route,
         alpha1=alpha1, alpha2=alpha2, alpha3=alpha3,
-        grid=grid, prev_count=prev_count, now_count=now_count)
+        grid=grid, prev_count=prev_count, now_count=now_count, time_consumed_per_grid=time_consumed_per_grid)
 
     all_arcs = arcs_YT_to_Pick + arcs_Pick_to_Drop + arcs_Drop_to_Pick + arcs_Drop_to_Sink + arcs_YT_to_Sink
 
