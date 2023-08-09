@@ -406,27 +406,39 @@ namespace TrafficSimulation {
                     if(axis_x_next_now < 0)
                     {
                         // Debug.Log(_routeName + " --> Down Right (ㄴ 반대 모양)");
-                        x1 = nowPoint_x;
+                        x1 = nowPoint_x -1f;
                         z1 = nowPoint_z + 12.5f;
 
-                        x2 = nowPoint_x - 3f;
+                        x2 = nowPoint_x - 4f;
                         z2 = nowPoint_z + 6.5f;
 
                         x3 = nowPoint_x - 8f;
                         z3 = nowPoint_z + 2.5f;
 
-                        x4 = nowPoint_x - 15f;
-                        z4 = nowPoint_z - 0.5f;
+                        x4 = nowPoint_x - 14f;
+                        z4 = nowPoint_z;
                     }
 
                     // Down Left (ㄴ 모양)
                     else if(axis_x_next_now > 0)
                     {                        
                         // Debug.Log(_routeName + " --> Down Left (ㄴ 모양)");
-                        x1 = nowPoint_x;
-                        z1 = nowPoint_z + 17.5f;
+                        // x1 = nowPoint_x;
+                        // z1 = nowPoint_z + 19f;
 
-                        x2 = nowPoint_x + 5f;
+                        // x2 = nowPoint_x + 5f;
+                        // z2 = nowPoint_z + 12.5f;
+
+                        // x3 = nowPoint_x + 13f;
+                        // z3 = nowPoint_z + 6.5f;
+
+                        // x4 = nowPoint_x + 20f;
+                        // z4 = nowPoint_z + 2.5f;
+
+                        x1 = nowPoint_x + 2f;
+                        z1 = nowPoint_z + 20f;
+
+                        x2 = nowPoint_x + 6f;
                         z2 = nowPoint_z + 12.5f;
 
                         x3 = nowPoint_x + 13f;
@@ -444,16 +456,19 @@ namespace TrafficSimulation {
                     {
                         // Debug.Log(_routeName + " --> Up left 2 (ㄱ 모양)");
                         x1 = nowPoint_x;
-                        z1 = nowPoint_z - 25.5f;
+                        // z1 = nowPoint_z - 25.5f;
+                        z1 = nowPoint_z - 20f;
 
-                        x2 = nowPoint_x - 5f;
-                        z2 = nowPoint_z - 15.5f;
 
-                        x3 = nowPoint_x - 13f;
-                        z3 = nowPoint_z - 6.5f;
+                        x2 = nowPoint_x - 3f;
+                        // z2 = nowPoint_z - 15.5f;
+                        z2 = nowPoint_z - 10f;
 
-                        x4 = nowPoint_x - 20f;
-                        z4 = nowPoint_z - 0.5f;
+                        x3 = nowPoint_x - 8f;
+                        z3 = nowPoint_z - 4f;
+
+                        x4 = nowPoint_x - 15f;
+                        z4 = nowPoint_z;
                     }
 
                     // Up right 2(ㄱ 반대모양)
@@ -470,7 +485,7 @@ namespace TrafficSimulation {
                         z3 = nowPoint_z - 2.5f;
 
                         x4 = nowPoint_x + 15f;
-                        z4 = nowPoint_z + 0.5f;
+                        z4 = nowPoint_z;
 
                     }
                     
@@ -489,13 +504,13 @@ namespace TrafficSimulation {
                         x1 = nowPoint_x - 20f;
                         z1 = nowPoint_z;
 
-                        x2 = nowPoint_x - 13f;
+                        x2 = nowPoint_x - 10f;
                         z2 = nowPoint_z + 6.5f;
 
-                        x3 = nowPoint_x - 5f;
+                        x3 = nowPoint_x - 2f;
                         z3 = nowPoint_z + 15.5f;
 
-                        x4 = nowPoint_x - 1f;
+                        x4 = nowPoint_x;
                         z4 = nowPoint_z + 25.5f;
                     }
 
@@ -524,7 +539,7 @@ namespace TrafficSimulation {
                     {
                         // Debug.Log(_routeName + " --> Down right 2 (ㄱ 모양)");
                         x1 = nowPoint_x - 15f;
-                        z1 = nowPoint_z + 0.5f;
+                        z1 = nowPoint_z;
 
                         x2 = nowPoint_x - 8f;
                         z2 = nowPoint_z - 2.5f;
@@ -542,7 +557,7 @@ namespace TrafficSimulation {
                     {
                         // Debug.Log(_routeName + " --> Down left 2 (ㄱ 반대 모양)");
                         x1 = nowPoint_x + 15f;
-                        z1 = nowPoint_z - 0.5f;
+                        z1 = nowPoint_z;
 
                         x2 = nowPoint_x + 8f;
                         z2 = nowPoint_z - 2.5f;
