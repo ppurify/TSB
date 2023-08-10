@@ -696,11 +696,11 @@ MonoBehaviour:
   trafficSystem: {fileID: 0}
   waypointThresh: 6
   raycastAnchor: {fileID: 4617705441392776722}
-  raycastLength: 6
-  raySpacing: 3
+  raycastLength: 7
+  raySpacing: 4
   raysNumber: 10
-  emergencyBrakeThresh: 3.5
-  slowDownThresh: 4
+  emergencyBrakeThresh: 4
+  slowDownThresh: 5
   vehicleStatus: 0
 --- !u!114 &6191599503789027035
 MonoBehaviour:
@@ -714,7 +714,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5021f9004f348d74abb4f0ae3ed02375, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  downForce: 200
+  downForce: 300
   maxAngle: 90
   steeringLerp: 10
   steeringSpeedMax: 40

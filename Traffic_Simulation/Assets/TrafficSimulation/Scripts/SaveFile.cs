@@ -10,9 +10,6 @@ namespace TrafficSimulation{
     public class SaveFile : MonoBehaviour
     {
         // 파일 저장 위치
-        // public static string csvFileName = CreateTruckAndStation.truckFileName_1 + "-" + CreateTruckAndStation.truckFileName_2;
-        // public static string csvFileName = CreateTruckAndStation.truckFileName_1;
-
         public static string csvFileName;
         public string filePath;
 
