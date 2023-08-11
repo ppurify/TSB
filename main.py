@@ -23,18 +23,21 @@ def main():
         [4, 2, 2, 2, 2, 2, 4, 2, 2, 2, 2, 2 ,4, 2, 2, 2, 2, 2, 4]
     ])
 
-    number_of_YT = 3
-    number_of_Job = 2
-    filename_Truck = 'Test_Truck_30_solution.csv'
-    filename_RoutePoints = 'Test_RoutePoints_30_solution.csv'
+    number_of_YT = 30
+    number_of_Job = 30
+    filename_Truck = 'Test_Truck_30_solution_3.csv'
+    filename_RoutePoints = 'Test_RoutePoints_30_solution_3.csv'
 
     # 스케줄링 대상 YT 생성
-    # YT_locations = {0: (4, 3), 1: (6, 14), 2: (0, 15), 3: (8, 17), 4: (4, 2), 5: (0, 1), 6: (4, 7), 7: (8, 13), 8: (0, 18), 9: (0, 16), 10: (6, 2), 11: (0, 3), 12: (1, 18), 13: (7, 18), 14: (2, 12), 15: (2, 15), 16: (4, 3), 17: (0, 18), 18: (8, 13), 19: (8, 16), 20: (8, 16), 21: (2, 3), 22: (0, 9), 23: (1, 0), 24: (0, 18), 25: (1, 6), 26: (2, 3), 27: (8, 10), 28: (2, 12), 29: (0, 0)}
-    # Job_locations =  {0: [(6, 15), (6, 9)], 1: [(6, 3), (0, 3)], 2: [(2, 9), (0, 3)], 3: [(2, 9), (6, 15)], 4: [(0, 15), (2, 9)], 5: [(2, 15), (6, 15)], 6: [(4, 9), (4, 3)], 7: [(6, 9), (2, 3)], 8: [(6, 15), (0, 15)], 9: [(0, 9), (4, 3)], 10: [(4, 15), (2, 3)], 11: [(6, 9), (8, 15)], 12: [(6, 15), (6, 9)], 13: [(8, 3), (6, 15)], 14: [(4, 9), (6, 9)], 15: [(2, 3), (4, 9)], 16: [(6, 9), (4, 9)], 17: [(6, 15), (4, 9)], 18: [(6, 3), (8, 15)], 19: [(4, 9), (8, 3)], 20: [(0, 3), (2, 3)], 21: [(4, 15), (8, 3)], 22: [(2, 3), (8, 3)], 23: [(8, 3), (6, 15)], 24: [(8, 9), (6, 9)], 25: [(4, 15), (4, 9)], 26: [(4, 9), (6, 9)], 27: [(2, 15), (6, 3)], 28: [(2, 9), (6, 9)], 29: [(0, 3), (2, 9)]}
+    YT_locations = {0: (4, 3), 1: (6, 14), 2: (0, 15), 3: (8, 17), 4: (4, 2), 5: (0, 1), 6: (4, 7), 7: (8, 13), 8: (0, 18), 9: (0, 16), 10: (6, 2), 11: (0, 3), 12: (1, 18), 13: (7, 18), 14: (2, 12), 15: (2, 15), 16: (4, 3), 17: (0, 18), 18: (8, 13), 19: (8, 16), 20: (8, 16), 21: (2, 3), 22: (0, 9), 23: (1, 0), 24: (0, 18), 25: (1, 6), 26: (2, 3), 27: (8, 10), 28: (2, 12), 29: (0, 0)}
+    Job_locations =  {0: [(6, 15), (6, 9)], 1: [(6, 3), (0, 3)], 2: [(2, 9), (0, 3)], 3: [(2, 9), (6, 15)], 4: [(0, 15), (2, 9)], 5: [(2, 15), (6, 15)], 6: [(4, 9), (4, 3)], 7: [(6, 9), (2, 3)], 8: [(6, 15), (0, 15)], 9: [(0, 9), (4, 3)], 10: [(4, 15), (2, 3)], 11: [(6, 9), (8, 15)], 12: [(6, 15), (6, 9)], 13: [(8, 3), (6, 15)], 14: [(4, 9), (6, 9)], 15: [(2, 3), (4, 9)], 16: [(6, 9), (4, 9)], 17: [(6, 15), (4, 9)], 18: [(6, 3), (8, 15)], 19: [(4, 9), (8, 3)], 20: [(0, 3), (2, 3)], 21: [(4, 15), (8, 3)], 22: [(2, 3), (8, 3)], 23: [(8, 3), (6, 15)], 24: [(8, 9), (6, 9)], 25: [(4, 15), (4, 9)], 26: [(4, 9), (6, 9)], 27: [(2, 15), (6, 3)], 28: [(2, 9), (6, 9)], 29: [(0, 3), (2, 9)]}
 
-    YT_locations = {0: (4, 3), 1: (6, 14), 2 : (0, 3)}
-    Job_locations =  {0: [(6, 15), (6, 9)], 1: [(6, 3), (0, 3)]}
+    # YT_locations = {0: (4, 3), 1: (6, 14), 2 : (0, 3)}
+    # Job_locations =  {0: [(6, 15), (6, 9)], 1: [(6, 3), (0, 3)]}
 
+    # YT_locations = {0: (4, 10), 1: (6, 8), 2: (0, 8), 3: (8, 17), 4: (6, 10)}
+    # Job_locations = {0: [(4, 15), (0, 3)], 1: [(4, 15), (2, 15)], 2: [(4, 3), (8, 15)], 3: [(4, 15), (8, 9)], 4: [(4, 3), (4, 9)]}
+    
     # YT_locations = {}
     # Job_locations = {}
 
@@ -62,7 +65,7 @@ def main():
     number_of_final_route = 3
     alpha1 = 0 # prev counter
     alpha2 = 0 # now counter
-    alpha3 = 1 # distance
+    alpha3 = 100 # distance
 
     # prev_count : t-1시점의 활성화된 A2 + A3의 누적 path정보
     prev_count = np.array([
@@ -78,6 +81,7 @@ def main():
     
     now_count = np.zeros((len(grid), len(grid[0])))
 
+    processing_time = 150
     time_consumed_per_grid = 2.35
 
     ra.set_grid(grid)
@@ -87,7 +91,7 @@ def main():
     arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink, now_count = make_arc.create_arcs(
         YT_locations=YT_locations, Job_locations=Job_locations, number_of_final_route=number_of_final_route,
         alpha1=alpha1, alpha2=alpha2, alpha3=alpha3,
-        grid=grid, prev_count=prev_count, now_count=now_count, time_consumed_per_grid=time_consumed_per_grid)
+        grid=grid, prev_count=prev_count, now_count=now_count, time_consumed_per_grid=time_consumed_per_grid, processing_time=processing_time)
 
     all_arcs = arcs_YT_to_Pick + arcs_Pick_to_Drop + arcs_Drop_to_Pick + arcs_Drop_to_Sink + arcs_YT_to_Sink
 
@@ -97,14 +101,14 @@ def main():
     # Run network_LP
     objective_value, activated_arcs = network_LP.solve(all_arcs, number_of_YT, number_of_Job)
     
-    # activated_arcs들의 각 정보 출력
-    for arc in activated_arcs:
-        print('arc.i : ', arc.i)
-        print('arc.j : ', arc.j)
-        print('arc.k : ', arc.k)
-        print('arc cost : ', arc.cost)
-        print('arc path : ', arc.path)
-        print("")
+    # # activated_arcs들의 각 정보 출력
+    # for arc in activated_arcs:
+    #     print('arc.i : ', arc.i)
+    #     print('arc.j : ', arc.j)
+    #     print('arc.k : ', arc.k)
+    #     print('arc cost : ', arc.cost)
+    #     print('arc path : ', arc.path)
+    #     print("")
     # print('objective_value: ', objective_value)
     # print('activated_arcs: ', activated_arcs)
 
@@ -120,8 +124,8 @@ def main():
             for i in range(len(arc.path)):
                 next_prev_count[arc.path[i][0]][arc.path[i][1]] += 1
 
-    print('next_prev_count')
-    print(next_prev_count)
+    # print('next_prev_count')
+    # print(next_prev_count)
 
     # # 붙여넣기 쉽게 원소사이에 , 추가하여 출력
     # print('next_prev_count')

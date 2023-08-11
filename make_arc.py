@@ -55,7 +55,7 @@ def penalty(normalized_prev_count, route, number_of_final_route, alpha1, alpha3,
 #     pick k' paths with the smallest penalty
 
 
-def get_cost(normalized_prev_count, normalized_now_count, path, alpha1, alpha2, alpha3, time_consumed_per_grid):
+def get_cost(normalized_prev_count, normalized_now_count, path, alpha1, alpha2, alpha3, time_consumed_per_grid, processing_time):
 
     if len(path) == 0:
         total_cost = sys.maxsize
@@ -68,11 +68,16 @@ def get_cost(normalized_prev_count, normalized_now_count, path, alpha1, alpha2, 
             sum_of_counter_of_now_count += normalized_now_count[(path[i][0], path[i][1])]
 
         # cost 산출(반올림)
-        total_cost = round((alpha1 * sum_of_counter_of_prev_count) + (alpha2 * sum_of_counter_of_now_count) + (alpha3 * sum_of_move * time_consumed_per_grid))
+        total_cost = round((alpha1 * sum_of_counter_of_prev_count) + (alpha2 * sum_of_counter_of_now_count) + (alpha3 * (sum_of_move * time_consumed_per_grid + 2*processing_time)))
+        print('prev count sum : ', (sum_of_counter_of_prev_count))
+        print('now count sum : ', (sum_of_counter_of_now_count))
+        print('dist time sum per grid : ', (sum_of_move * time_consumed_per_grid))
+        print('cost : ', total_cost)
+        print('')
     return total_cost
 
 
-def sort_and_cost(YT_locations, Job_locations, arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink, prev_count, now_count, alpha1, alpha2, alpha3, time_consumed_per_grid):
+def sort_and_cost(YT_locations, Job_locations, arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink, prev_count, now_count, alpha1, alpha2, alpha3, time_consumed_per_grid, processing_time):
 
     # A1를 now_count에 path 반영
     for i in range(len(arcs_YT_to_Pick)):
@@ -86,8 +91,9 @@ def sort_and_cost(YT_locations, Job_locations, arcs_YT_to_Pick, arcs_Pick_to_Dro
 
     # A1 cost 계산
     for i in range(len(arcs_YT_to_Pick)):
-        arcs_YT_to_Pick[i].cost = get_cost(normalized_prev_count, normalized_A1_now_count, arcs_YT_to_Pick[i].path, alpha1=alpha1, alpha2=alpha2, alpha3=alpha3, time_consumed_per_grid=time_consumed_per_grid)
-
+        print('A1 : ', i)
+        arcs_YT_to_Pick[i].cost = get_cost(normalized_prev_count, normalized_A1_now_count, arcs_YT_to_Pick[i].path, alpha1=alpha1, alpha2=alpha2, alpha3=alpha3, time_consumed_per_grid=time_consumed_per_grid, processing_time = 0)
+        
 
     # now_count 초기화
     now_count = np.zeros((len(prev_count), len(prev_count[0])))
@@ -115,14 +121,14 @@ def sort_and_cost(YT_locations, Job_locations, arcs_YT_to_Pick, arcs_Pick_to_Dro
                 A2_prev_count_for_cost[(arcs_YT_to_Pick[min_cost_in_YT_index].path[k][0], arcs_YT_to_Pick[min_cost_in_YT_index].path[k][1])] += 1
 
 
-    for _ in range(len(arcs_YT_to_Pick)):
-        print(arcs_YT_to_Pick[_].i, arcs_YT_to_Pick[_].j, arcs_YT_to_Pick[_].k)
-        print(arcs_YT_to_Pick[_].cost)
-        print(arcs_YT_to_Pick[_].path)
-        print('')
+    # for _ in range(len(arcs_YT_to_Pick)):
+    #     print(arcs_YT_to_Pick[_].i, arcs_YT_to_Pick[_].j, arcs_YT_to_Pick[_].k)
+    #     print(arcs_YT_to_Pick[_].cost)
+    #     print(arcs_YT_to_Pick[_].path)
+    #     print('')
 
-    print('A2_prev_count_for_cost')
-    print(A2_prev_count_for_cost)
+    # print('A2_prev_count_for_cost')
+    # print(A2_prev_count_for_cost)
 
     normalized_A2_prev_count = min_max_normalization(A2_prev_count_for_cost)
     normalized_A2_now_count = min_max_normalization(now_count)
@@ -130,7 +136,8 @@ def sort_and_cost(YT_locations, Job_locations, arcs_YT_to_Pick, arcs_Pick_to_Dro
 
     # A2 cost 계산
     for i in range(len(arcs_Pick_to_Drop)):
-        arcs_Pick_to_Drop[i].cost = get_cost(normalized_A2_prev_count, normalized_A2_now_count, arcs_Pick_to_Drop[i].path, alpha1=alpha1, alpha2=alpha2, alpha3=alpha3, time_consumed_per_grid=time_consumed_per_grid)
+        print('A2 : ', i)
+        arcs_Pick_to_Drop[i].cost = get_cost(normalized_A2_prev_count, normalized_A2_now_count, arcs_Pick_to_Drop[i].path, alpha1=alpha1, alpha2=alpha2, alpha3=alpha3, time_consumed_per_grid=time_consumed_per_grid, processing_time = 0)
 
     # now_count 초기화
     now_count = np.zeros((len(prev_count), len(prev_count[0])))
@@ -161,7 +168,8 @@ def sort_and_cost(YT_locations, Job_locations, arcs_YT_to_Pick, arcs_Pick_to_Dro
 
     # A3 cost 계산
     for i in range(len(arcs_Drop_to_Pick)):
-        arcs_Drop_to_Pick[i].cost = get_cost((normalized_A3_prev_count), (normalized_A3_now_count), arcs_Drop_to_Pick[i].path, alpha1=alpha1, alpha2=alpha2, alpha3=alpha3, time_consumed_per_grid=time_consumed_per_grid) + 100000
+        print('A3 : ', i)
+        arcs_Drop_to_Pick[i].cost = get_cost((normalized_A3_prev_count), (normalized_A3_now_count), arcs_Drop_to_Pick[i].path, alpha1=alpha1, alpha2=alpha2, alpha3=alpha3, time_consumed_per_grid=time_consumed_per_grid, processing_time = processing_time)
     # A4 cost 계산
     for i in range(len(arcs_Drop_to_Sink)):
         arcs_Drop_to_Sink[i].cost = 0
@@ -174,7 +182,7 @@ def sort_and_cost(YT_locations, Job_locations, arcs_YT_to_Pick, arcs_Pick_to_Dro
 
 
 
-def create_arcs(YT_locations, Job_locations, number_of_final_route, alpha1, alpha2, alpha3, grid, prev_count, now_count, time_consumed_per_grid):
+def create_arcs(YT_locations, Job_locations, number_of_final_route, alpha1, alpha2, alpha3, grid, prev_count, now_count, time_consumed_per_grid, processing_time):
     arcs_YT_to_Pick = []
     arcs_Pick_to_Drop = []
     arcs_Drop_to_Pick = []
@@ -295,6 +303,6 @@ def create_arcs(YT_locations, Job_locations, number_of_final_route, alpha1, alph
         arcs_YT_to_Sink.append(arcname)
 
 
-    sort_and_cost(YT_locations, Job_locations, arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink, prev_count, now_count, alpha1, alpha2, alpha3, time_consumed_per_grid)
+    sort_and_cost(YT_locations, Job_locations, arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink, prev_count, now_count, alpha1, alpha2, alpha3, time_consumed_per_grid, processing_time)
 
     return arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink, now_count
