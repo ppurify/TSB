@@ -33,6 +33,32 @@ def solve(all_arcs, number_of_YT, number_of_Job):
     for i in range(len(all_arcs)):
         x[i] = solver.IntVar(0, 1, 'x[%i]' % i)
 
+    # # completion time of each YT
+    # C = np.empty(number_of_YT, dtype=object)
+    # for i in range(number_of_YT):
+    #     C[i] = solver.NumVar(0, inf, 'C[%i]' % i)
+
+
+    # Constraints 0 : 각 YT의 completion time은 한 출발노드가 자기자신(YT)이면서 아크들의 출발노드 도착노드를 이어서 최종적으로 sink노드로 가는데 걸리는 시간(cost의 합)
+    # for l in range(number_of_YT):
+    #     list_for_const0 = []
+    #     for a in all_arcs:
+    #         if a.i == ['YT', l]:
+    #             list_for_const0.append(a.index)
+
+    #     solver.Add(C[l] == sum(x[j] * all_arcs[j].cost for j in list_for_const0))
+    # while True:
+    #     list_for_const0 = []
+    #     # list_for_const0의 마지막 원소의 출발노드가 현재 아크이면서 현재 아크의 도착노드가 sink인지 확인
+    #     if list_for_const0[-1].i == ['YT', l] and all_arcs[list_for_const0[-1]].j[0] == 'Sink':
+    #         solver.Add(C[l] == sum(x[j] * all_arcs[j].cost for j in list_for_const0))
+    #         break
+    #     else:
+    #         # list_for_const0의 마지막 원소의 도착노드와 같은 출발노드를 가지는 아크들 중에서, 아크의 도착노드가 sink인 아크를 list_for_const0에 추가
+    #         for a in all_arcs:
+    #             if a.i == all_arcs[list_for_const0[-1]].j and a.j[0] == 'Sink':
+    #                 list_for_const0.append(a.index)
+    #                 break
 
     # Constraints 1 : 한 YT에서 활성화되는 아크들의 합은 1
     # 출발지(i)가 같은 YT인 아크들의 합을 1로
