@@ -8,10 +8,10 @@ using System;
 namespace TrafficSimulation{
     public class CreateTruckAndStation : MonoBehaviour
     {
-        // private static string folderPath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\";
-        private static string folderPath = "C:\\Users\\purify\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\";
+        private static string folderPath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\";
+        // private static string folderPath = "C:\\Users\\purify\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\";
 
-        public static string truckFileName_1 = "prev_Truck_60_shortest.csv";
+        public static string truckFileName_1 = "prev_Truck_70_shortest.csv";
         public static string truckFileName_2 = "Truck_40_shortest.csv";
         private static string truckFilePath_1 = Path.Combine(folderPath, truckFileName_1);
         private static string truckFilePath_2 = Path.Combine(folderPath, truckFileName_2);
@@ -48,9 +48,9 @@ namespace TrafficSimulation{
         // file 2개일 때
         public static bool isTwoFile = false;
         // file 1개 일 때
-        public static bool isOneFile = true;
+        public static bool isOneFile = false;
         // 1대씩 돌릴 때
-        public static bool isOneByOne = false;
+        public static bool isOneByOne = true;
 
         // // 2개 파일일때
         void Start()

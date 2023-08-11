@@ -30,9 +30,9 @@ public class CranesInfo : MonoBehaviour
         // Randomly assign 2 or 3 to the 'craneCapacity' variable
         // craneCapacity = Random.Range(2, 4);
         // AssignCraneCapacity(quayCranePosition_z, 3, 2);
-        AssignCraneCapacity(quayCranePosition_z, 3, 2);
+        AssignCraneCapacity(quayCranePosition_z, 100, 100);
 
-        AssignProcessTime(quayCranePosition_z, 100f, 100f);
+        AssignProcessTime(quayCranePosition_z, 150f, 150f);
         // craneCapacity = 2;
     
         processQueueList = new List<GameObject>();

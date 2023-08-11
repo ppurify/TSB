@@ -47,7 +47,7 @@ namespace TrafficSimulation{
         // 2. tile 25
         private float toStationNum = 15f;
 
-        private float checkRange_1 = 4f;
+        private float checkRange_1 = 3f;
         // private float checkRange_1 = 80f;
         private float checkRange_2 = 3f;
         // 현재 유턴 횟수
