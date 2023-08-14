@@ -19,7 +19,7 @@ namespace TrafficSimulation {
         // 1. tile 75
         // private static Vector3 intersectionSize = new Vector3(80,10,80);
         // 2. tile 38    
-        private static Vector3 intersectionSize = new Vector3(40,10,26);
+        private static Vector3 intersectionSize = new Vector3(50,10,24);
 
         private static float intersectionPos_y = intersectionSize.y/2;
 
