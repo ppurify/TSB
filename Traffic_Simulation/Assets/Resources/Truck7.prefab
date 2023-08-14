@@ -714,14 +714,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5021f9004f348d74abb4f0ae3ed02375, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  downForce: 300
+  downForce: 200
   maxAngle: 90
   steeringLerp: 10
   steeringSpeedMax: 40
   maxTorque: 300
   brakeTorque: 10000
   unitType: 0
-  minSpeed: 30
+  minSpeed: 35
   maxSpeed: 57
   leftWheelShape: {fileID: 6238161387211472396, guid: ccfaa9eec1c4f654d9224b3d6382e480,
     type: 3}
