@@ -25,7 +25,7 @@ namespace TrafficSimulation{
         public float downForce = 200f;
 
         [Tooltip("Maximum steering angle of the wheels")]
-        public float maxAngle = 90f;
+        public float maxAngle = 92f;
 
         [Tooltip("Speed at which we will reach the above steering angle (lerp)")]
         // public float steeringLerp = 20f;
