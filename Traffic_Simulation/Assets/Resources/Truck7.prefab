@@ -139,7 +139,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1557313104294762183}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2, y: 1.03, z: -6.45}
+  m_LocalPosition: {x: 1.8, y: 1.03, z: -6.45}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3591147847683722964}
@@ -234,7 +234,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2642133620849512790}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2, y: 1.03, z: 0.75}
+  m_LocalPosition: {x: -1.8, y: 1.03, z: 0.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3591147847683722964}
@@ -325,7 +325,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3507210238773740444}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2, y: 1.03, z: 0.75}
+  m_LocalPosition: {x: 1.8, y: 1.03, z: 0.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3591147847683722964}
@@ -386,7 +386,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5448983823663798288}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2, y: 1.03, z: -6.45}
+  m_LocalPosition: {x: -1.8, y: 1.03, z: -6.45}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3591147847683722964}
@@ -641,8 +641,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 4.5, y: 5.39, z: 11.3}
-  m_Center: {x: 0, y: 2.7, z: -2.9}
+  m_Size: {x: 4.2, y: 5.39, z: 8.5}
+  m_Center: {x: 0, y: 2.7, z: -1.77}
 --- !u!54 &6494037355815411564
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -696,11 +696,11 @@ MonoBehaviour:
   trafficSystem: {fileID: 0}
   waypointThresh: 6
   raycastAnchor: {fileID: 4617705441392776722}
-  raycastLength: 7
-  raySpacing: 4
+  raycastLength: 15
+  raySpacing: 3
   raysNumber: 10
-  emergencyBrakeThresh: 4
-  slowDownThresh: 5
+  emergencyBrakeThresh: 5
+  slowDownThresh: 7
   vehicleStatus: 0
 --- !u!114 &6191599503789027035
 MonoBehaviour:
@@ -715,7 +715,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   downForce: 200
-  maxAngle: 90
+  maxAngle: 92
   steeringLerp: 10
   steeringSpeedMax: 40
   maxTorque: 300
