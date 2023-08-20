@@ -418,7 +418,7 @@ namespace TrafficSimulation{
             //         nowTurnNum += 1;
             //     }
             // }
-            
+            yield return new WaitForSeconds(1f);
           
             // 유턴했는지 확인
             // if(turnStations.Count > 0 && truckStationWatchList.Count > 1 && nowTurnNum < turnStations.Count && nowStationPos == turnStations[nowTurnNum])
@@ -467,11 +467,17 @@ namespace TrafficSimulation{
             nowStationInfo.craneStatus += 1;
             nowStationInfo.processQueueList.Remove(vehicle);
 
+            rb.velocity = Vector3.zero;
             thisVehicleAI.vehicleStatus = Status.STOP;
+
             processTime = nowStationInfo.craneProcessTime;
             yield return new WaitForSeconds(processTime);
 
-            thisVehicleAI.vehicleStatus = Status.STOP;
+            truckTotalWatch.Stop();
+            UnityEngine.Debug.Log(vehicle.name + " truckTotalWatch stop ");
+
+            float truckTotalTime = truckTotalWatch.ElapsedMilliseconds / 1000f * Time.timeScale;
+            
             UnityEngine.Debug.Log(vehicle.name + " process done ");
 
 
@@ -488,11 +494,6 @@ namespace TrafficSimulation{
                 UnityEngine.Debug.LogError(this.name + " _truckTimer.totalWatch is null !!!");
             }
 
-            truckTotalWatch.Stop();
-            UnityEngine.Debug.Log(vehicle.name + " truckTotalWatch stop ");
-
-
-            float truckTotalTime = truckTotalWatch.ElapsedMilliseconds / 1000f * Time.timeScale;
             
             if(exitPlayMode == null)
             {
