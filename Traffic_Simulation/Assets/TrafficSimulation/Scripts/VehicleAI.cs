@@ -41,7 +41,7 @@ namespace TrafficSimulation {
         public Transform raycastAnchor;
 
         [Tooltip("Length of the casted rays")]
-        public float raycastLength = 15f;
+        public float raycastLength = 9f;
 
         [Tooltip("Spacing between each rays")]
         public int raySpacing = 3;
@@ -136,7 +136,7 @@ namespace TrafficSimulation {
 
             //Default, full acceleration, no break and no steering
             // float acc = 1;
-            float acc = 10;
+            float acc = 5;
             float brake = 0;
             float steering = 0;
             wheelDrive.maxSpeed = initMaxSpeed;
