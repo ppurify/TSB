@@ -26,6 +26,7 @@ namespace TrafficSimulation{
 
         private List<GameObject> vehiclesQueue;
         private List<GameObject> vehiclesInIntersection;
+
         private TrafficSystem trafficSystem;
         
         [HideInInspector] public int currentRedLightsGroup = 1;
@@ -34,12 +35,13 @@ namespace TrafficSimulation{
 
         // Time to slow down to zero speed
         public float slowingTime = 1f; 
+        private float invokeTime = 6f;
         
         void Start(){
             vehiclesQueue = new List<GameObject>();
             vehiclesInIntersection = new List<GameObject>();
-            if(intersectionType == IntersectionType.TRAFFIC_LIGHT)
-                InvokeRepeating("SwitchLights", lightsDuration, lightsDuration);
+            // if(intersectionType == IntersectionType.TRAFFIC_LIGHT)
+            //     InvokeRepeating("SwitchLights", lightsDuration, lightsDuration)
         }
 
         void SwitchLights(){
@@ -57,9 +59,12 @@ namespace TrafficSimulation{
             if(IsAlreadyInIntersection(_other.gameObject) || Time.timeSinceLevelLoad < .5f) return;
 
             if(_other.tag == "AutonomousVehicle" && intersectionType == IntersectionType.STOP)
+            {
                 TriggerStop(_other.gameObject);
-            else if(_other.tag == "AutonomousVehicle" && intersectionType == IntersectionType.TRAFFIC_LIGHT)
-                TriggerLight(_other.gameObject);
+            }
+            // else if(_other.tag == "AutonomousVehicle" && intersectionType == IntersectionType.TRAFFIC_LIGHT)
+            //     TriggerLight(_other.gameObject);
+            
         }
 
         void OnTriggerExit(Collider _other) {
@@ -78,6 +83,8 @@ namespace TrafficSimulation{
             // Debug.Log("vehicleAIRouteName : "+ vehicleAIRouteName);
             _vehicle.GetComponent<TruckInfo>().nowStatus = NowStatus.WAITING;
             
+            Debug.Log(_vehicle.name + " arrives at " + this.name  + "'s vehiclesQueue.Count : " + vehiclesQueue.Count + " , vehiclesInIntersection.Count : " + vehiclesInIntersection.Count);
+
             if(!IsPrioritySegment(vehicleAIRouteName))
             {
                 if(vehiclesQueue.Count > 0 || vehiclesInIntersection.Count > 0)
@@ -87,6 +94,12 @@ namespace TrafficSimulation{
 
                     // StartCoroutine(ReduceSpeed(_vehicle));
                     vehicleAI.vehicleStatus = Status.STOP;
+                    
+                    if(vehiclesInIntersection.Count == 0)
+                    {   
+                        Debug.Log(this.name + " checking");
+                        Invoke("CheckIntersection", invokeTime);
+                    }
                 }
 
                 else
@@ -100,6 +113,30 @@ namespace TrafficSimulation{
             {
                 vehicleAI.vehicleStatus = Status.SLOW_DOWN;
                 vehiclesInIntersection.Add(_vehicle);
+            }
+        }
+
+        private void CheckIntersection()
+        {   
+            if(vehiclesQueue.Count > 0)
+            {
+                int waitingVehicleCount = 0;
+        
+                foreach(GameObject _vehicleInQueue in vehiclesQueue)
+                {   
+                    Debug.Log(this.name + "-->" + _vehicleInQueue.name + "'s nowStatus : " + _vehicleInQueue.GetComponent<TruckInfo>().nowStatus);
+                    if(_vehicleInQueue.GetComponent<TruckInfo>().nowStatus == NowStatus.WAITING)
+                    {
+                        waitingVehicleCount ++;
+                    }
+                }
+
+                Debug.Log(this.name + "'s waitingVehicleCount : " + waitingVehicleCount + " , vehiclesQueue.Count : " + vehiclesQueue.Count);
+                if(waitingVehicleCount == vehiclesQueue.Count)
+                {   
+                    Debug.Log(vehiclesQueue[0].name + " has to Existstop at " + this.name);
+                    ExitStop(vehiclesQueue[0]);
+                }
             }
         }
 
