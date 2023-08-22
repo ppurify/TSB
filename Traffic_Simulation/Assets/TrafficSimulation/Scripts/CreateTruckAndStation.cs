@@ -11,7 +11,7 @@ namespace TrafficSimulation{
         private static string folderPath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\";
         // private static string folderPath = "C:\\Users\\purify\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\";
 
-        public static string truckFileName_1 = "now_Truck_1_shortest.csv";
+        public static string truckFileName_1 = "prev_Truck_20_shortest.csv";
         public static string truckFileName_2 = "prev_Truck_60_shortest.csv";
         private static string truckFilePath_1 = Path.Combine(folderPath, truckFileName_1);
         private static string truckFilePath_2 = Path.Combine(folderPath, truckFileName_2);
@@ -35,7 +35,9 @@ namespace TrafficSimulation{
         // 동일한 시작 위치를 가진 트럭들의 생성 주기
         private float createDelay = 160f;
         
-        private int truckIndexPlus_1 = 100;
+        // 이전에 스케줄링이 된게 없고 현재 한대만 돌릴 때는 truckIndexPlus_1을 100으로 해주기
+        // 두대 돌리거나 이전에 스케줄링이 된게 있으면 truckIndexPlus_1을 0으로 해주기
+        private int truckIndexPlus_1 = 0;
         private int truckIndexPlus_2 = 100;
 
         private float checkRange_1 = 7f;
@@ -45,16 +47,24 @@ namespace TrafficSimulation{
         // file 2개일 때
         public static bool isTwoFile = false;
         // file 1개 일 때
-        public static bool isOneFile = true;
+        public static bool isOneFile = false;
         // 1대씩 돌릴 때
-        public static bool isOneByOne = false;
+        public static bool isOneByOne = true;
 
         // // 2개 파일일때
         void Start()
         {
-            ReadFile(truckFilePath_1, truckIndexPlus_1);
-            CreateStations(truckDataList_1, stationTagName);
+            if(truckFilePath_1 != null)
+            {
+                ReadFile(truckFilePath_1, truckIndexPlus_1);
+                CreateStations(truckDataList_1, stationTagName);
+            }
 
+            else
+            {
+                Debug.LogError("check truckFilePath_1.");
+            }
+            
             if(isTwoFile)
             {
                 ReadFile(truckFilePath_2, truckIndexPlus_2);
@@ -79,8 +89,16 @@ namespace TrafficSimulation{
             }
             
             else if(isOneByOne)
-            {
-                CreateOneTruck_1(truckDataList_1[0]);
+            {   
+                if(truckDataList_1 != null)
+                {
+                    CreateOneTruck_1(truckDataList_1[0]);
+                }
+
+                else
+                {
+                    Debug.LogError("truckDataList_1 is null.");
+                }
             }
             
         }
@@ -145,7 +163,7 @@ namespace TrafficSimulation{
 
                     truckData.CreateData(truckName, truckRoute, workStations);
 
-                    if(isOneFile)
+                    if(!isTwoFile)
                     {
                         truckDataList_1.Add(truckData);
                     }
