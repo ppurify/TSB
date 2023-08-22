@@ -11,8 +11,8 @@ namespace TrafficSimulation{
         private static string folderPath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\";
         // private static string folderPath = "C:\\Users\\purify\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\";
 
-        public static string truckFileName_1 = "prev_Truck_60_shortest.csv";
-        public static string truckFileName_2 = "Truck_40_shortest.csv";
+        public static string truckFileName_1 = "now_Truck_1_shortest.csv";
+        public static string truckFileName_2 = "prev_Truck_60_shortest.csv";
         private static string truckFilePath_1 = Path.Combine(folderPath, truckFileName_1);
         private static string truckFilePath_2 = Path.Combine(folderPath, truckFileName_2);
 
@@ -22,9 +22,6 @@ namespace TrafficSimulation{
         private static float truckRotation_y;
 
         // Station Parameters
-        // 1. tile 75
-        // private static Vector3 stationSize = new Vector3(75,10,30);
-        // 2. tile 30
         private static Vector3 stationSize = new Vector3(75,10,30);
 
         private static float stationPos_y = stationSize.y/2;
@@ -38,7 +35,7 @@ namespace TrafficSimulation{
         // 동일한 시작 위치를 가진 트럭들의 생성 주기
         private float createDelay = 160f;
         
-        private int truckIndexPlus_1 = 0;
+        private int truckIndexPlus_1 = 100;
         private int truckIndexPlus_2 = 100;
 
         private float checkRange_1 = 7f;
@@ -148,7 +145,7 @@ namespace TrafficSimulation{
 
                     truckData.CreateData(truckName, truckRoute, workStations);
 
-                    if(_truckIndexPlus == 0)
+                    if(isOneFile)
                     {
                         truckDataList_1.Add(truckData);
                     }
@@ -300,9 +297,7 @@ namespace TrafficSimulation{
         // 딕셔너리 생성 함수
         private static void IsDuplicateStartPosition(List<CreateTruckData> dataList, float _truckIndexPlus)
         {
-            // startPositionDict_1 = new Dictionary<Vector3, List<Tuple<string, string, List<Vector3>>>>();
-
-            if(_truckIndexPlus == 0)
+            if(isOneFile)
             {
                 startPositionDict_1 = new Dictionary<Vector3, List<Tuple<string, string, List<Vector3>>>>();
             }
@@ -329,7 +324,7 @@ namespace TrafficSimulation{
 
                         Tuple<string, string, List<Vector3>> _truckData = Tuple.Create(data.Name, parentName, data.WorkStations);
 
-                        if(_truckIndexPlus == 0)
+                        if(isOneFile)
                         {
                             if(startPositionDict_1.ContainsKey(startPoint))
                             {  
@@ -373,7 +368,12 @@ namespace TrafficSimulation{
         
         // 출발 위치가 동일한 트럭이 있는지 확인한 후 트럭 생성하는 함수
         private void CreateTrucks(Dictionary<Vector3, List<Tuple<string, string, List<Vector3>>>> _dictionary, float _checkRange_1, float _checkRange_2, float _checkDelay)
-        {
+        {   
+            if(_dictionary == null)
+            {
+                Debug.LogError("Dictionary is null.");
+            }
+
             // Print the duplicate start positions
             foreach (KeyValuePair<Vector3, List<Tuple<string, string, List<Vector3>>>> kvp in _dictionary)
             {   
