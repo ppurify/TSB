@@ -11,8 +11,8 @@ namespace TrafficSimulation{
         private static string folderPath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\";
         // private static string folderPath = "C:\\Users\\purify\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\";
 
-        public static string truckFileName_1 = "prev_Truck_20_shortest.csv";
-        public static string truckFileName_2 = "prev_Truck_60_shortest.csv";
+        public static string truckFileName_1 = "prev_Truck_40_shortest.csv";
+        public static string truckFileName_2 = "Truck_1_LP_30_60_10.csv";
         private static string truckFilePath_1 = Path.Combine(folderPath, truckFileName_1);
         private static string truckFilePath_2 = Path.Combine(folderPath, truckFileName_2);
 
@@ -163,7 +163,7 @@ namespace TrafficSimulation{
 
                     truckData.CreateData(truckName, truckRoute, workStations);
 
-                    if(!isTwoFile)
+                    if(!isTwoFile | _truckIndexPlus == 0)
                     {
                         truckDataList_1.Add(truckData);
                     }
@@ -315,7 +315,9 @@ namespace TrafficSimulation{
         // 딕셔너리 생성 함수
         private static void IsDuplicateStartPosition(List<CreateTruckData> dataList, float _truckIndexPlus)
         {
-            if(isOneFile)
+            Debug.Log("dataList.Count: " + dataList.Count + " , _truckIndexPlus: " + _truckIndexPlus);
+
+            if(isOneFile | _truckIndexPlus == 0)
             {
                 startPositionDict_1 = new Dictionary<Vector3, List<Tuple<string, string, List<Vector3>>>>();
             }
@@ -342,7 +344,7 @@ namespace TrafficSimulation{
 
                         Tuple<string, string, List<Vector3>> _truckData = Tuple.Create(data.Name, parentName, data.WorkStations);
 
-                        if(isOneFile)
+                        if(isOneFile | _truckIndexPlus == 0)
                         {
                             if(startPositionDict_1.ContainsKey(startPoint))
                             {  
