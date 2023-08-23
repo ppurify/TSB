@@ -11,8 +11,8 @@ namespace TrafficSimulation{
         private static string folderPath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\";
         // private static string folderPath = "C:\\Users\\purify\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\";
 
-        public static string truckFileName_1 = "prev_Truck_40_shortest.csv";
-        public static string truckFileName_2 = "Truck_1_LP_30_60_10.csv";
+        public static string truckFileName_1 = "now_Truck_1_shortest_Minimize.csv";
+        public static string truckFileName_2 = "now_Truck_1_LP_40_50_10.csv";
         private static string truckFilePath_1 = Path.Combine(folderPath, truckFileName_1);
         private static string truckFilePath_2 = Path.Combine(folderPath, truckFileName_2);
 
@@ -37,7 +37,7 @@ namespace TrafficSimulation{
         
         // 이전에 스케줄링이 된게 없고 현재 한대만 돌릴 때는 truckIndexPlus_1을 100으로 해주기
         // 두대 돌리거나 이전에 스케줄링이 된게 있으면 truckIndexPlus_1을 0으로 해주기
-        private int truckIndexPlus_1 = 0;
+        private int truckIndexPlus_1 = 100;
         private int truckIndexPlus_2 = 100;
 
         private float checkRange_1 = 7f;
@@ -47,9 +47,9 @@ namespace TrafficSimulation{
         // file 2개일 때
         public static bool isTwoFile = false;
         // file 1개 일 때
-        public static bool isOneFile = false;
+        public static bool isOneFile = true;
         // 1대씩 돌릴 때
-        public static bool isOneByOne = true;
+        public static bool isOneByOne = false;
 
         // // 2개 파일일때
         void Start()
