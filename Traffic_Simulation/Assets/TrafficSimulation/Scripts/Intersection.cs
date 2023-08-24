@@ -35,7 +35,7 @@ namespace TrafficSimulation{
 
         // Time to slow down to zero speed
         public float slowingTime = 1f; 
-        private float invokeTime = 3f;
+        private float invokeTime = 4f;
         
         void Start(){
             vehiclesQueue = new List<GameObject>();
@@ -98,7 +98,7 @@ namespace TrafficSimulation{
                     if(vehiclesInIntersection.Count == 0)
                     {   
                         // Debug.Log(this.name + " checking");
-                        InvokeRepeating("CheckIntersection", invokeTime, 2f);
+                        InvokeRepeating("CheckIntersection", invokeTime, 4f);
                     }
                 }
 

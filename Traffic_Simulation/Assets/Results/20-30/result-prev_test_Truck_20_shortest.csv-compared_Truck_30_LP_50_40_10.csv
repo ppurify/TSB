@@ -1,4 +1,0 @@
-Truck_id, Route_id, Origin, Destination, Total Time, PickupSta AT, DropSta AT
-Truck-0,Route-0,(675.0 0.0 105.5),(125.0 0.0 50.0),78.182,6.382,61.795
-Truck-0,Route-0,(675.0 0.0 105.5),(125.0 0.0 50.0),68.545,5.384,53.156
-Truck-8,Route-8,(675.0 0.0 205.5),(375.0 0.0 150.0),120.176,46.493,63.676

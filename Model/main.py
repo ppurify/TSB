@@ -26,46 +26,50 @@ def main():
     
     number_of_YT = 40
     number_of_Job = 40
-    filename_Truck = 'now_Truck_40_shortest_with_30_shortest.csv'
-    filename_RoutePoints = 'now_RoutePoints_40_shortest_with_30_shortest.csv'
+    filename_Truck = 'now_Truck_40_LP_70_20_10_with_30_shortest.csv'
+    filename_RoutePoints = 'now_RoutePoints_40_LP_70_20_10_with_30_shortest.csv'
 
     # YT_locations = {0: (2, 7)}
     # Job_locations = {0: [(0, 25), (6, 25)]}
     
+    YT_locations = {0: (6, 27), 1: (8, 27), 2: (4, 27), 3: (0, 17), 4: (4, 17), 5: (8, 27), 6: (4, 17), 7: (2, 17), 8: (8, 17), 9: (6, 27), 10: (4, 17), 11: (8, 27), 12: (0, 27), 13: (6, 27), 14: (8, 7), 15: (4, 27), 16: (4, 7), 17: (0, 27), 18: (8, 27), 19: (4, 27), 20: (6, 7), 21: (4, 7), 22: (4, 27), 23: (0, 27), 24: (2, 17), 25: (2, 27), 26: (8, 7), 27: (0, 7), 28: (8, 17), 29: (0, 7), 30: (8, 17), 31: (2, 17), 32: (4, 27), 33: (8, 27), 34: (2, 27), 35: (4, 17), 36: (2, 27), 37: (8, 27), 38: (0, 7), 39: (0, 17)}
+    Job_locations = {0: [(2, 15), (0, 5)], 1: [(6, 25), (0, 25)], 2: [(4, 25), (0, 25)], 3: [(0, 15), (8, 5)], 4: [(8, 25), (0, 15)], 5: [(6, 15), (0, 5)], 6: [(0, 5), (6, 15)], 7: [(4, 15), (0, 25)], 8: [(8, 5), (0, 15)], 9: [(6, 5), (0, 15)], 10: [(0, 25), (8, 15)], 11: [(2, 25), (0, 15)], 12: [(0, 15), (2, 25)], 13: [(2, 5), (0, 15)], 14: [(0, 5), (2, 25)], 15: [(0, 15), (8, 25)], 16: [(4, 15), (0, 25)], 17: [(4, 5), (0, 15)], 18: [(2, 5), (0, 25)], 19: [(0, 15), (4, 5)], 20: [(0, 5), (6, 5)], 21: [(2, 5), (0, 15)], 22: [(2, 15), (0, 25)], 23: [(0, 5), (4, 25)], 24: [(0, 5), (6, 15)], 25: [(0, 25), (8, 25)], 26: [(0, 15), (8, 25)], 27: [(0, 5), (2, 5)], 28: [(2, 25), (0, 5)], 29: [(2, 25), (0, 25)], 30: [(4, 15), (0, 15)], 31: [(2, 5), (0, 15)], 32: [(2, 25), (0, 15)], 33: [(0, 15), (8, 25)], 34: [(4, 25), (0, 5)], 35: [(6, 25), (0, 15)], 36: [(0, 5), (6, 15)], 37: [(6, 25), (0, 15)], 38: [(4, 25), (0, 5)], 39: [(0, 25), (8, 5)]}
+
+
     # 스케줄링 대상 YT 생성
-    YT_locations = {}
-    Job_locations = {}
+    # YT_locations = {}
+    # Job_locations = {}
 
-    # # 임의의 위치에 YT 생성
-    for i in range(number_of_YT):
-        YT_location = None
-        while YT_location is None or grid[YT_location] == -1 or YT_location[1] not in _YT_location_col_index:
-            YT_location = (np.random.randint(len(grid)), np.random.randint(len(grid[0])))
-        YT_locations[i] = YT_location
+    # # # 임의의 위치에 YT 생성
+    # for i in range(number_of_YT):
+    #     YT_location = None
+    #     while YT_location is None or grid[YT_location] == -1 or YT_location[1] not in _YT_location_col_index:
+    #         YT_location = (np.random.randint(len(grid)), np.random.randint(len(grid[0])))
+    #     YT_locations[i] = YT_location
 
-    for j in range(number_of_Job):
-        # choice random number 0 or 1
-        random_num = np.random.randint(2)
+    # for j in range(number_of_Job):
+    #     # choice random number 0 or 1
+    #     random_num = np.random.randint(2)
         
-        # 0이면 Outbound => YC -> QC
-        if random_num == 0:
-            Pick_location = (YC_locations[np.random.randint(len(YC_locations))])
-            Drop_location = (QC_locations[np.random.randint(len(QC_locations))])
-        # 1이면 Inbound => QC -> YC
-        else:
-            Pick_location = (QC_locations[np.random.randint(len(QC_locations))])
-            Drop_location = (YC_locations[np.random.randint(len(YC_locations))])
+    #     # 0이면 Outbound => YC -> QC
+    #     if random_num == 0:
+    #         Pick_location = (YC_locations[np.random.randint(len(YC_locations))])
+    #         Drop_location = (QC_locations[np.random.randint(len(QC_locations))])
+    #     # 1이면 Inbound => QC -> YC
+    #     else:
+    #         Pick_location = (QC_locations[np.random.randint(len(QC_locations))])
+    #         Drop_location = (YC_locations[np.random.randint(len(YC_locations))])
         
-        Job_locations[j] = [Pick_location, Drop_location]
+    #     Job_locations[j] = [Pick_location, Drop_location]
 
-    print("YT_locations =", YT_locations)
-    print("Job_locations =", Job_locations)
+    # print("YT_locations =", YT_locations)
+    # print("Job_locations =", Job_locations)
 
 
     number_of_final_route = 3
-    alpha1 = 0  # prev counter
-    alpha2 = 0  # now counter
-    alpha3 = 100 # distance
+    alpha1 = 70  # prev counter
+    alpha2 = 20  # now counter
+    alpha3 = 10 # distance
 
     # prev_count : t-1시점의 활성화된 A2 + A3의 누적 path정보
     # prev_count = np.zeros((len(grid), len(grid[0])))
