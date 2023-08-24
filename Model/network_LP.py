@@ -102,8 +102,6 @@ def solve(all_arcs, number_of_YT, number_of_Job):
         objective.SetCoefficient(x[i], all_arcs[i].cost)
         
     objective.SetMinimization()
-    # objective.SetMaximization()
-    
 
     status = solver.Solve()
     # print("Number of arcs : " , len(all_arcs))
