@@ -63,8 +63,8 @@ def main():
 
 
     number_of_final_route = 3
-    alpha1 = 40 # prev counter
-    alpha2 = 50 # now counter
+    alpha1 = 40  # prev counter
+    alpha2 = 50  # now counter
     alpha3 = 10 # distance
 
     # prev_count : t-1시점의 활성화된 A2 + A3의 누적 path정보
