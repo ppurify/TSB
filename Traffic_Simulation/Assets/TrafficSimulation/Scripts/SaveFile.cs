@@ -13,6 +13,8 @@ namespace TrafficSimulation{
         public static string csvFileName;
         public string filePath;
 
+        public static List<ResultsData> resultsDataList = new List<ResultsData>();
+
         void Start()
         {
             if(CreateTruckAndStation.isTwoFile)
@@ -44,7 +46,7 @@ namespace TrafficSimulation{
                 // Create a new CSV file and write the data
                 using (StreamWriter sw = File.CreateText(_filePath))
                 {
-                    string header = "Truck_id, Route_id, Origin, Destination, Total Time, PickupSta AT, DropSta AT";
+                    string header = "Truck_id,Route_id,Origin,Destination,Total Time,PickupSta AT,DropSta AT";
 
                     // Write the header and data to the CSV file
                     sw.WriteLine(header);
@@ -55,9 +57,7 @@ namespace TrafficSimulation{
             string[] lines = File.ReadAllLines(_filePath);
 
             // Convert the List<float> to a comma-separated string
-            UnityEngine.Debug.Log(this.name + "_arrivalTimeList.Count: " + _arrivalTimeList.Count);
             string arrivalTimeValues = string.Join(",", _arrivalTimeList);
-            UnityEngine.Debug.Log("arrivalTimeValues: " + arrivalTimeValues);
 
             // Convert the Vector3 values to strings without including commas
             string originValue = _origin.ToString().Replace(",", string.Empty);

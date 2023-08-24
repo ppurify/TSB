@@ -11,7 +11,7 @@ namespace TrafficSimulation{
         private static string folderPath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\";
         // private static string folderPath = "C:\\Users\\purify\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\";
 
-        public static string truckFileName_1 = "prev_Truck_70_shortest.csv";
+        public static string truckFileName_1 = "prev_Truck_10_shortest.csv";
         public static string truckFileName_2 = "now_Truck_1_LP_40_50_10_with_70_shortest.csv";
         private static string truckFilePath_1 = Path.Combine(folderPath, truckFileName_1);
         private static string truckFilePath_2 = Path.Combine(folderPath, truckFileName_2);
@@ -36,7 +36,7 @@ namespace TrafficSimulation{
         private float createDelay = 160f;
         
         // 이전에 스케줄링이 된게 없고 현재 한대만 돌릴 때는 truckIndexPlus_1을 100으로 해주기
-        // 두대 돌리거나 이전에 스케줄링이 된게 있으면 truckIndexPlus_1을 0으로 해주기
+        // 두대 돌리거나 이전에 스케줄링 된 걸 돌릴때는 truckIndexPlus_1을 0으로 해주기
         private int truckIndexPlus_1 = 0;
         private int truckIndexPlus_2 = 100;
 
@@ -45,9 +45,9 @@ namespace TrafficSimulation{
         private float checkDelay = 0.5f;
         
         // file 2개일 때
-        public static bool isTwoFile = true;
+        public static bool isTwoFile = false;
         // file 1개 일 때
-        public static bool isOneFile = false;
+        public static bool isOneFile = true;
         // 1대씩 돌릴 때
         public static bool isOneByOne = false;
 
@@ -99,8 +99,7 @@ namespace TrafficSimulation{
                 {
                     Debug.LogError("truckDataList_1 is null.");
                 }
-            }
-            
+            }    
         }
 
         // 경로 유무 확인 함수

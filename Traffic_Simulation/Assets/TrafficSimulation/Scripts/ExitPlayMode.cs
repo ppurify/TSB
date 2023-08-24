@@ -11,6 +11,8 @@ namespace TrafficSimulation{
         public int nowTruckCount;
         public int totalTruckCount;
 
+        private SaveFile saveFile;
+
         void Start()
         {
             nowTruckCount = 0;
@@ -23,14 +25,25 @@ namespace TrafficSimulation{
             {
                 totalTruckCount = CreateTruckAndStation.truckDataList_1.Count;
             }
+
+            GameObject.Find("Roads").AddComponent<SaveFile>();
+
+            saveFile = GetComponent<SaveFile>();
         }
 
         // Update is called once per frame
-        private void Update()
+        void Update()
         {
-
             if(CompareTruckCount(nowTruckCount, totalTruckCount))
-            {
+            {   
+                List<ResultsData> dataList = SaveFile.resultsDataList;
+     
+                foreach(ResultsData resultsData in dataList)
+                {
+                    saveFile.SaveToCSV(resultsData.FilePath, resultsData.Vehicle, resultsData.Route, resultsData.Origin, resultsData.Destination, resultsData.TotalTime, resultsData.StopwathTimeList);
+                    UnityEngine.Debug.Log("Save " + resultsData.FilePath + "  --> " + resultsData.Vehicle + " data");
+                }
+
                 Debug.Log("Exit Play Mode");
                 EditorApplication.ExitPlaymode();
 
@@ -41,11 +54,9 @@ namespace TrafficSimulation{
 
         }
 
-        private bool CompareTruckCount(int _nowTruckCount, int _totalTruckCount)
+        public bool CompareTruckCount(int _nowTruckCount, int _totalTruckCount)
         {
             return _nowTruckCount == _totalTruckCount;
         }
-
-        
     }
 }

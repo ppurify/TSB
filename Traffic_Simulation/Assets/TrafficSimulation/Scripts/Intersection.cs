@@ -35,7 +35,7 @@ namespace TrafficSimulation{
 
         // Time to slow down to zero speed
         public float slowingTime = 1f; 
-        private float invokeTime = 6f;
+        private float invokeTime = 3f;
         
         void Start(){
             vehiclesQueue = new List<GameObject>();
@@ -83,7 +83,7 @@ namespace TrafficSimulation{
             // Debug.Log("vehicleAIRouteName : "+ vehicleAIRouteName);
             _vehicle.GetComponent<TruckInfo>().nowStatus = NowStatus.WAITING;
             
-            Debug.Log(_vehicle.name + " arrives at " + this.name  + "'s vehiclesQueue.Count : " + vehiclesQueue.Count + " , vehiclesInIntersection.Count : " + vehiclesInIntersection.Count);
+            // Debug.Log(_vehicle.name + " arrives at " + this.name  + "'s vehiclesQueue.Count : " + vehiclesQueue.Count + " , vehiclesInIntersection.Count : " + vehiclesInIntersection.Count);
 
             if(!IsPrioritySegment(vehicleAIRouteName))
             {
@@ -97,8 +97,8 @@ namespace TrafficSimulation{
                     
                     if(vehiclesInIntersection.Count == 0)
                     {   
-                        Debug.Log(this.name + " checking");
-                        Invoke("CheckIntersection", invokeTime);
+                        // Debug.Log(this.name + " checking");
+                        InvokeRepeating("CheckIntersection", invokeTime, 2f);
                     }
                 }
 
@@ -124,19 +124,24 @@ namespace TrafficSimulation{
         
                 foreach(GameObject _vehicleInQueue in vehiclesQueue)
                 {   
-                    Debug.Log(this.name + "-->" + _vehicleInQueue.name + "'s nowStatus : " + _vehicleInQueue.GetComponent<TruckInfo>().nowStatus);
+                    // Debug.Log(this.name + "-->" + _vehicleInQueue.name + "'s nowStatus : " + _vehicleInQueue.GetComponent<TruckInfo>().nowStatus);
                     if(_vehicleInQueue.GetComponent<TruckInfo>().nowStatus == NowStatus.WAITING)
                     {
                         waitingVehicleCount ++;
                     }
                 }
 
-                Debug.Log(this.name + "'s waitingVehicleCount : " + waitingVehicleCount + " , vehiclesQueue.Count : " + vehiclesQueue.Count);
+                // Debug.Log(this.name + "'s waitingVehicleCount : " + waitingVehicleCount + " , vehiclesQueue.Count : " + vehiclesQueue.Count);
                 if(waitingVehicleCount == vehiclesQueue.Count)
                 {   
-                    Debug.Log(vehiclesQueue[0].name + " has to Existstop at " + this.name);
+                    // Debug.Log(vehiclesQueue[0].name + " has to Existstop at " + this.name);
                     ExitStop(vehiclesQueue[0]);
                 }
+            }
+
+            else
+            {
+                CancelInvoke("CheckIntersection");
             }
         }
 
