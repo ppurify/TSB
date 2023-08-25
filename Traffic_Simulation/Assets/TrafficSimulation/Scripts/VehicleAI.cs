@@ -163,7 +163,15 @@ namespace TrafficSimulation {
                     // acc = .3f;
                     // acc가 클수록 속도는 더 적게 줄어듬
                     // acc = 1.8f;
-                    acc = 3f;
+                    if(rb.velocity.x >= -10f | rb.velocity.x <= 10f)
+                    {
+                        acc = 3f;
+                    }
+
+                    else
+                    {
+                        acc = 1.8f;
+                    }
                     
                     brake = 0f;
                     this.gameObject.GetComponent<TruckInfo>().nowStatus = NowStatus.WAITING;
