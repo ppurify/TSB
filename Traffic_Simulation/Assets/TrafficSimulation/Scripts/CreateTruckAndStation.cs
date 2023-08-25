@@ -8,13 +8,13 @@ using System;
 namespace TrafficSimulation{
     public class CreateTruckAndStation : MonoBehaviour
     {
-        private static string folderPath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\Variance\\LP_50_40_10\\Trucks\\";
-        // private static string folderPath = "C:\\Users\\purify\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\";
-
-        public static string truckFileName_1 = "now_Truck_1_LP_50_40_10_with_0.csv";
-        public static string truckFileName_2 = "now_Truck_30_LP_80_10_10_with_30_shortest.csv";
-        private static string truckFilePath_1 = Path.Combine(folderPath, truckFileName_1);
-        private static string truckFilePath_2 = Path.Combine(folderPath, truckFileName_2);
+        private static string folderPath_1 = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\prev\\Trucks\\";
+        private static string folderPath_2 = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\Variance\\LP_50_40_10\\Trucks\\";
+        
+        public static string truckFileName_1 = "prev_Truck_70_shortest.csv";
+        public static string truckFileName_2 = "now_Truck_1_LP_50_40_10_with_70_shortest.csv";
+        private static string truckFilePath_1 = Path.Combine(folderPath_1, truckFileName_1);
+        private static string truckFilePath_2 = Path.Combine(folderPath_2, truckFileName_2);
 
         public static List<CreateTruckData> truckDataList_1 = new List<CreateTruckData>();
         public static List<CreateTruckData> truckDataList_2 = new List<CreateTruckData>();
@@ -37,7 +37,7 @@ namespace TrafficSimulation{
         
         // 이전에 스케줄링이 된게 없고 현재 한대만 돌릴 때는 truckIndexPlus_1을 100으로 해주기
         // 두대 돌리거나 이전에 스케줄링 된 걸 돌릴때는 truckIndexPlus_1을 0으로 해주기
-        private int truckIndexPlus_1 = 100;
+        private int truckIndexPlus_1 = 0;
         private int truckIndexPlus_2 = 100;
 
         private float checkRange_1 = 7f;
@@ -45,9 +45,9 @@ namespace TrafficSimulation{
         private float checkDelay = 0.5f;
         
         // file 2개일 때
-        public static bool isTwoFile = false;
+        public static bool isTwoFile = true;
         // file 1개 일 때
-        public static bool isOneFile = true;
+        public static bool isOneFile = false;
         // 1대씩 돌릴 때
         public static bool isOneByOne = false;
 

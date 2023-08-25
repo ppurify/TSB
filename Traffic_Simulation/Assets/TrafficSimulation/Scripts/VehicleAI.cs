@@ -170,7 +170,7 @@ namespace TrafficSimulation {
 
                     else
                     {
-                        acc = 1.8f;
+                        acc = 1.5f;
                     }
                     
                     brake = 0f;

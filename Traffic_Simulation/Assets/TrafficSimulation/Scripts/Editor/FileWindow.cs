@@ -19,9 +19,12 @@ namespace TrafficSimulation {
         // 1. tile 75
         // private static Vector3 intersectionSize = new Vector3(80,10,80);
         // 2. tile 38    
-        private static Vector3 intersectionSize = new Vector3(40,10,25);
+        private static Vector3 intersectionSize = new Vector3(50,10,25);
 
         private static float intersectionPos_y = intersectionSize.y/2;
+
+        private static Vector3 cornerSize = new Vector3(40,10,30);
+
 
         
         // Route Parameters
@@ -974,7 +977,7 @@ namespace TrafficSimulation {
             BoxCollider bc = EditorHelper.AddComponent<BoxCollider>(cornerGo);
 
             // change the size of the box collider to fit the intersection
-            bc.size = intersectionSize;
+            bc.size = cornerSize;
             // change the center of the box collider to fit the intersection
             Vector3 center = bc.center;
             center.y = intersectionPos_y;

@@ -98,7 +98,7 @@ namespace TrafficSimulation{
                     if(vehiclesInIntersection.Count == 0)
                     {   
                         // Debug.Log(this.name + " checking");
-                        InvokeRepeating("CheckIntersection", invokeTime, 6f);
+                        InvokeRepeating("CheckIntersection", invokeTime, 5f);
                     }
                 }
 
