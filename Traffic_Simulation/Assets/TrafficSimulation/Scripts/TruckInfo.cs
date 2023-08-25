@@ -366,7 +366,6 @@ namespace TrafficSimulation{
 
         private void checkStationStatus()
         {
-            UnityEngine.Debug.Log("checkStationStatus Method" + ", IsStationAvailable(nowStation) : " + IsStationAvailable(nowStation));
             if(IsStationAvailable(nowStation))
             {
                 CancelInvoke("checkStationStatus");
