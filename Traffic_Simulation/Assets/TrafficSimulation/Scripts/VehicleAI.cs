@@ -165,7 +165,7 @@ namespace TrafficSimulation {
                     // acc = 1.8f;
                     if(rb.velocity.x >= -10f | rb.velocity.x <= 10f)
                     {
-                        acc = 2.5f;
+                        acc = 2f;
                     }
 
                     else
