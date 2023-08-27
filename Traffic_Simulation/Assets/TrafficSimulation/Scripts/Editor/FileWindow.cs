@@ -8,7 +8,7 @@ using System;
 namespace TrafficSimulation {    
     public class FileWindow : EditorWindow
     {   
-        private static string routefilePath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\prev_RoutePoints_10_shortest.csv";    
+        private static string routefilePath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\prev\\RoutePoints_LP_0_20_80\\prev_RoutePoints_10_LP_0_20_80.csv";    
         private static string intersectionfilePath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\Intersections\\intersectionPoints-tile25.csv";
 
         private static TrafficSystem wps;
@@ -23,7 +23,7 @@ namespace TrafficSimulation {
 
         private static float intersectionPos_y = intersectionSize.y/2;
 
-        private static Vector3 cornerSize = new Vector3(40,10,30);
+        private static Vector3 cornerSize = new Vector3(40,10,40);
 
 
         
@@ -425,19 +425,6 @@ namespace TrafficSimulation {
                     // Down Left (ㄴ 모양)
                     else if(axis_x_next_now > 0)
                     {                        
-                        // Debug.Log(_routeName + " --> Down Left (ㄴ 모양)");
-                        // x1 = nowPoint_x;
-                        // z1 = nowPoint_z + 19f;
-
-                        // x2 = nowPoint_x + 5f;
-                        // z2 = nowPoint_z + 12.5f;
-
-                        // x3 = nowPoint_x + 13f;
-                        // z3 = nowPoint_z + 6.5f;
-
-                        // x4 = nowPoint_x + 20f;
-                        // z4 = nowPoint_z + 2.5f;
-
                         x1 = nowPoint_x + 2f;
                         z1 = nowPoint_z + 20f;
 
@@ -457,27 +444,22 @@ namespace TrafficSimulation {
                     // Up left 2 (ㄱ 모양)
                     if(axis_x_next_now < 0)
                     {
-                        // Debug.Log(_routeName + " --> Up left 2 (ㄱ 모양)");
                         x1 = nowPoint_x;
-                        // z1 = nowPoint_z - 25.5f;
-                        z1 = nowPoint_z - 20f;
+                        z1 = nowPoint_z - 25.5f;
 
+                        x2 = nowPoint_x - 2f;
+                        z2 = nowPoint_z - 15.5f;
 
-                        x2 = nowPoint_x - 3f;
-                        // z2 = nowPoint_z - 15.5f;
-                        z2 = nowPoint_z - 10f;
+                        x3 = nowPoint_x - 10f;
+                        z3 = nowPoint_z - 6.5f;
 
-                        x3 = nowPoint_x - 8f;
-                        z3 = nowPoint_z - 4f;
-
-                        x4 = nowPoint_x - 15f;
+                        x4 = nowPoint_x - 20f;
                         z4 = nowPoint_z;
                     }
 
                     // Up right 2(ㄱ 반대모양)
                     else if(axis_x_next_now > 0)
                     {
-                        // Debug.Log(_routeName + " --> Up right 2(ㄱ 반대모양)");
                         x1 = nowPoint_x;
                         z1 = nowPoint_z - 12.5f;
 
@@ -552,24 +534,23 @@ namespace TrafficSimulation {
 
                         x4 = nowPoint_x;
                         z4 = nowPoint_z - 12.5f;
-              
                     }
 
                     // Down left 2 (ㄱ 반대 모양)
                     else if(axis_x_pre_now > 0)
                     {
                         // Debug.Log(_routeName + " --> Down left 2 (ㄱ 반대 모양)");
-                        x1 = nowPoint_x + 15f;
-                        z1 = nowPoint_z;
+                        x1 = nowPoint_x + 20f;
+                        z1 = nowPoint_z - 2f;
 
-                        x2 = nowPoint_x + 8f;
-                        z2 = nowPoint_z - 2.5f;
+                        x2 = nowPoint_x + 13f;
+                        z2 = nowPoint_z - 6.5f;
 
-                        x3 = nowPoint_x + 3f;
-                        z3 = nowPoint_z - 6.5f;
+                        x3 = nowPoint_x + 6.5f;
+                        z3 = nowPoint_z - 13f;
 
-                        x4 = nowPoint_x;
-                        z4 = nowPoint_z - 12.5f;
+                        x4 = nowPoint_x + 2f;
+                        z4 = nowPoint_z - 22f;
                     }
 
                     
