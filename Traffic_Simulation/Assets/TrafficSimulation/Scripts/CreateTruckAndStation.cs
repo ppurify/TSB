@@ -8,11 +8,14 @@ using System;
 namespace TrafficSimulation{
     public class CreateTruckAndStation : MonoBehaviour
     {
-        private static string folderPath_1 = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\prev\\Trucks\\";
-        private static string folderPath_2 = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\Variance\\LP_50_40_10\\Trucks\\";
+        private static string folderPath_1 = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\prev\\Trucks_LP_0_20_80\\";
+        // private static string folderPath_1 = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\Variance\\LP_0_0_100\\";
+
+        private static string folderPath_2 = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\Variance\\LP_0_0_100\\";
         
-        public static string truckFileName_1 = "prev_Truck_70_shortest.csv";
-        public static string truckFileName_2 = "now_Truck_1_LP_50_40_10_with_70_shortest.csv";
+        public static string truckFileName_1 = "prev_Truck_20_LP_0_20_80.csv";
+        public static string truckFileName_2 = "now_Truck_1_LP_0_0_100.csv";
+
         private static string truckFilePath_1 = Path.Combine(folderPath_1, truckFileName_1);
         private static string truckFilePath_2 = Path.Combine(folderPath_2, truckFileName_2);
 
@@ -45,11 +48,11 @@ namespace TrafficSimulation{
         private float checkDelay = 0.5f;
         
         // file 2개일 때
-        public static bool isTwoFile = true;
+        public static bool isTwoFile = false;
         // file 1개 일 때
         public static bool isOneFile = false;
         // 1대씩 돌릴 때
-        public static bool isOneByOne = false;
+        public static bool isOneByOne = true;
 
         // // 2개 파일일때
         void Start()
