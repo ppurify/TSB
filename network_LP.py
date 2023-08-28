@@ -16,7 +16,6 @@ def solve(all_arcs, number_of_YT, number_of_Job):
     all_arcs.sort(key=lambda x: x.index)
 
 
-
     # print('lenght of all_arcs : ', len(all_arcs))
     # for i in range(len(all_arcs)):
     #     print('i : ', all_arcs[i].i),
@@ -117,7 +116,6 @@ def solve(all_arcs, number_of_YT, number_of_Job):
             if a.j == ['Drop', l]:
                 list_for_const4.append(a.index)
         solver.Add(sum(x[j] for j in list_for_const4) == 1)
-
 
 
 

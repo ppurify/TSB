@@ -45,15 +45,6 @@ def penalty(normalized_prev_count, route, number_of_final_route, alpha1, alpha3,
     final_route = [route[i] for i in final_route_idx]
     return final_route
 
-# pseudo code of penalty function
-# for pair in pairs:
-#     for arc in pair:
-#         input : path, Q_(x,y)^prev count
-#         for coordinate in path:
-#             prev_count_sum += Q_(x,y)^prev count[coordinate]
-#         penalty = alpha1 * prev_count_sum + alpha3 * len(path)
-#     pick k' paths with the smallest penalty
-
 
 def get_cost(normalized_prev_count, normalized_now_count, path, alpha1, alpha2, alpha3, time_consumed_per_grid, processing_time):
 
@@ -69,11 +60,11 @@ def get_cost(normalized_prev_count, normalized_now_count, path, alpha1, alpha2, 
 
         # cost 산출(반올림)
         total_cost = round((alpha1 * sum_of_counter_of_prev_count) + (alpha2 * sum_of_counter_of_now_count) + (alpha3 * (sum_of_move * time_consumed_per_grid + 2*processing_time)))
-        print('prev count sum : ', (sum_of_counter_of_prev_count))
-        print('now count sum : ', (sum_of_counter_of_now_count))
-        print('dist time sum per grid : ', (sum_of_move * time_consumed_per_grid))
-        print('cost : ', total_cost)
-        print('')
+        # print('prev count sum : ', (sum_of_counter_of_prev_count))
+        # print('now count sum : ', (sum_of_counter_of_now_count))
+        # print('dist time sum per grid : ', (sum_of_move * time_consumed_per_grid))
+        # print('cost : ', total_cost)
+        # print('')
     return total_cost
 
 
@@ -91,7 +82,7 @@ def sort_and_cost(YT_locations, Job_locations, arcs_YT_to_Pick, arcs_Pick_to_Dro
 
     # A1 cost 계산
     for i in range(len(arcs_YT_to_Pick)):
-        print('A1 : ', i)
+        # print('A1 : ', i)
         arcs_YT_to_Pick[i].cost = get_cost(normalized_prev_count, normalized_A1_now_count, arcs_YT_to_Pick[i].path, alpha1=alpha1, alpha2=alpha2, alpha3=alpha3, time_consumed_per_grid=time_consumed_per_grid, processing_time = 0)
         
 
@@ -136,7 +127,7 @@ def sort_and_cost(YT_locations, Job_locations, arcs_YT_to_Pick, arcs_Pick_to_Dro
 
     # A2 cost 계산
     for i in range(len(arcs_Pick_to_Drop)):
-        print('A2 : ', i)
+        # print('A2 : ', i)
         arcs_Pick_to_Drop[i].cost = get_cost(normalized_A2_prev_count, normalized_A2_now_count, arcs_Pick_to_Drop[i].path, alpha1=alpha1, alpha2=alpha2, alpha3=alpha3, time_consumed_per_grid=time_consumed_per_grid, processing_time = 0)
 
     # now_count 초기화
@@ -168,7 +159,7 @@ def sort_and_cost(YT_locations, Job_locations, arcs_YT_to_Pick, arcs_Pick_to_Dro
 
     # A3 cost 계산
     for i in range(len(arcs_Drop_to_Pick)):
-        print('A3 : ', i)
+        # print('A3 : ', i)
         arcs_Drop_to_Pick[i].cost = get_cost((normalized_A3_prev_count), (normalized_A3_now_count), arcs_Drop_to_Pick[i].path, alpha1=alpha1, alpha2=alpha2, alpha3=alpha3, time_consumed_per_grid=time_consumed_per_grid, processing_time = processing_time)
     # A4 cost 계산
     for i in range(len(arcs_Drop_to_Sink)):
