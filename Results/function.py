@@ -2,6 +2,7 @@ import csv
 import os
 import matplotlib.pyplot as plt
 import re
+import pandas as pd
 
 def load_csv_file(file_path):
     data = []
@@ -70,21 +71,6 @@ def create_YT_A_Data(_keyword, _variance_all_csv_data):
     return _data_list, _column_names
 
 # ------------------------------------------------------------------------------
-
-def draw_plot(_x_values, _y_values, _title_name, x_label, y_label):
-    plt.figure(figsize=(5,3))
-    plt.plot(_x_values, _y_values , marker='o', linestyle='-', color = 'navy')
-    plt.title(_title_name, fontsize=9, ha='center')
-
-    plt.yticks(range(int(_y_values.min()) - 30, int(_y_values.max()) + 10, 50))
-    plt.xlabel(x_label, fontsize=9)
-    plt.ylabel(y_label, fontsize=9)
-    # plt.xticks(range(0, x_values.max() + 10, 10))
-
-    plt.grid(True)
-    plt.show()
-    
-    
 def create_congestion_df(csv_data):
     columns = ['Truck_num'] + csv_data[0][1][0]
 
@@ -102,3 +88,18 @@ def create_congestion_df(csv_data):
 
     df = pd.DataFrame(data_list, columns=columns)
     return df
+
+def draw_plot(_x_values, _y_values, _title_name, x_label, y_label):
+    plt.figure(figsize=(5,3))
+    plt.plot(_x_values, _y_values , marker='o', linestyle='-', color = 'navy')
+    plt.title(_title_name, fontsize=9, ha='center')
+
+    plt.yticks(range(int(_y_values.min()) - 30, int(_y_values.max()) + 10, 50))
+    plt.xlabel(x_label, fontsize=9)
+    plt.ylabel(y_label, fontsize=9)
+    # plt.xticks(range(0, x_values.max() + 10, 10))
+
+    plt.grid(True)
+    plt.show()
+    
+    
