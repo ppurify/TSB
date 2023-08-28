@@ -25,118 +25,87 @@ def main():
     grid, _YT_location_col_index, QC_locations, YC_locations = make_grid.Grid(grid_length, grid_height, block_length, block_height, block_num_in_row)
     
     
-    number_of_YT = 1
-    number_of_Job = 1
+    number_of_YT = 10
+    number_of_Job = 10
 
-    # filename_Truck = 'prev_Truck_65_LP_0_20_80.csv'
-    # filename_RoutePoints = 'prev_RoutePoints_65_LP_0_20_80.csv'
-    filename_Truck = 'now_Truck_1_LP_70_20_10_with_prev_Truck_70_LP_0_20_80.csv'
-    filename_RoutePoints = 'now_RoutePoints_1_LP_70_20_10_with_prev_Truck_70_LP_0_20_80.csv'
+    filename_Truck = 'prev_Truck_10_LP_0_0_100.csv'
+    filename_RoutePoints = 'prev_RoutePoints_10_LP_0_0_100.csv'
+  
+
+    # Assuming you have YC_locations and QC_locations defined
+    YT_locations = {}
+    Job_locations = {}
     
-    YT_locations = {0: (2, 7)}
-    Job_locations = {0: [(0, 25), (6, 25)]}
+    # Generate a shuffled list of all possible grid locations
+    possible_locations = [(i, j) for i in range(len(grid)) for j in range(len(grid[0]))]
+    random.shuffle(possible_locations)
 
-    # # Assuming you have YC_locations and QC_locations defined
-    # YT_locations = {}
-    # Job_locations = {}
-    
-    # # Generate a shuffled list of all possible grid locations
-    # possible_locations = [(i, j) for i in range(len(grid)) for j in range(len(grid[0]))]
-    # random.shuffle(possible_locations)
-
-    # # Create YT locations
-    # for i in range(number_of_YT):
-    #     YT_location = None
-    #     while YT_location is None or grid[YT_location] == -1 or YT_location[1] not in _YT_location_col_index:
-    #         # YT_location = possible_locations[location_index]  # Use the current index
-    #         if len(possible_locations) > 0:
-    #           YT_location = possible_locations.pop()
-    #         else:
-    #           # print("No more possible YT locations")
-    #           possible_locations = [(i, j) for i in range(len(grid)) for j in range(len(grid[0]))]
-    #           random.shuffle(possible_locations)
-    #           YT_location = possible_locations.pop()
+    # Create YT locations
+    for i in range(number_of_YT):
+        YT_location = None
+        while YT_location is None or grid[YT_location] == -1 or YT_location[1] not in _YT_location_col_index:
+            # YT_location = possible_locations[location_index]  # Use the current index
+            if len(possible_locations) > 0:
+              YT_location = possible_locations.pop()
+            else:
+              # print("No more possible YT locations")
+              possible_locations = [(i, j) for i in range(len(grid)) for j in range(len(grid[0]))]
+              random.shuffle(possible_locations)
+              YT_location = possible_locations.pop()
       
-    #     YT_locations[i] = YT_location
+        YT_locations[i] = YT_location
 
-    # # Shuffle YC and QC locations for better randomness
-    # possible_YC_locations = YC_locations.copy()
-    # possible_QC_locations = QC_locations.copy()
+    # Shuffle YC and QC locations for better randomness
+    possible_YC_locations = YC_locations.copy()
+    possible_QC_locations = QC_locations.copy()
     
-    # random.shuffle(possible_YC_locations)
-    # random.shuffle(possible_QC_locations)
+    random.shuffle(possible_YC_locations)
+    random.shuffle(possible_QC_locations)
     
-    # # Create Job locations
-    # for j in range(number_of_Job):
-    #     # choice random number 0 or 1
-    #     random_num = np.random.randint(2)
+    # Create Job locations
+    for j in range(number_of_Job):
+        # choice random number 0 or 1
+        random_num = np.random.randint(2)
         
-    #     if(len(possible_YC_locations) > 0):
-    #       YC_loc = possible_YC_locations.pop()
+        if(len(possible_YC_locations) > 0):
+          YC_loc = possible_YC_locations.pop()
         
-    #     else:
-    #       # print("No more YC locations")
-    #       possible_YC_locations = YC_locations.copy()
-    #       random.shuffle(possible_YC_locations)
-    #       YC_loc = possible_YC_locations.pop()
+        else:
+          # print("No more YC locations")
+          possible_YC_locations = YC_locations.copy()
+          random.shuffle(possible_YC_locations)
+          YC_loc = possible_YC_locations.pop()
           
-    #     if(len(possible_QC_locations) > 0):
-    #       QC_loc = possible_QC_locations.pop()
+        if(len(possible_QC_locations) > 0):
+          QC_loc = possible_QC_locations.pop()
           
-    #     else:
-    #       # print("No more QC locations")
-    #       possible_QC_locations = QC_locations.copy()
-    #       random.shuffle(possible_QC_locations)
-    #       QC_loc = possible_QC_locations.pop()
+        else:
+          # print("No more QC locations")
+          possible_QC_locations = QC_locations.copy()
+          random.shuffle(possible_QC_locations)
+          QC_loc = possible_QC_locations.pop()
           
-    #     # 0 means Outbound => YC -> QC
-    #     if random_num == 0:
-    #         Pick_location = YC_loc  # Use random.choice for better randomness
-    #         Drop_location = QC_loc
-    #     # 1 means Inbound => QC -> YC
-    #     else:
-    #         Pick_location = QC_loc
-    #         Drop_location = YC_loc
+        # 0 means Outbound => YC -> QC
+        if random_num == 0:
+            Pick_location = YC_loc  # Use random.choice for better randomness
+            Drop_location = QC_loc
+        # 1 means Inbound => QC -> YC
+        else:
+            Pick_location = QC_loc
+            Drop_location = YC_loc
         
-    #     Job_locations[j] = [Pick_location, Drop_location]
+        Job_locations[j] = [Pick_location, Drop_location]
 
-    # print("YT_locations =", YT_locations)
-    # print("Job_locations =", Job_locations)
+    print("YT_locations =", YT_locations)
+    print("Job_locations =", Job_locations)
 
     number_of_final_route = 3
-    alpha1 = 70  # prev counter
-    alpha2 = 20  # now counter
-    alpha3 = 10 # distance
+    alpha1 = 0  # prev counter
+    alpha2 = 0  # now counter
+    alpha3 = 100 # distance
 
     # prev_count : t-1시점의 활성화된 A2 + A3의 누적 path정보
-    # prev_count = np.zeros((len(grid), len(grid[0])))
-    prev_count = np.array([[18, 18, 18, 18, 18, 33, 25, 25, 25, 25, 35, 24, 24, 24,
-  24, 35, 23, 23, 23, 23, 32, 20, 20, 20, 20, 27, 10, 10,
-  10, 10, 10],
- [18,  0,  0,  0,  0,  0,  0,  0,  0,  0, 21,  0,  0,  0,
-   0,  0,  0,  0,  0,  0, 21,  0,  0,  0,  0,  0,  0,  0,
-   0,  0, 10],
- [18,  4,  4,  4,  4,  6,  2,  2,  2,  2, 21,  5,  5,  5,
-   5,  7,  3,  3,  3,  3, 22,  4,  4,  4,  4,  6,  2,  2,
-   2,  2, 10],
- [14,  0,  0,  0,  0,  0,  0,  0,  0,  0, 14,  0,  0,  0,
-   0,  0,  0,  0,  0,  0, 16,  0,  0,  0,  0,  0,  0,  0,
-   0,  0,  8],
- [14,  5,  5,  5,  5,  6,  1,  1,  1,  1, 14,  4,  4,  4,
-   4,  9,  8,  8,  8,  8, 19,  3,  3,  3,  3,  6,  3,  3,
-   3,  3,  8],
- [ 9,  0,  0,  0,  0,  0,  0,  0,  0,  0,  9,  0,  0,  0,
-   0,  0,  0,  0,  0,  0, 11,  0,  0,  0,  0,  0,  0,  0,
-   0,  0,  5],
- [ 9,  4,  4,  4,  4,  6,  2,  2,  2,  2,  9,  3,  3,  3,
-   3,  5,  2,  2,  2,  2, 11,  3,  3,  3,  3,  6,  3,  3,
-   3,  3,  5],
- [ 5,  0,  0,  0,  0,  0,  0,  0,  0,  0,  4,  0,  0,  0,
-   0,  0,  0,  0,  0,  0,  6,  0,  0,  0,  0,  0,  0,  0,
-   0,  0,  2],
- [ 5,  5,  5,  5,  5,  6,  1,  1,  1,  1,  4,  3,  3,  3,
-   3,  7,  6,  6,  6,  6,  8,  4,  4,  4,  4,  6,  2,  2,
-   2,  2,  2]])
+    prev_count = np.zeros((len(grid), len(grid[0])))
     
     now_count = np.zeros((len(grid), len(grid[0])))
 
@@ -188,5 +157,15 @@ def main():
     make_csv.create_csv(activated_arcs, number_of_YT, grid, filename_Truck, filename_RoutePoints)
 
 
+    log_file_path =  "Model/Logs/" + filename_Truck + ".txt"
+    
+    with open(log_file_path, 'w') as file:
+        file.write("YT_locations = " + str(YT_locations) + "\n")
+        file.write("Job_locations = " + str(Job_locations) + "\n")
+        file.write("objective_value: " + str(objective_value) + "\n")
+        next_prev_count_str = np.array2string(next_prev_count, separator=', ').replace('.', '')
+        file.write("next_prev_count: " + next_prev_count_str + "\n")
+        
+        
 if __name__ == "__main__":
     main()
