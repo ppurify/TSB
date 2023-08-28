@@ -25,11 +25,11 @@ def main():
     grid, _YT_location_col_index, QC_locations, YC_locations = make_grid.Grid(grid_length, grid_height, block_length, block_height, block_num_in_row)
     
     
-    number_of_YT = 10
-    number_of_Job = 10
+    number_of_YT = 25
+    number_of_Job = 25
 
-    filename_Truck = 'prev_Truck_10_LP_0_0_100.csv'
-    filename_RoutePoints = 'prev_RoutePoints_10_LP_0_0_100.csv'
+    filename_Truck = 'now_Truck_25_LP_0_0_100_3_with_prev_Truck_25_LP_0_0_100_3.csv'
+    filename_RoutePoints = 'now_RoutePoints_25_LP_0_0_100_3_with_prev_Truck_25_LP_0_0_100_3.csv'
   
 
     # Assuming you have YC_locations and QC_locations defined
@@ -98,6 +98,7 @@ def main():
 
     print("YT_locations =", YT_locations)
     print("Job_locations =", Job_locations)
+    
 
     number_of_final_route = 3
     alpha1 = 0  # prev counter
@@ -105,7 +106,34 @@ def main():
     alpha3 = 100 # distance
 
     # prev_count : t-1시점의 활성화된 A2 + A3의 누적 path정보
-    prev_count = np.zeros((len(grid), len(grid[0])))
+    # prev_count = np.zeros((len(grid), len(grid[0])))
+    prev_count = np.array([[ 2,  2,  2,  2,  2, 11, 11, 11, 11, 11, 15, 10, 10, 10,
+  10, 14, 10, 10, 10, 10, 14,  8,  8,  8,  8, 10,  4,  4,
+   4,  4,  4],
+ [ 2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  9,  0,  0,  0,
+   0,  0,  0,  0,  0,  0, 10,  0,  0,  0,  0,  0,  0,  0,
+   0,  0,  4],
+ [ 2,  0,  0,  0,  0,  2,  2,  2,  2,  2, 10,  1,  1,  1,
+   1,  4,  4,  4,  4,  4, 10,  1,  1,  1,  1,  2,  1,  1,
+   1,  1,  4],
+ [ 2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  8,  0,  0,  0,
+   0,  0,  0,  0,  0,  0,  5,  0,  0,  0,  0,  0,  0,  0,
+   0,  0,  3],
+ [ 2,  1,  1,  1,  1,  2,  1,  1,  1,  1,  8,  2,  2,  2,
+   2,  3,  2,  2,  2,  2,  6,  1,  1,  1,  1,  2,  1,  1,
+   1,  1,  3],
+ [ 1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  5,  0,  0,  0,
+   0,  0,  0,  0,  0,  0,  4,  0,  0,  0,  0,  0,  0,  0,
+   0,  0,  2],
+ [ 1,  1,  1,  1,  1,  2,  1,  1,  1,  1,  5,  3,  3,  3,
+   3,  3,  1,  1,  1,  1,  5,  1,  1,  1,  1,  2,  1,  1,
+   1,  1,  2],
+ [ 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  0,  0,  0,
+   0,  0,  0,  0,  0,  0,  4,  0,  0,  0,  0,  0,  0,  0,
+   0,  0,  1],
+ [ 0,  0,  0,  0,  0,  2,  2,  2,  2,  2,  2,  1,  1,  1,
+   1,  3,  3,  3,  3,  3,  4,  1,  1,  1,  1,  2,  1,  1,
+   1,  1,  1]])
     
     now_count = np.zeros((len(grid), len(grid[0])))
 
