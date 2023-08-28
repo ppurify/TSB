@@ -83,3 +83,22 @@ def draw_plot(_x_values, _y_values, _title_name, x_label, y_label):
 
     plt.grid(True)
     plt.show()
+    
+    
+def create_congestion_df(csv_data):
+    columns = ['Truck_num'] + csv_data[0][1][0]
+
+
+    data_list = []
+
+    for file_name, file_data in csv_data:
+        truck_num = file_name.split('_')[2]
+        
+        for row in file_data[1:]:
+            # print(row)
+            row[4:] = [float(value) for value in row[4:]]
+            new_row = [truck_num] + row
+            data_list.append(new_row)
+
+    df = pd.DataFrame(data_list, columns=columns)
+    return df
