@@ -27,16 +27,10 @@ namespace TrafficSimulation{
         private GameObject vehicle;
         private VehicleAI thisVehicleAI;
 
-        
-        // public float short_slowingTime = 1.5f;
-        // public float long_slowingTime = 5f;
         private float short_slowingTime = 1f;
 
         private float long_slowingTime = 5f;
 
-
-        // public float moveDelay = 3f;
-        // private float processTime = 180f;
         private float processTime;
 
 
@@ -48,11 +42,9 @@ namespace TrafficSimulation{
         private float toStationNum = 20f;
 
         private float checkRange_1 = 5f;
-        // private float checkRange_1 = 80f;
+ 
         private float checkRange_2 = 13f;
-        // 현재 유턴 횟수
-        [SerializeField] private int nowTurnNum;
-        // public int turnNum;
+
         public List<Vector3> turnStations;
 
 
@@ -64,7 +56,6 @@ namespace TrafficSimulation{
 
         // To check Station's Status
         private float checkDelay = 1f; 
-        // private float checkDelay = 1f; 
 
         private SaveFile saveFile;
         private Stopwatch truckTotalWatch;
@@ -77,7 +68,7 @@ namespace TrafficSimulation{
         private Vector3 firstStationPos;
 
         private Rigidbody rb;
-        // private BoxCollider bc;
+
         public NowStatus nowStatus;
         
         // 한대씩 돌릴 때 필요한 Data
@@ -90,9 +81,6 @@ namespace TrafficSimulation{
         {   
             vehicle = this.gameObject;
             thisVehicleAI = vehicle.GetComponent<VehicleAI>();
-
-            // vehicle.AddComponent<SaveFile>();
-            // saveFile = vehicle.GetComponent<SaveFile>();
 
             truckTotalWatch = new Stopwatch();
             truckStationWatch = new Stopwatch();
@@ -108,7 +96,6 @@ namespace TrafficSimulation{
         void Start()
         {
             truckStatus = 0;
-            nowTurnNum = 0;
 
             truckTotalWatch.Start();
             truckStationWatch.Start();
@@ -346,22 +333,7 @@ namespace TrafficSimulation{
 
             truckStatus+= 1;
 
-            if(turnStations.Count > 0 && nowTurnNum < turnStations.Count && nowStationPos == turnStations[nowTurnNum])
-            {
-                if(CheckRotation_IsToRight(vehicle))
-                {   
-                    originalPos = nowStationPos + new Vector3(0, 0, -7.5f);
-                }
-
-                else
-                {
-                    originalPos = nowStationPos + new Vector3(0, 0, 7.5f);
-                }
-
-                nowTurnNum += 1;
-            }
-
-            InvokeRepeating("CheckRoad", 3f, 1f);
+            InvokeRepeating("CheckRoad", 3f, 3f);
         }
 
         private void checkStationStatus()
@@ -401,8 +373,18 @@ namespace TrafficSimulation{
         }
 
         private void MoveToOriginalPos()
-        {
-            UnityEngine.Debug.Log(vehicle.name + " move from " + nowStationPos + " to Original Pos ");
+        {   
+            UnityEngine.Debug.Log(vehicle.name + " move from " + nowStationPos + " to Original Pos ---> CheckRotation_IsToRight(vehicle) : " + CheckRotation_IsToRight(vehicle));
+
+            if(CheckRotation_IsToRight(vehicle))
+            {   
+                originalPos = nowStationPos + new Vector3(0, 0, -7.5f);
+            }
+
+            else
+            {
+                originalPos = nowStationPos + new Vector3(0, 0, 7.5f);
+            }
 
             vehicle.transform.position = originalPos;
         
