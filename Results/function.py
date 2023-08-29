@@ -93,6 +93,36 @@ def create_congestion_df(csv_data):
     df = pd.DataFrame(data_list, columns=columns)
     return df
 
+def create_completion_df(csv_data):
+    columns = ["Prev Truck Number", "Now Truck Number", "alpha_1", "alpha_2", "alpha_3"] + csv_data[0][1][0]
+
+    data_list = []
+
+    for file_name, file_data in csv_data:
+        
+        # Extract numbers after "Truck_"
+        truck_numbers = re.findall(r'Truck_(\d+)', file_name)
+        
+        alphas_match = re.search(r"LP_(\d+)_(\d+)_(\d+)", file_name)
+        
+        if alphas_match:
+            alpha1 = int(alphas_match.group(1))
+            alpha2 = int(alphas_match.group(2))
+            alpha3 = int(alphas_match.group(3))
+            
+            alphas = [alpha1, alpha2, alpha3]
+        
+        for row in file_data[1:]:
+            # print(row)
+            row[4:] = [float(value) for value in row[4:]]
+            new_row = truck_numbers + alphas + row
+            data_list.append(new_row)
+
+    df = pd.DataFrame(data_list, columns=columns)
+
+    return df
+
+
 def draw_plot(_x_values, _y_values, _title_name, x_label, y_label):
     plt.figure(figsize=(5,3))
     plt.plot(_x_values, _y_values , marker='o', linestyle='-', color = 'navy')
