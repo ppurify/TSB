@@ -72,18 +72,22 @@ def create_YT_A_Data(_keyword, _variance_all_csv_data):
 
 # ------------------------------------------------------------------------------
 def create_congestion_df(csv_data):
-    columns = ['Truck_num'] + csv_data[0][1][0]
-
+    columns = ['Truck_num', 'Repeat_time'] + csv_data[0][1][0]
 
     data_list = []
 
     for file_name, file_data in csv_data:
         truck_num = file_name.split('_')[2]
+        # remove .csv
+        repeat_time = file_name.split('_')[-1].split('.')[0]
         
+        if repeat_time == '100' :
+            repeat_time == '1'
+            
         for row in file_data[1:]:
             # print(row)
             row[4:] = [float(value) for value in row[4:]]
-            new_row = [truck_num] + row
+            new_row = [truck_num, repeat_time] + row
             data_list.append(new_row)
 
     df = pd.DataFrame(data_list, columns=columns)
@@ -102,4 +106,7 @@ def draw_plot(_x_values, _y_values, _title_name, x_label, y_label):
     plt.grid(True)
     plt.show()
     
-    
+
+def merge_df(df1, df2):
+    merged_df = pd.merge(df1, df2, on=['Truck_num', 'Truck_id'], suffixes=('_wt', '_wot'))
+    return merged_df
