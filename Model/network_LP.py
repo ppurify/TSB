@@ -113,12 +113,22 @@ def solve(all_arcs, number_of_YT, number_of_Job):
         print('Objective value =', solver.Objective().Value())
         # print()
 
+        log_file_path =  "Model/Logs/Arcs_Info.txt"
+        
         for i in range(len(all_arcs)):
             if x[i].solution_value() > 0:
                 activated_arcs.append(all_arcs[i])
                 # print(x[i].name(), ' = ', x[i].solution_value())
                 # index가 i인 아크의 i, j, k, path 출력
                 # print(all_arcs[i].i, all_arcs[i].j, all_arcs[i].k, all_arcs[i].path, all_arcs[i].cost, all_arcs[i].index)
+    
+            with open(log_file_path, 'a') as file:  # Open in append mode ('a')
+                file.write("x[i].solution_value() : " + str(x[i].solution_value()) + "\n")
+                file.write("i, j, k : " + str(all_arcs[i].i) + ", " +  str(all_arcs[i].j) + ", " + str(all_arcs[i].k) + "\n")
+                file.write("cost : " + str(all_arcs[i].cost) + ", index : " + str(all_arcs[i].index) + "\n")
+                file.write("path : " + str(all_arcs[i].path) + "\n")
+                file.write(" ------------------------------------------ \n" )
+                
     else:
         print('The problem does not have an optimal solution.')
 
