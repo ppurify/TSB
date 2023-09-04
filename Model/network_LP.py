@@ -82,7 +82,6 @@ def solve(all_arcs, number_of_YT, number_of_Job):
         solver.Add(sum(x[j] for j in list_for_const3_from_Pick) == sum(x[j] for j in list_for_const3_to_Pick))
         solver.Add(sum(x[j] for j in list_for_const3_from_Drop) == sum(x[j] for j in list_for_const3_to_Drop))
 
-
     # Constraint 4 : Drop노드 대상으로, 각 Drop노드에 들어오는 아크의 합이 1
     for l in range(number_of_Job):
         list_for_const4 = []
@@ -91,9 +90,6 @@ def solve(all_arcs, number_of_YT, number_of_Job):
             if a.j == ['Drop', l]:
                 list_for_const4.append(a.index)
         solver.Add(sum(x[j] for j in list_for_const4) == 1)
-
-
-
 
     # Obejctive
     objective = solver.Objective()
@@ -106,7 +102,7 @@ def solve(all_arcs, number_of_YT, number_of_Job):
     status = solver.Solve()
     # print("Number of arcs : " , len(all_arcs))
     # print()
-
+    
     if status == pywraplp.Solver.OPTIMAL:
         objective_value = solver.Objective().Value()
         activated_arcs = []
@@ -115,20 +111,23 @@ def solve(all_arcs, number_of_YT, number_of_Job):
 
         log_file_path =  "Model/Logs/Arcs_Info.txt"
         
+        activated_arcs_index = []
         for i in range(len(all_arcs)):
             if x[i].solution_value() > 0:
                 activated_arcs.append(all_arcs[i])
+                activated_arcs_index.append(i)
                 # print(x[i].name(), ' = ', x[i].solution_value())
                 # index가 i인 아크의 i, j, k, path 출력
                 # print(all_arcs[i].i, all_arcs[i].j, all_arcs[i].k, all_arcs[i].path, all_arcs[i].cost, all_arcs[i].index)
     
-            with open(log_file_path, 'a') as file:  # Open in append mode ('a')
-                file.write("x[i].solution_value() : " + str(x[i].solution_value()) + "\n")
-                file.write("i, j, k : " + str(all_arcs[i].i) + ", " +  str(all_arcs[i].j) + ", " + str(all_arcs[i].k) + "\n")
-                file.write("cost : " + str(all_arcs[i].cost) + ", index : " + str(all_arcs[i].index) + "\n")
-                file.write("path : " + str(all_arcs[i].path) + "\n")
-                file.write(" ------------------------------------------ \n" )
-                
+            # with open(log_file_path, 'a') as file:  # Open in append mode ('a')
+            #     file.write("x[i].solution_value() : " + str(x[i].solution_value()) + "\n")
+            #     file.write("i, j, k : " + str(all_arcs[i].i) + ", " +  str(all_arcs[i].j) + ", " + str(all_arcs[i].k) + "\n")
+            #     file.write("cost : " + str(all_arcs[i].cost) + ", index : " + str(all_arcs[i].index) + "\n")
+            #     file.write("path : " + str(all_arcs[i].path) + "\n")
+            #     file.write(" ------------------------------------------ \n" )
+        # print(activated_arcs_index)
+     
     else:
         print('The problem does not have an optimal solution.')
 

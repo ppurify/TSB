@@ -46,8 +46,8 @@ def create_csv(activated_arcs, number_of_YT, grid, filename_Truck, filename_Rout
             Trucks.append(temp_list)
 
     # Write the Trucks list to a CSV file
-    truck_folder_path = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\Completion_time\\now_40_prev_20"
-    # folder_path = "C:\\Users\\purify\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data"
+    # truck_folder_path = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\Completion_time\\now_40_prev_20"
+    truck_folder_path = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\Congestion"
     
     filename = os.path.join(truck_folder_path, filename_Truck)
     with open(filename, mode='w', newline='') as file:
@@ -92,8 +92,8 @@ def create_csv(activated_arcs, number_of_YT, grid, filename_Truck, filename_Rout
                 RoutePoints['x'].append(point[1] * tile_size)
                 RoutePoints['y'].append(0)
                 RoutePoints['z'].append((len(grid) - 1 - point[0]) * tile_size)
-    
-    route_folder_path = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\Completion_time\\now_40_prev_20"
+  
+    route_folder_path = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\Congestion"
     
     filename = os.path.join(route_folder_path, filename_RoutePoints)
     header = list(RoutePoints.keys())
