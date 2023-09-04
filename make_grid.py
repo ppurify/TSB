@@ -32,8 +32,8 @@ def Grid(_grid_length, _grid_height, _block_length, _block_height, _block_num_in
         grid[-1, i * _block_length + (i + 1) : (i + 1) * _block_length + (i + 1)] = 2
         
         if i != 0:
-            grid[0, i * _block_length + i] = 3
-            grid[-1, i * _block_length + i] = 3
+            grid[0, i * _block_length + i] = 4
+            grid[-1, i * _block_length + i] = 4
 
     
     # 단방향 1
@@ -41,7 +41,7 @@ def Grid(_grid_length, _grid_height, _block_length, _block_height, _block_num_in
         for j in range(_block_num_in_row):
             grid[i, j * _block_length + (j+1) : (j+1) * _block_length + (j+1) ] = 1
             if j != 0:
-                grid[i, j*_block_length + j] = 3
+                grid[i, j*_block_length + j] = 4
     
     # Block 있는 곳은 -1
     for i in block_row_index:

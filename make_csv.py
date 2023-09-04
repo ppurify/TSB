@@ -20,7 +20,7 @@ def create_csv(activated_arcs, number_of_YT, grid, filename_Truck, filename_Rout
                 break
 
     # Trucks.csv : 각 YT들이 거치는 경로, pick, drop station정보를 저장
-    tile_size = 75
+    tile_size = 25
     Trucks = [['Truck_id', 'Route_id', 'Pick_station', 'Drop_station']]
 
     # Iterate over Traversing_info
