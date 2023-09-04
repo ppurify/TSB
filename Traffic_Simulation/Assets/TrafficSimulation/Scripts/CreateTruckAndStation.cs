@@ -14,7 +14,7 @@ namespace TrafficSimulation{
 
         private static string folderPath_2 = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\Completion_time\\now_40_prev_20\\";
         
-        public static string truckFileName_1 = "now_Truck_10_LP_20_70_10_with_prev_Truck_20_LP_20_70_10_3.csv";
+        public static string truckFileName_1 = "now_Truck_10_LP_20_70_10_with_prev_Truck_20_LP_20_70_10_4.csv";
         public static string truckFileName_2 = "now_Truck_40_LP_80_10_10_with_prev_Truck_20_LP_80_10_10.csv";
 
         private static string truckFilePath_1 = Path.Combine(folderPath_1, truckFileName_1);
