@@ -10,12 +10,12 @@ namespace TrafficSimulation{
     {
         // private static string folderPath_1 = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\Completion_time\\prev_20\\";
         // private static string folderPath_1 = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\Variance\\LP_0_0_100\\";
-        private static string folderPath_1 = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\Congestion\\prev_20_now_10\\LP_20_70_10\\";
+        private static string folderPath_1 = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\DH\\";
 
-        private static string folderPath_2 = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\Completion_time\\now_40_prev_20\\";
+        private static string folderPath_2 = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\DH\\";
         
-        public static string truckFileName_1 = "now_Truck_10_LP_20_70_10_with_prev_Truck_20_LP_20_70_10_4.csv";
-        public static string truckFileName_2 = "now_Truck_40_LP_80_10_10_with_prev_Truck_20_LP_80_10_10.csv";
+        public static string truckFileName_1 = "Before_RA_revision_prev_Truck_20_LP_30_60_10.csv";
+        public static string truckFileName_2 = "Before_RA_revision_now_Truck_20_LP_30_60_10.csv";
 
         private static string truckFilePath_1 = Path.Combine(folderPath_1, truckFileName_1);
         private static string truckFilePath_2 = Path.Combine(folderPath_2, truckFileName_2);
@@ -41,7 +41,7 @@ namespace TrafficSimulation{
         
         // 이전에 스케줄링이 된게 없고 현재 한대만 돌릴 때는 truckIndexPlus_1을 100으로 해주기
         // 두대 돌리거나 이전에 스케줄링 된 걸 돌릴때는 truckIndexPlus_1을 0으로 해주기
-        private int truckIndexPlus_1 = 100;
+        private int truckIndexPlus_1 = 0;
         private int truckIndexPlus_2 = 100;
 
         private float checkRange_1 = 7f;
@@ -49,11 +49,11 @@ namespace TrafficSimulation{
         private float checkDelay = 0.5f;
         
         // file 2개일 때
-        public static bool isTwoFile = false;
+        public static bool isTwoFile = true;
         // file 1개 일 때
         public static bool isOneFile = false;
         // 1대씩 돌릴 때
-        public static bool isOneByOne = true;
+        public static bool isOneByOne = false;
 
         // // 2개 파일일때
         void Start()

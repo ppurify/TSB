@@ -8,7 +8,7 @@ using System;
 namespace TrafficSimulation {    
     public class FileWindow : EditorWindow
     {   
-        private static string routefilePath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\prev\\RoutePoints_LP_0_20_80\\prev_RoutePoints_10_LP_0_20_80.csv";    
+        private static string routefilePath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\DH\\Before_RA_revision_prev_RoutePoints_20_LP_0_0_100.csv";    
         private static string intersectionfilePath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\Intersections\\intersectionPoints-tile25.csv";
 
         private static TrafficSystem wps;
