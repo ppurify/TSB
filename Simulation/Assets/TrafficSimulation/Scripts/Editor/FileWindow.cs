@@ -8,8 +8,8 @@ using System;
 namespace TrafficSimulation {    
     public class FileWindow : EditorWindow
     {   
-        private static string routefilePath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\DH\\Before_RA_revision_prev_RoutePoints_20_LP_0_0_100.csv";    
-        private static string intersectionfilePath = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\Intersections\\intersectionPoints-tile25.csv";
+        private static string routefilePath = "C:\\Users\\USER\\workspace\\TSB\\Simulation\\Assets\\Data\\DH\\Before_RA_revision_prev_RoutePoints_20_LP_0_0_100.csv";    
+        private static string intersectionfilePath = "C:\\Users\\USER\\workspace\\TSB\\Simulation\\Assets\\Data\\Intersections\\IntersectionPoints - tile25.csv";
 
         private static TrafficSystem wps;
 
@@ -69,8 +69,6 @@ namespace TrafficSimulation {
         // 2. tile 38
         private static float routeMoveScale = 5.5f;
 
-
-        
         
         [MenuItem("Component/Traffic Simulation/File Window")]
         public static void ShowWindow()
@@ -90,7 +88,7 @@ namespace TrafficSimulation {
                 routefilePath = EditorUtility.OpenFilePanel("Select File", "", "");
                 if(routefilePath != "")
                 {
-                    // Debug.Log("Selected file path: " + routefilePath);
+                    Debug.Log("Selected file path: " + routefilePath);
                 }
             }
             GUILayout.Label("File Path: " + routefilePath);
@@ -102,7 +100,7 @@ namespace TrafficSimulation {
                 intersectionfilePath = EditorUtility.OpenFilePanel("Select File", "", "");
                 if(intersectionfilePath != "")
                 {
-                    // Debug.Log("Selected file path: " + intersectionfilePath);
+                    Debug.Log("Selected file path: " + intersectionfilePath);
                 }
             }
             GUILayout.Label("File Path: " + intersectionfilePath);
@@ -110,16 +108,17 @@ namespace TrafficSimulation {
 
             GUILayout.Label("Route plus Number", EditorStyles.boldLabel);
             routePlusNum = EditorGUILayout.IntField("Enter a number:", routePlusNum);
+            EditorGUILayout.Space(30);
 
             // Create the buttons
-            GUILayout.FlexibleSpace();
-            EditorGUILayout.BeginHorizontal();
-            GUILayout.Label("Route Count : " + routes.Count, GUILayout.Width(150));
-            GUILayout.Space(10);
-            GUILayout.Label("Intersection Count : " + intersections.Count, GUILayout.Width(150));
-            GUILayout.Space(60);
-            GUILayout.Label("Corners Count : " + cornerPositions.Count, GUILayout.Width(150));
-            EditorGUILayout.EndHorizontal();
+            // GUILayout.FlexibleSpace();
+            // EditorGUILayout.BeginHorizontal();
+            // GUILayout.Label("Route Count : " + routes.Count, GUILayout.Width(150));
+            // GUILayout.Space(10);
+            // GUILayout.Label("Intersection Count : " + intersections.Count, GUILayout.Width(150));
+            // GUILayout.Space(60);
+            // GUILayout.Label("Corners Count : " + cornerPositions.Count, GUILayout.Width(150));
+            // EditorGUILayout.EndHorizontal();
 
 
             EditorGUILayout.BeginHorizontal();
@@ -143,15 +142,22 @@ namespace TrafficSimulation {
             GUILayout.Space(10);
             if (GUILayout.Button("Create Intersections in Scene", GUILayout.Width(200)))
             {   
-                if(intersectionfilePath != null)
+                GameObject intersectionOB = GameObject.Find("Intersections");
+                Debug.Log("Intersection Object : " + intersectionOB);
+                if(intersectionfilePath != null & intersectionOB == null)
                 {
                     intersections = CreateIntersectionList(intersectionfilePath, intersections);
                     CreateIntersections(intersections);
                 }
                 
-                else
+                else if(intersectionfilePath == null)
                 {
                     Debug.LogError("Check intersection file Path");
+                }
+
+                else if(intersectionOB != null)
+                {
+                    Debug.LogError("There is already Intersection Object");
                 }
             }
             // EditorGUILayout.EndHorizontal();
@@ -159,39 +165,42 @@ namespace TrafficSimulation {
 
             if (GUILayout.Button("Create Corners in Scene", GUILayout.Width(200)))
             {   
-                if(intersectionfilePath != null)
+                GameObject cornerOB = GameObject.Find("Corners");
+
+                if(cornerOB == null)
                 {
                     CreateCorners(cornerPositions);
                 }
                 
-                else
+                else if(cornerOB != null)
                 {
-                    Debug.LogError("Check Corners List");
+                    Debug.LogError("There is already Corner Object");
                 }
             }
+
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.Space(10);
 
 
-            // Reset Button
-            EditorGUILayout.BeginHorizontal();
-            if(GUILayout.Button("Reset Route", GUILayout.Width(150)))
-            {
-                routes.Clear();
-            }
-            GUILayout.Space(10);
-            if(GUILayout.Button("Reset Intersection", GUILayout.Width(200)))
-            {
-                intersections.Clear();
-            }
-            GUILayout.Space(10);
-            if(GUILayout.Button("Reset Corners", GUILayout.Width(200)))
-            {
-                cornerPositions.Clear();
-            }
+            // // Reset Button
+            // EditorGUILayout.BeginHorizontal();
+            // if(GUILayout.Button("Reset Route", GUILayout.Width(150)))
+            // {
+            //     routes.Clear();
+            // }
+            // GUILayout.Space(10);
+            // // if(GUILayout.Button("Reset Intersection", GUILayout.Width(200)))
+            // // {
+            // //     intersections.Clear();
+            // // }
+            // // GUILayout.Space(10);
+            // // if(GUILayout.Button("Reset Corners", GUILayout.Width(200)))
+            // // {
+            // //     cornerPositions.Clear();
+            // // }
             
-            EditorGUILayout.EndHorizontal();
-            EditorGUILayout.Space(10);
+            // EditorGUILayout.EndHorizontal();
+            // EditorGUILayout.Space(10);
 
 
             // Create All Button
