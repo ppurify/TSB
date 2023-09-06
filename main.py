@@ -23,8 +23,8 @@ def main():
   grid, _YT_location_col_index, QC_locations, YC_locations = make_grid.Grid(grid_length, grid_height, block_length, block_height, block_num_in_row)
   
   
-  number_of_YT = 20
-  number_of_Job = 20
+  number_of_YT = 3
+  number_of_Job = 3
   filename_Truck = 'result/aa_10.csv'
   filename_RoutePoints = 'result/Asd0_60_10.csv'
 
@@ -101,9 +101,9 @@ def main():
   # print("Job_locations =", Job_locations)
 
   number_of_final_route = 3
-  alpha1 = 30  # prev counter
-  alpha2 = 60  # now counter
-  alpha3 = 10 # distance
+  alpha1 = 0  # prev counter
+  alpha2 = 0  # now counter
+  alpha3 = 100 # distance
 
   # prev_count : t-1시점의 활성화된 A2 + A3의 누적 path정보
   prev_count = np.zeros((len(grid), len(grid[0])))
@@ -151,20 +151,92 @@ def main():
   all_arcs = arcs_YT_to_Pick + arcs_Pick_to_Drop + arcs_Drop_to_Pick + arcs_Drop_to_Sink + arcs_YT_to_Sink
 
 
+  # # arcs_YT_to_Pick을 순회하면서 같은 i, j내의 k개의 arc 중, cost가 가장 작은 arc의 cost를 1000000으로 설정  
+  # for YT_index in range(number_of_YT):
+  #   for Pick_index in range(number_of_Job):
+  #       arcs_in_same_ij = []
+  #       for arc in arcs_YT_to_Pick:
+  #         if arc.i == ['YT', YT_index] and arc.j == ['Pick', Pick_index]:
+  #           arcs_in_same_ij.append(arc)
+  #       # k가 1개보다 많으면
+  #       if len(arcs_in_same_ij) > 1:
+  #          # arcs_in_same_ij내에서 cost가 가장 작은 arc의 cost를 10000000으로 설정
+  #           min_cost = 10000000
+  #           for arc_ in arcs_in_same_ij: 
+  #               if arc_.cost < min_cost:
+  #                   min_cost = arc_.cost
+  #           for arc__ in arcs_in_same_ij:
+  #               if arc__.cost == min_cost:
+  #                   arc__.cost = 10000000
+  #                   break
+                
+  # # arcs_Pick_to_Drop을 순회하면서 같은 i, j내의 k개의 arc 중, cost가 가장 작은 arc의 cost를 1000000으로 설정
+  # for Pick_index in range(number_of_Job):
+  #   for Drop_index in range(number_of_Job):
+  #       arcs_in_same_ij = []
+  #       for arc in arcs_Pick_to_Drop:
+  #         if arc.i == ['Pick', Pick_index] and arc.j == ['Drop', Drop_index]:
+  #           arcs_in_same_ij.append(arc)
+  #       # k가 1개보다 많으면
+  #       if len(arcs_in_same_ij) > 1:
+  #          # arcs_in_same_ij내에서 cost가 가장 작은 arc의 cost를 10000000으로 설정
+  #           min_cost = 10000000
+  #           for arc_ in arcs_in_same_ij: 
+  #               if arc_.cost < min_cost:
+  #                   min_cost = arc_.cost
+  #           for arc__ in arcs_in_same_ij:
+  #               if arc__.cost == min_cost:
+  #                   arc__.cost = 10000000
+  #                   break
+                
+  # # arcs_Drop_to_Pick을 순회하면서 같은 i, j내의 k개의 arc 중, cost가 가장 작은 arc의 cost를 1000000으로 설정
+  # for Drop_index in range(number_of_Job):
+  #   for Pick_index in range(number_of_Job):
+  #       arcs_in_same_ij = []
+  #       for arc in arcs_Drop_to_Pick:
+  #         if arc.i == ['Drop', Drop_index] and arc.j == ['Pick', Pick_index]:
+  #           arcs_in_same_ij.append(arc)
+  #       # k가 1개보다 많으면
+  #       if len(arcs_in_same_ij) > 1:
+  #          # arcs_in_same_ij내에서 cost가 가장 작은 arc의 cost를 10000000으로 설정
+  #           min_cost = 10000000
+  #           for arc_ in arcs_in_same_ij: 
+  #               if arc_.cost < min_cost:
+  #                   min_cost = arc_.cost
+  #           for arc__ in arcs_in_same_ij:
+  #               if arc__.cost == min_cost:
+  #                   arc__.cost = 10000000
+  #                   break
+              
+          
+                
+  # all arc print
+  print('all_arcs')
+
+  for arc in all_arcs:
+    print('arc.i : ', arc.i)
+    print('arc.j : ', arc.j)
+    print('arc.k : ', arc.k)
+    print('arc cost : ', arc.cost)
+    print('arc path : ', arc.path)
+    print("")
+
 
 
 
   objective_value, activated_arcs = network_LP.solve(all_arcs, number_of_YT, number_of_Job)
   
-  # # activated_arcs들의 각 정보 출력
-  # for arc in activated_arcs:
-  #     print('arc.i : ', arc.i)
-  #     print('arc.j : ', arc.j)
-  #     print('arc.k : ', arc.k)
-  #     print('arc cost : ', arc.cost)
-  #     print('arc path : ', arc.path)
-  #     print("")
-  # print('objective_value: ', objective_value)
+  # activated_arcs들의 각 정보 출력
+  print('activated_arcs')
+  for arc in activated_arcs:
+      print('arc.i : ', arc.i)
+      print('arc.j : ', arc.j)
+      print('arc.k : ', arc.k)
+      print('arc cost : ', arc.cost)
+      print('arc path : ', arc.path)
+      print("")
+
+  print('objective_value: ', objective_value)
   # print('activated_arcs: ', activated_arcs)
 
   # 다음번 스케줄링을 위한 next_prev_count : A2 + A3의 누적 path정보
@@ -180,8 +252,8 @@ def main():
               next_prev_count[arc.path[i][0]][arc.path[i][1]] += 1
 
   # 붙여넣기 쉽게 원소사이에 , 추가하여 출력
-  print('next_prev_count')
-  print(np.array2string(next_prev_count, separator=', ').replace('.', ''))
+  # print('next_prev_count')
+  # print(np.array2string(next_prev_count, separator=', ').replace('.', ''))
 
 
   # Heatmap을 위한 grid_for_visualization
@@ -192,6 +264,11 @@ def main():
 
   # print('grid_for_visualization')
   # print(np.array2string(grid_for_visualization, separator=', ').replace('.', ''))
+
+
+
+
+
 
 
 

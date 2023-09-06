@@ -59,6 +59,9 @@ def get_cost(normalized_prev_count, normalized_now_count, path, alpha1, alpha2, 
             sum_of_counter_of_now_count += normalized_now_count[(path[i][0], path[i][1])]
 
         # cost 산출(반올림)
+        # print('sum_of_counter_of_prev_count : ', sum_of_counter_of_prev_count)
+        # print('sum_of_counter_of_now_count : ', sum_of_counter_of_now_count)
+        # print('sum_of_move : ', sum_of_move)
         total_cost = round((alpha1 * sum_of_counter_of_prev_count) + (alpha2 * sum_of_counter_of_now_count) + (alpha3 * (sum_of_move * time_consumed_per_grid + 2*processing_time)))
         # print('prev count sum : ', (sum_of_counter_of_prev_count))
         # print('now count sum : ', (sum_of_counter_of_now_count))
@@ -82,7 +85,11 @@ def sort_and_cost(YT_locations, Job_locations, arcs_YT_to_Pick, arcs_Pick_to_Dro
 
     # A1 cost 계산
     for i in range(len(arcs_YT_to_Pick)):
-        # print('A1 : ', i)
+        # print('i : ', arcs_YT_to_Pick[i].i)
+        # print('j : ', arcs_YT_to_Pick[i].j)
+        # print('k : ', arcs_YT_to_Pick[i].k)
+        # print('path : ', arcs_YT_to_Pick[i].path)
+
         arcs_YT_to_Pick[i].cost = get_cost(normalized_prev_count, normalized_A1_now_count, arcs_YT_to_Pick[i].path, alpha1=alpha1, alpha2=alpha2, alpha3=alpha3, time_consumed_per_grid=time_consumed_per_grid, processing_time = 0)
         
 

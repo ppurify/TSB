@@ -134,7 +134,7 @@ def solve(all_arcs, number_of_YT, number_of_Job):
     if status == pywraplp.Solver.OPTIMAL:
         objective_value = solver.Objective().Value()
         activated_arcs = []
-        print('Objective value =', solver.Objective().Value())
+        # print('Objective value =', solver.Objective().Value())
         # print()
 
         for i in range(len(all_arcs)):
