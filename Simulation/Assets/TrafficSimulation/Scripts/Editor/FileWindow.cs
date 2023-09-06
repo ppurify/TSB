@@ -44,6 +44,25 @@ namespace TrafficSimulation {
         // private static List<Vector3> cornerPositions = new List<Vector3>{new Vector3(0,0,0), new Vector3(540,0,0), new Vector3(540,0,240), new Vector3(0,0,240)};
         // 3. tile 25
         private static List<Vector3> cornerPositions = new List<Vector3>{new Vector3(0,0,0), new Vector3(750,0,0), new Vector3(750,0,200), new Vector3(0,0,200)};
+        private static List<Vector3> intersectionPositions = new List<Vector3>
+                                                                {
+                                                                    new Vector3(250, 0, 0),
+                                                                    new Vector3(500, 0, 0),
+                                                                    new Vector3(0, 0, 50),
+                                                                    new Vector3(250, 0, 50),
+                                                                    new Vector3(500, 0, 50),
+                                                                    new Vector3(750, 0, 50),
+                                                                    new Vector3(0, 0, 100),
+                                                                    new Vector3(250, 0, 100),
+                                                                    new Vector3(500, 0, 100),
+                                                                    new Vector3(750, 0, 100),
+                                                                    new Vector3(0, 0, 150),
+                                                                    new Vector3(250, 0, 150),
+                                                                    new Vector3(500, 0, 150),
+                                                                    new Vector3(750, 0, 150),
+                                                                    new Vector3(250, 0, 200),
+                                                                    new Vector3(500, 0, 200)
+                                                                };
 
         // private static List<Vector3> cornerPositions = new List<Vector3>{new Vector3(0,0,0), new Vector3(900,0,0), new Vector3(900,0,300), new Vector3(0,0,300)};
 
@@ -130,7 +149,7 @@ namespace TrafficSimulation {
                     routeDictionary = CreateRouteList(routefilePath);
 
                     // CreateRoutes(routes, cornerPositions, intersections);
-                    CreateRoutes(routeDictionary, cornerPositions, intersections);
+                    CreateRoutes(routeDictionary, cornerPositions, intersectionPositions);
 
                 }
                 
@@ -140,26 +159,42 @@ namespace TrafficSimulation {
                 }
             }
             GUILayout.Space(10);
+            // if (GUILayout.Button("Create Intersections in Scene", GUILayout.Width(200)))
+            // {   
+            //     GameObject intersectionOB = GameObject.Find("Intersections");
+            //     Debug.Log("Intersection Object : " + intersectionOB);
+            //     if(intersectionfilePath != null & intersectionOB == null)
+            //     {
+            //         intersections = CreateIntersectionList(intersectionfilePath, intersections);
+            //         CreateIntersections(intersections);
+            //     }
+                
+            //     else if(intersectionfilePath == null)
+            //     {
+            //         Debug.LogError("Check intersection file Path");
+            //     }
+
+            //     else if(intersectionOB != null)
+            //     {
+            //         Debug.LogError("There is already Intersection Object");
+            //     }
+            // }
             if (GUILayout.Button("Create Intersections in Scene", GUILayout.Width(200)))
             {   
                 GameObject intersectionOB = GameObject.Find("Intersections");
                 Debug.Log("Intersection Object : " + intersectionOB);
-                if(intersectionfilePath != null & intersectionOB == null)
-                {
-                    intersections = CreateIntersectionList(intersectionfilePath, intersections);
-                    CreateIntersections(intersections);
-                }
                 
-                else if(intersectionfilePath == null)
+                if(intersectionOB == null)
                 {
-                    Debug.LogError("Check intersection file Path");
+                    CreateIntersections(intersectionPositions);
                 }
 
-                else if(intersectionOB != null)
+                else
                 {
                     Debug.LogError("There is already Intersection Object");
                 }
             }
+
             // EditorGUILayout.EndHorizontal();
             GUILayout.Space(10);
 
@@ -209,7 +244,7 @@ namespace TrafficSimulation {
             {
                 if(routefilePath != null && intersectionfilePath != null)
                 {
-                    CreateAll(routefilePath, intersectionfilePath, routes, intersections, cornerPositions);
+                    CreateAll(routefilePath, intersectionfilePath, routes, intersectionPositions, cornerPositions);
                 }
 
                 else
@@ -706,10 +741,18 @@ namespace TrafficSimulation {
 
         public static void CreateAll(string routefilePath, string intersectionfilePath, List<List<Vector3>> routes, List<Vector3> intersections, List<Vector3> _cornerPositions)
         {   
-            CreateCorners(_cornerPositions);
+            GameObject cornersOB = GameObject.Find("Corners");
+            if(cornersOB == null)
+            {
+                CreateCorners(_cornerPositions);
+            }
 
-            intersections = CreateIntersectionList(intersectionfilePath, intersections);
-            CreateIntersections(intersections);
+            GameObject intersectionOB = GameObject.Find("Intersections");
+            if(intersectionOB == null)
+            {
+                intersections = CreateIntersectionList(intersectionfilePath, intersections);
+                CreateIntersections(intersections);
+            }
             
             // routes = CreateRouteList(routefilePath, routes, routeDictionary);
             routeDictionary = CreateRouteList(routefilePath);
