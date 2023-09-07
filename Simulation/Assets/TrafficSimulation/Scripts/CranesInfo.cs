@@ -23,10 +23,8 @@ public class CranesInfo : MonoBehaviour
     public float craneProcessTime;
     private float quayCranePosition_z = 200f;
 
-    // private float quayCraneProcessTime = 150f;
-    // private float yardCraneProcessTime = 150f;
-    private float quayCraneProcessTime = 8f;
-    private float yardCraneProcessTime = 8f;
+    private float quayCraneProcessTime = 150f;
+    private float yardCraneProcessTime = 150f;
 
     void Awake()
     {
