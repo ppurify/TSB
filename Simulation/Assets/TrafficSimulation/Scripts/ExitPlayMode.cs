@@ -21,9 +21,14 @@ namespace TrafficSimulation{
                 totalTruckCount = CreateTruckAndStation.truckDataList_1.Count + CreateTruckAndStation.truckDataList_2.Count;
             }
             
-            else
+            else if(CreateTruckAndStation.prevTruckFileName != "")
             {
                 totalTruckCount = CreateTruckAndStation.truckDataList_1.Count;
+            }
+
+            else if(CreateTruckAndStation.nowTruckFileName != "")
+            {
+                totalTruckCount = CreateTruckAndStation.truckDataList_2.Count;
             }
 
             GameObject.Find("Roads").AddComponent<SaveFile>();

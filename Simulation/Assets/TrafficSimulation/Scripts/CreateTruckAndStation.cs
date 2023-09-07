@@ -13,8 +13,12 @@ namespace TrafficSimulation{
 
         private static string nowTruckFilePath = "C:\\Users\\USER\\workspace\\TSB\\Simulation\\Assets\\Data\\DH\\";
         
-        public static string prevTruckFileName = "Before_RA_revision_prev_Truck_20_LP_0_0_100.csv";
-        public static string nowTruckFileName = "Before_RA_revision_now_Truck_20_LP_0_0_100.csv";
+        // public static string prevTruckFileName = "Before_RA_revision_prev_Truck_20_LP_0_0_100.csv";
+        public static string prevTruckFileName = "";
+
+        public static string nowTruckFileName = "Before_RA_revision_now_Truck_5_LP_0_0_100.csv";
+        // public static string nowTruckFileName = "";
+
 
         public static bool isTwoFile;
         // file 1개 일 때
@@ -66,14 +70,6 @@ namespace TrafficSimulation{
 
                 ReadFile(prevTruckPath, truckIndexPlus_1);
                 CreateStations(truckDataList_1, stationTagName);
-
-                if(ExistRoute(truckDataList_1))
-                {   
-                    IsDuplicateStartPosition(truckDataList_1, truckIndexPlus_1);
-                    CreateTrucks(startPositionDict_1, checkRange_1, checkRange_2, checkDelay);
-                }
-
-                Debug.Log("Create prev trucks");
             }
             
             if(nowTruckFileName != "")
@@ -82,15 +78,21 @@ namespace TrafficSimulation{
 
                 ReadFile(nowTruckPath, truckIndexPlus_2);
                 CreateStations(truckDataList_2, stationTagName);
-                
-                StartCoroutine(CreateNewTrucksDelay(createDelay));
             }
             
             Debug.Log("fileCount: " + fileCount);
 
             if(fileCount == 2)
-            {
+            {   
                 isTwoFile = true;
+                if(ExistRoute(truckDataList_1))
+                {   
+                    IsDuplicateStartPosition(truckDataList_1, truckIndexPlus_1);
+                    CreateTrucks(startPositionDict_1, checkRange_1, checkRange_2, checkDelay);
+                    Debug.Log("Create prev trucks");
+                }
+
+                StartCoroutine(CreateNewTrucksDelay(createDelay));
             }
 
 
@@ -98,17 +100,12 @@ namespace TrafficSimulation{
             {   
                 if(prevTruckFileName != "")
                 {
-                    if(ExistRoute(truckDataList_1))
-                    {   
-                        IsDuplicateStartPosition(truckDataList_1, truckIndexPlus_1);
-                        CreateTrucks(startPositionDict_1, checkRange_1, checkRange_2, checkDelay);
-                    }
-
                     if(isOneByOne)
                     {
                         if(truckDataList_1 != null)
                         {
                             CreateOneTruck_1(truckDataList_1[0]);
+                            Debug.Log("Create prev truck : " + truckDataList_1[0]);
                         }
 
                         else
@@ -120,22 +117,30 @@ namespace TrafficSimulation{
                     else
                     {
                         isOneFile = true;
+
+                        if(ExistRoute(truckDataList_1))
+                        {   
+                            IsDuplicateStartPosition(truckDataList_1, truckIndexPlus_1);
+                            CreateTrucks(startPositionDict_1, checkRange_1, checkRange_2, checkDelay);
+                            Debug.Log("Create prev trucks");
+                        }
+
+                        else
+                        {
+                            Debug.LogError("truckDataList_1's Route doesn't found.");
+                        }
                     }
                 }
 
                 else if(nowTruckFileName != "")
                 {
-                    if(ExistRoute(truckDataList_2))
-                    {
-                        IsDuplicateStartPosition(truckDataList_2, truckIndexPlus_2);
-                        CreateTrucks(startPositionDict_2, checkRange_1, checkRange_2, checkDelay);
-                    }
-
                     if(isOneByOne)
                     {
                         if(truckDataList_2 != null)
-                        {
+                        {   
+                            Debug.Log("truckDataList_2.Count : " + truckDataList_2.Count);
                             CreateOneTruck_1(truckDataList_2[0]);
+                            Debug.Log("Create now truck : " + truckDataList_2[0]);
                         }
 
                         else
@@ -147,6 +152,19 @@ namespace TrafficSimulation{
                     else
                     {
                         isOneFile = true;
+
+                        if(ExistRoute(truckDataList_2))
+                        {   
+                            Debug.Log("truckDataList_2.Count : " + truckDataList_2.Count);
+                            IsDuplicateStartPosition(truckDataList_2, truckIndexPlus_2);
+                            CreateTrucks(startPositionDict_2, checkRange_1, checkRange_2, checkDelay);
+                            Debug.Log("Create now trucks");
+                        }
+                        
+                        else
+                        {
+                            Debug.LogError("truckDataList_2's Route doesn't found.");
+                        }
                     }
                 }
                 
@@ -264,7 +282,7 @@ namespace TrafficSimulation{
 
                     truckData.CreateData(truckName, truckRoute, workStations);
 
-                    if(!isTwoFile | _truckIndexPlus == 0)
+                    if(_truckIndexPlus == 0)
                     {
                         truckDataList_1.Add(truckData);
                     }
@@ -418,7 +436,7 @@ namespace TrafficSimulation{
         {
             Debug.Log("dataList.Count: " + dataList.Count + " , _truckIndexPlus: " + _truckIndexPlus);
 
-            if(isOneFile | _truckIndexPlus == 0)
+            if(_truckIndexPlus == 0)
             {
                 startPositionDict_1 = new Dictionary<Vector3, List<Tuple<string, string, List<Vector3>>>>();
             }
@@ -445,7 +463,7 @@ namespace TrafficSimulation{
 
                         Tuple<string, string, List<Vector3>> _truckData = Tuple.Create(data.Name, parentName, data.WorkStations);
 
-                        if(isOneFile | _truckIndexPlus == 0)
+                        if(_truckIndexPlus == 0)
                         {
                             if(startPositionDict_1.ContainsKey(startPoint))
                             {  

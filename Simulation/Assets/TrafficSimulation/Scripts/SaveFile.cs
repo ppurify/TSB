@@ -19,13 +19,17 @@ namespace TrafficSimulation{
         {
             if(CreateTruckAndStation.isTwoFile)
             {
-                // csvFileName = CreateTruckAndStation.truckFileName_1 + "-" + CreateTruckAndStation.truckFileName_2;
                 csvFileName = CreateTruckAndStation.nowTruckFileName;
             }
 
-            else
+            else if(CreateTruckAndStation.prevTruckFileName != "")
             {
                 csvFileName = CreateTruckAndStation.prevTruckFileName;
+            }
+            
+            else if(CreateTruckAndStation.nowTruckFileName != "")
+            {
+                csvFileName = CreateTruckAndStation.nowTruckFileName;
             }
 
             if(CreateTruckAndStation.isOneByOne)

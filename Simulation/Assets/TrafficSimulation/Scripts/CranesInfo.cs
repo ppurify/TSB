@@ -23,6 +23,10 @@ public class CranesInfo : MonoBehaviour
     public float craneProcessTime;
     private float quayCranePosition_z = 200f;
 
+    // private float quayCraneProcessTime = 150f;
+    // private float yardCraneProcessTime = 150f;
+    private float quayCraneProcessTime = 8f;
+    private float yardCraneProcessTime = 8f;
 
     void Awake()
     {
@@ -30,7 +34,7 @@ public class CranesInfo : MonoBehaviour
 
         AssignCraneCapacity(quayCranePosition_z, 100, 100);
 
-        AssignProcessTime(quayCranePosition_z, 150f, 150f);
+        AssignProcessTime(quayCranePosition_z, quayCraneProcessTime, yardCraneProcessTime);
         // craneCapacity = 2;
     
         processQueueList = new List<GameObject>();

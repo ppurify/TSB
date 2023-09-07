@@ -73,7 +73,7 @@ namespace TrafficSimulation{
         
         // 한대씩 돌릴 때 필요한 Data
         private static CreateTruckAndStation createTruckAndStation;
-        private static List<CreateTruckData> truckDataList = CreateTruckAndStation.truckDataList_1;
+        private static List<CreateTruckData> truckDataList;
         private static bool _isOneByOne = CreateTruckAndStation.isOneByOne;
 
         // Start is called before the first frame update
@@ -90,6 +90,16 @@ namespace TrafficSimulation{
             if(_isOneByOne)
             {   
                 createTruckAndStation = GameObject.Find("Roads").GetComponent<CreateTruckAndStation>();
+                if(CreateTruckAndStation.prevTruckFileName != "")
+                {
+                    truckDataList = CreateTruckAndStation.truckDataList_1;
+                }
+
+                else if(CreateTruckAndStation.nowTruckFileName != "")
+                {
+                    truckDataList = CreateTruckAndStation.truckDataList_2;
+                }
+
             }
         }
 
