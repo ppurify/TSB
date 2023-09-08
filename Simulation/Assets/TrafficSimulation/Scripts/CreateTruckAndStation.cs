@@ -16,7 +16,7 @@ namespace TrafficSimulation{
         // public static string prevTruckFileName = "prev_Truck_20_After_time_transition_LP_40_50_10.csv";
         public static string prevTruckFileName = "";
 
-        public static string nowTruckFileName = "now_Truck_30_with_prev_Truck_25_LP_50_40_10.csv";
+        public static string nowTruckFileName = "now_Truck_30_with_prev_Truck_25_LP_80_10_10.csv";
         // public static string nowTruckFileName = "";
 
 
