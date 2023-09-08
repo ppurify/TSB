@@ -9,14 +9,14 @@ namespace TrafficSimulation{
     public class CreateTruckAndStation : MonoBehaviour
     {
         // Parameters
-        private static string prevTruckFilePath = "C:\\Users\\USER\\workspace\\TSB\\Simulation\\Assets\\Data\\DH\\TimeTransition_Revision\\After";
+        private static string prevTruckFilePath = "C:\\Users\\USER\\workspace\\TSB\\Simulation\\Assets\\Data\\Congestion\\prev_25_now_30\\Trucks";
 
-        private static string nowTruckFilePath = "C:\\Users\\USER\\workspace\\TSB\\Simulation\\Assets\\Data\\DH\\RoutingAlgorithm_Revision\\Before";
+        private static string nowTruckFilePath = "C:\\Users\\USER\\workspace\\TSB\\Simulation\\Assets\\Data\\Congestion\\prev_25_now_30\\Trucks";
         
         // public static string prevTruckFileName = "prev_Truck_20_After_time_transition_LP_40_50_10.csv";
         public static string prevTruckFileName = "";
 
-        public static string nowTruckFileName = "Before_RA_revision_now_Truck_5_LP_0_0_100.csv";
+        public static string nowTruckFileName = "now_Truck_30_with_prev_Truck_25_LP_50_40_10.csv";
         // public static string nowTruckFileName = "";
 
 
