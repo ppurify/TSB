@@ -8,7 +8,9 @@ using System;
 namespace TrafficSimulation {    
     public class FileWindow : EditorWindow
     {   
-        private static string routefilePath = "C:\\Users\\USER\\workspace\\TSB\\Simulation\\Assets\\Data\\DH\\Before_RA_revision_prev_RoutePoints_20_LP_0_0_100.csv";    
+        private static string routefilePath = "C:\\Users\\USER\\workspace\\TSB\\Simulation\\Assets\\Data\\DH\\Before_RA_revision_prev_RoutePoints_20_LP_0_0_100.csv";
+        // private static string routefilePath;    
+
         private static string intersectionfilePath = "C:\\Users\\USER\\workspace\\TSB\\Simulation\\Assets\\Data\\Intersections\\IntersectionPoints - tile25.csv";
 
         private static TrafficSystem wps;
@@ -35,7 +37,7 @@ namespace TrafficSimulation {
         private static Vector3 newPoint;
         
         
-        [SerializeField] private static int routePlusNum = 0;
+        private static int routePlusNum;
         
         // Corner Positions
         // 1. tile 75
@@ -125,32 +127,13 @@ namespace TrafficSimulation {
             GUILayout.Label("File Path: " + intersectionfilePath);
             EditorGUILayout.Space(10);
 
-            GUILayout.Label("Route plus Number", EditorStyles.boldLabel);
-            routePlusNum = EditorGUILayout.IntField("Enter a number:", routePlusNum);
-            EditorGUILayout.Space(30);
-
-            // Create the buttons
-            // GUILayout.FlexibleSpace();
-            // EditorGUILayout.BeginHorizontal();
-            // GUILayout.Label("Route Count : " + routes.Count, GUILayout.Width(150));
-            // GUILayout.Space(10);
-            // GUILayout.Label("Intersection Count : " + intersections.Count, GUILayout.Width(150));
-            // GUILayout.Space(60);
-            // GUILayout.Label("Corners Count : " + cornerPositions.Count, GUILayout.Width(150));
-            // EditorGUILayout.EndHorizontal();
-
-
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("Create Routes in Scene", GUILayout.Width(150)))
             {   
                 if(routefilePath != null)
                 {
-                    // routes = CreateRouteList(routefilePath, routes, routeDictionary);
                     routeDictionary = CreateRouteList(routefilePath);
-
-                    // CreateRoutes(routes, cornerPositions, intersections);
                     CreateRoutes(routeDictionary, cornerPositions, intersectionPositions);
-
                 }
                 
                 else
@@ -159,26 +142,7 @@ namespace TrafficSimulation {
                 }
             }
             GUILayout.Space(10);
-            // if (GUILayout.Button("Create Intersections in Scene", GUILayout.Width(200)))
-            // {   
-            //     GameObject intersectionOB = GameObject.Find("Intersections");
-            //     Debug.Log("Intersection Object : " + intersectionOB);
-            //     if(intersectionfilePath != null & intersectionOB == null)
-            //     {
-            //         intersections = CreateIntersectionList(intersectionfilePath, intersections);
-            //         CreateIntersections(intersections);
-            //     }
-                
-            //     else if(intersectionfilePath == null)
-            //     {
-            //         Debug.LogError("Check intersection file Path");
-            //     }
-
-            //     else if(intersectionOB != null)
-            //     {
-            //         Debug.LogError("There is already Intersection Object");
-            //     }
-            // }
+  
             if (GUILayout.Button("Create Intersections in Scene", GUILayout.Width(200)))
             {   
                 GameObject intersectionOB = GameObject.Find("Intersections");
@@ -216,28 +180,6 @@ namespace TrafficSimulation {
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.Space(10);
 
-
-            // // Reset Button
-            // EditorGUILayout.BeginHorizontal();
-            // if(GUILayout.Button("Reset Route", GUILayout.Width(150)))
-            // {
-            //     routes.Clear();
-            // }
-            // GUILayout.Space(10);
-            // // if(GUILayout.Button("Reset Intersection", GUILayout.Width(200)))
-            // // {
-            // //     intersections.Clear();
-            // // }
-            // // GUILayout.Space(10);
-            // // if(GUILayout.Button("Reset Corners", GUILayout.Width(200)))
-            // // {
-            // //     cornerPositions.Clear();
-            // // }
-            
-            // EditorGUILayout.EndHorizontal();
-            // EditorGUILayout.Space(10);
-
-
             // Create All Button
             GUILayout.BeginVertical();
             if (GUILayout.Button("Create All"))
@@ -257,6 +199,18 @@ namespace TrafficSimulation {
             GUILayout.FlexibleSpace();
         }
 
+        private static void GetPlusNum(string _routefilePath)
+        {
+            if(_routefilePath.Contains("now"))
+            {
+                routePlusNum = 100;
+            }
+
+            else if(_routefilePath.Contains("prev"))
+            {
+                routePlusNum = 0;
+            }
+        }
 
         private static bool RotatePosition(Vector3 prePosition, Vector3 nowPosition, Vector3 nextPosition, List<Vector3> coordinateList)
         {   
@@ -693,8 +647,6 @@ namespace TrafficSimulation {
 
                     }
                 }
-
-                // _routes.AddRange(_routeDictionary.Values);
             }
 
             return _routeDictionary;
@@ -754,9 +706,7 @@ namespace TrafficSimulation {
                 CreateIntersections(intersections);
             }
             
-            // routes = CreateRouteList(routefilePath, routes, routeDictionary);
             routeDictionary = CreateRouteList(routefilePath);
-            // if(routes == null) Debug.LogError("routes is null");
             CreateRoutes(routeDictionary, _cornerPositions, intersections);
         }
 
@@ -764,6 +714,8 @@ namespace TrafficSimulation {
         private static void CreateRoutes(Dictionary<int, List<Vector3>> _routeDictionary, List<Vector3> _corners, List<Vector3> _intersections)
         {
             EditorHelper.SetUndoGroup("Create Routes");
+
+            GetPlusNum(routefilePath);
 
             List<Vector3> checkingRotateList = new List<Vector3>();
             
