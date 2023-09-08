@@ -10,11 +10,11 @@ def Grid(_grid_length, _grid_height, _block_length, _block_height, _block_num_in
     block_row_index = []
 
 
-    # Fill in corners with value 4
+    # Fill in corners with value 3
     for i in range(_grid_height):
         if (i == 0) | (i % (_block_height + 1) == 0):
-            grid[i, 0] = 4
-            grid[i, -1] = 4
+            grid[i, 0] = 3
+            grid[i, -1] = 3
 
             if (i!=0) & (i!=_grid_height-1):
                 one_way_index.append(i)
