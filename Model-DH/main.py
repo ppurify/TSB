@@ -23,19 +23,22 @@ def main():
   grid, _YT_location_col_index, QC_locations, YC_locations = make_grid.Grid(grid_length, grid_height, block_length, block_height, block_num_in_row)
   
   
-  number_of_YT = 20
-  number_of_Job = 20
-  filename_Truck = 'Result/now_Truck_20_cost_prevcount_Minarc_40_50_10.csv'
-  filename_RoutePoints = 'Result/now_RoutePoints_20_cost_prevcount_Minarc_40_50_10.csv'
+  number_of_YT = 30
+  number_of_Job = 30
+  filename_Truck = 'Model-DH/Result-DH/cost_time_cost_taveltime_correlation/prev_Truck_30_cost_taveltime_correlation_0_0_100_Min.csv'
+  filename_RoutePoints = 'Model-DH/Result-DH/cost_time_cost_taveltime_correlation/prev_RoutePoints_30_cost_taveltime_correlation_0_0_100_Min.csv'
+
+  YT_locations = {0: (6, 27), 1: (8, 17), 2: (6, 17), 3: (4, 17), 4: (0, 27), 5: (8, 7), 6: (8, 27), 7: (4, 7), 8: (2, 17), 9: (2, 27), 10: (0, 7), 11: (0, 17), 12: 
+  (6, 7), 13: (4, 27), 14: (2, 7), 15: (4, 17), 16: (6, 7), 17: (2, 27), 18: (8, 7), 19: (6, 17), 20: (8, 17), 21: (0, 7), 22: (0, 17), 23: (8, 27), 24: (4, 27), 25: (2, 17), 26: (4, 7), 27: (0, 27), 28: (2, 7), 29: (6, 27)}
+  Job_locations = {0: [(0, 15), (2, 5)], 1: [(0, 5), (6, 5)], 2: [(0, 25), (2, 25)], 3: [(0, 5), (6, 15)], 4: [(4, 25), (0, 15)], 5: [(6, 25), (0, 25)], 6: [(0, 25), (8, 25)], 7: [(8, 15), (0, 15)], 8: [(0, 5), (8, 5)], 9: [(4, 15), (0, 25)], 10: [(0, 15), (4, 5)], 11: [(2, 15), (0, 5)], 12: [(0, 5), (4, 5)], 13: [(2, 15), (0, 15)], 14: [(8, 25), (0, 25)], 15: [(0, 5), (4, 15)], 16: [(4, 25), (0, 25)], 17: [(6, 25), (0, 15)], 18: [(0, 15), (6, 5)], 19: [(2, 25), (0, 25)], 20: [(0, 5), (8, 5)], 21: [(0, 15), (8, 15)], 22: [(6, 15), (0, 25)], 23: [(0, 5), (2, 5)], 24: [(6, 5), (0, 15)], 25: [(0, 5), (8, 15)], 26: [(0, 25), (8, 5)], 27: [(6, 15), (0, 15)], 28: [(2, 15), (0, 5)], 29: [(4, 5), (0, 25)]}
 
 
-  # YT_locations = {0: (2, 17), 1: (0, 27), 2: (2, 7), 3: (6, 7), 4: (0, 7), 5: (0, 17), 6: (4, 17), 7: (8, 27), 8: (6, 27), 9: (8, 17), 10: (4, 27), 11: (6, 17), 12: (2, 27), 13: (4, 7), 14: (8, 7), 15: (0, 7), 16: (4, 17), 17: (4, 27), 18: (8, 7), 19: (6, 17)}
-  # Job_locations = {0: [(2, 25), (0, 5)], 1: [(8, 15), (0, 15)], 2: [(0, 25), (6, 5)], 3: [(6, 25), (0, 15)], 4: [(0, 25), (2, 15)], 5: [(0, 5), (4, 25)], 6: [(0, 5), (4, 5)], 7: [(4, 15), (0, 15)], 8: [(0, 25), (8, 25)], 9: [(8, 5), (0, 25)], 10: [(2, 5), (0, 15)], 11: [(0, 5), (6, 15)], 12: [(0, 15), (8, 25)], 13: [(0, 25), (8, 5)], 14: [(6, 25), (0, 5)], 15: [(0, 5), (4, 25)], 16: [(2, 5), (0, 15)], 17: [(0, 25), (4, 5)], 18: [(2, 15), (0, 25)], 19: [(6, 15), (0, 15)]}
-  
-  YT_locations = {0: (4, 17), 1: (4, 7), 2: (6, 27), 3: (8, 27), 4: (2, 27), 5: (8, 17), 6: (6, 7), 7: (2, 7), 8: (0, 27), 9: (0, 7), 10: (8, 7), 11: (0, 17), 12: (6, 17), 13: (4, 27), 14: (2, 17), 15: (4, 17), 16: (0, 27), 17: (2, 7), 18: (8, 17), 19: (0, 7)}
-  Job_locations = {0: [(6, 5), (0, 15)], 1: [(4, 15), (0, 5)], 2: [(8, 25), (0, 25)], 3: [(0, 25), (2, 25)], 4: [(0, 15), (4, 5)], 5: [(0, 5), (2, 5)], 6: [(2, 15), (0, 25)], 7: [(0, 5), (6, 15)], 8: [(0, 15), (8, 5)], 9: [(8, 15), (0, 25)], 10: [(6, 25), (0, 5)], 11: [(0, 15), (4, 25)], 12: [(0, 25), (2, 5)], 13: [(0, 5), (6, 25)], 14: [(0, 15), (8, 5)], 15: [(0, 25), (4, 15)], 16: [(6, 15), (0, 5)], 17: [(0, 15), (2, 15)], 18: [(8, 15), (0, 25)], 19: [(0, 15), (2, 25)]}
-  
-  # Assuming you have YC_locations and QC_locations defined
+  # YT_locations = {0: (0, 7), 1: (6, 17), 2: (2, 17), 3: (0, 27), 4: (4, 27), 5: (8, 17), 6: (6, 27), 7: (2, 27), 8: (6, 7), 9: (2, 7), 10: (4, 17), 11: (8, 27), 12: 
+  # (4, 7), 13: (0, 17), 14: (8, 7), 15: (0, 27), 16: (0, 7), 17: (2, 7), 18: (8, 7), 19: (6, 17), 20: (0, 17), 21: (4, 17), 22: (6, 27), 23: (8, 17), 24: (8, 27), 25: (6, 7), 26: (4, 7), 27: (2, 27), 28: (4, 27), 29: (2, 17)}
+  # Job_locations = {0: [(2, 5), (0, 5)], 1: [(4, 25), (0, 25)], 2: [(0, 15), (8, 15)], 3: [(8, 25), (0, 15)], 4: [(2, 25), (0, 25)], 5: [(0, 5), (4, 5)], 6: [(0, 5), 
+  # (6, 15)], 7: [(0, 25), (8, 5)], 8: [(4, 15), (0, 15)], 9: [(0, 15), (6, 25)], 10: [(0, 25), (2, 15)], 11: [(6, 5), (0, 5)], 12: [(2, 25), (0, 25)], 13: [(0, 15), (8, 15)], 14: [(6, 25), (0, 5)], 15: [(0, 15), (2, 15)], 16: [(8, 5), (0, 5)], 17: [(0, 25), (2, 5)], 18: [(4, 25), (0, 15)], 19: [(0, 25), (4, 5)], 20: [(8, 25), (0, 5)], 21: [(6, 15), (0, 5)], 22: [(0, 25), (6, 5)], 23: [(0, 15), (4, 15)], 24: [(0, 5), (2, 5)], 25: [(4, 25), (0, 15)], 26: [(0, 25), (8, 25)], 27: [(0, 5), (4, 15)], 28: [(0, 25), (6, 5)], 29: [(8, 5), (0, 15)]}
+
+  # # Assuming you have YC_locations and QC_locations defined
   # YT_locations = {}
   # Job_locations = {}
   
@@ -104,39 +107,39 @@ def main():
   # print("Job_locations =", Job_locations)
 
   number_of_final_route = 3
-  alpha1 = 40  # prev counter
-  alpha2 = 50  # now counter
-  alpha3 = 10 # distance
+  alpha1 = 0  # prev counter
+  alpha2 = 0  # now counter
+  alpha3 = 100 # distance
 
   # prev_count : t-1시점의 활성화된 A2 + A3의 누적 path정보
   prev_count = np.zeros((len(grid), len(grid[0])))
-  prev_count = np.array([[ 2,  2,  2,  2,  2,  8,  8,  8,  8,  8, 12,  8,  8,  8,
-                            8, 10,  5,  5,  5,  5, 10,  8,  8,  8,  8,  9,  3,  3,
-                            3,  3,  3],
-                          [ 2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  8,  0,  0,  0,
-                            0,  0,  0,  0,  0,  0,  7,  0,  0,  0,  0,  0,  0,  0,
-                            0,  0,  3],
-                          [ 3,  3,  3,  3,  3,  3,  1,  1,  1,  1, 11,  6,  6,  6,
-                            6,  7,  6,  6,  6,  6,  9,  1,  1,  1,  1,  1,  0,  0,
-                            0,  0,  3],
-                          [ 1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  7,  0,  0,  0,
-                            0,  0,  0,  0,  0,  0,  4,  0,  0,  0,  0,  0,  0,  0,
-                            0,  0,  3],
-                          [ 1,  0,  0,  0,  0,  2,  2,  2,  2,  2,  7,  1,  1,  1,
-                            1,  1,  0,  0,  0,  0,  4,  0,  0,  0,  0,  2,  2,  2,
-                            2,  2,  3],
-                          [ 1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  4,  0,  0,  0,
-                            0,  0,  0,  0,  0,  0,  4,  0,  0,  0,  0,  0,  0,  0,
-                            0,  0,  1],
-                          [ 1,  0,  0,  0,  0,  1,  1,  1,  1,  1,  4,  1,  1,  1,
-                            1,  2,  1,  1,  1,  1,  5,  2,  2,  2,  2,  2,  0,  0,
-                            0,  0,  1],
-                          [ 1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  2,  0,  0,  0,
-                            0,  0,  0,  0,  0,  0,  3,  0,  0,  0,  0,  0,  0,  0,
-                            0,  0,  1],
-                          [ 1,  1,  1,  1,  1,  2,  1,  1,  1,  1,  3,  3,  3,  3,
-                            3,  3,  2,  2,  2,  2,  3,  1,  1,  1,  1,  2,  1,  1,
-                            1,  1,  1]])
+  # prev_count = np.array([[ 4,  4,  4,  4,  4, 12, 10, 10, 10, 10, 17, 11, 11, 11,
+  #                         11, 15,  9,  9,  9,  9, 13,  7,  7,  7,  7, 10,  3,  3,
+  #                         3,  3,  3],
+  #                       [ 4,  0,  0,  0,  0,  0,  0,  0,  0,  0, 13,  0,  0,  0,
+  #                         0,  0,  0,  0,  0,  0, 10,  0,  0,  0,  0,  0,  0,  0,
+  #                         0,  0,  3],
+  #                       [ 4,  0,  0,  0,  0,  2,  2,  2,  2,  2, 13,  3,  3,  3,
+  #                         3,  3,  0,  0,  0,  0, 10,  1,  1,  1,  1,  2,  1,  1,
+  #                         1,  1,  3],
+  #                       [ 4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  8,  0,  0,  0,
+  #                         0,  0,  0,  0,  0,  0,  9,  0,  0,  0,  0,  0,  0,  0,
+  #                         0,  0,  2],
+  #                       [ 4,  1,  1,  1,  1,  3,  2,  2,  2,  2,  9,  2,  2,  2,
+  #                         2,  3,  2,  2,  2,  2,  9,  2,  2,  2,  2,  2,  0,  0,
+  #                         0,  0,  2],
+  #                       [ 3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  6,  0,  0,  0,
+  #                         0,  0,  0,  0,  0,  0,  5,  0,  0,  0,  0,  0,  0,  0,
+  #                         0,  0,  2],
+  #                       [ 3,  1,  1,  1,  1,  3,  2,  2,  2,  2,  6,  2,  2,  2,
+  #                         2,  3,  1,  1,  1,  1,  5,  2,  2,  2,  2,  2,  0,  0,
+  #                         0,  0,  2],
+  #                       [ 2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  2,  0,  0,  0,
+  #                         0,  0,  0,  0,  0,  0,  2,  0,  0,  0,  0,  0,  0,  0,
+  #                         0,  0,  2],
+  #                       [ 2,  2,  2,  2,  2,  3,  1,  1,  1,  1,  2,  1,  1,  1,
+  #                         1,  3,  2,  2,  2,  2,  2,  0,  0,  0,  0,  2,  2,  2,
+  #                         2,  2,  2]])
 
   now_count = np.zeros((len(grid), len(grid[0])))
 
@@ -154,62 +157,62 @@ def main():
   all_arcs = arcs_YT_to_Pick + arcs_Pick_to_Drop + arcs_Drop_to_Pick + arcs_Drop_to_Sink + arcs_YT_to_Sink
 
 
-  # # arcs_YT_to_Pick을 순회하면서 같은 i, j내의 k개의 arc 중, cost가 가장 작은 arc의 cost를 1000000으로 설정  
-  # for YT_index in range(number_of_YT):
-  #   for Pick_index in range(number_of_Job):
-  #       arcs_in_same_ij = []
-  #       for arc in arcs_YT_to_Pick:
-  #         if arc.i == ['YT', YT_index] and arc.j == ['Pick', Pick_index]:
-  #           arcs_in_same_ij.append(arc)
-  #       # k가 1개보다 많으면
-  #       if len(arcs_in_same_ij) > 1:
-  #          # arcs_in_same_ij내에서 cost가 가장 작은 arc의 cost를 10000000으로 설정
-  #           min_cost = 10000000
-  #           for arc_ in arcs_in_same_ij: 
-  #               if arc_.cost < min_cost:
-  #                   min_cost = arc_.cost
-  #           for arc__ in arcs_in_same_ij:
-  #               if arc__.cost == min_cost:
-  #                   arc__.cost = 10000000
-  #                   break
+  # arcs_YT_to_Pick을 순회하면서 같은 i, j내의 k개의 arc 중, cost가 가장 작은 arc의 cost를 1000000으로 설정  
+  for YT_index in range(number_of_YT):
+    for Pick_index in range(number_of_Job):
+        arcs_in_same_ij = []
+        for arc in arcs_YT_to_Pick:
+          if arc.i == ['YT', YT_index] and arc.j == ['Pick', Pick_index]:
+            arcs_in_same_ij.append(arc)
+        # k가 1개보다 많으면
+        if len(arcs_in_same_ij) > 1:
+           # arcs_in_same_ij내에서 cost가 가장 작은 arc의 cost를 10000000으로 설정
+            min_cost = 10000000
+            for arc_ in arcs_in_same_ij: 
+                if arc_.cost < min_cost:
+                    min_cost = arc_.cost
+            for arc__ in arcs_in_same_ij:
+                if arc__.cost == min_cost:
+                    arc__.cost = 10000000
+                    break
                 
-  # # arcs_Pick_to_Drop을 순회하면서 같은 i, j내의 k개의 arc 중, cost가 가장 작은 arc의 cost를 1000000으로 설정
-  # for Pick_index in range(number_of_Job):
-  #   for Drop_index in range(number_of_Job):
-  #       arcs_in_same_ij = []
-  #       for arc in arcs_Pick_to_Drop:
-  #         if arc.i == ['Pick', Pick_index] and arc.j == ['Drop', Drop_index]:
-  #           arcs_in_same_ij.append(arc)
-  #       # k가 1개보다 많으면
-  #       if len(arcs_in_same_ij) > 1:
-  #          # arcs_in_same_ij내에서 cost가 가장 작은 arc의 cost를 10000000으로 설정
-  #           min_cost = 10000000
-  #           for arc_ in arcs_in_same_ij: 
-  #               if arc_.cost < min_cost:
-  #                   min_cost = arc_.cost
-  #           for arc__ in arcs_in_same_ij:
-  #               if arc__.cost == min_cost:
-  #                   arc__.cost = 10000000
-  #                   break
+  # arcs_Pick_to_Drop을 순회하면서 같은 i, j내의 k개의 arc 중, cost가 가장 작은 arc의 cost를 1000000으로 설정
+  for Pick_index in range(number_of_Job):
+    for Drop_index in range(number_of_Job):
+        arcs_in_same_ij = []
+        for arc in arcs_Pick_to_Drop:
+          if arc.i == ['Pick', Pick_index] and arc.j == ['Drop', Drop_index]:
+            arcs_in_same_ij.append(arc)
+        # k가 1개보다 많으면
+        if len(arcs_in_same_ij) > 1:
+           # arcs_in_same_ij내에서 cost가 가장 작은 arc의 cost를 10000000으로 설정
+            min_cost = 10000000
+            for arc_ in arcs_in_same_ij: 
+                if arc_.cost < min_cost:
+                    min_cost = arc_.cost
+            for arc__ in arcs_in_same_ij:
+                if arc__.cost == min_cost:
+                    arc__.cost = 10000000
+                    break
                 
-  # # arcs_Drop_to_Pick을 순회하면서 같은 i, j내의 k개의 arc 중, cost가 가장 작은 arc의 cost를 1000000으로 설정
-  # for Drop_index in range(number_of_Job):
-  #   for Pick_index in range(number_of_Job):
-  #       arcs_in_same_ij = []
-  #       for arc in arcs_Drop_to_Pick:
-  #         if arc.i == ['Drop', Drop_index] and arc.j == ['Pick', Pick_index]:
-  #           arcs_in_same_ij.append(arc)
-  #       # k가 1개보다 많으면
-  #       if len(arcs_in_same_ij) > 1:
-  #          # arcs_in_same_ij내에서 cost가 가장 작은 arc의 cost를 10000000으로 설정
-  #           min_cost = 10000000
-  #           for arc_ in arcs_in_same_ij: 
-  #               if arc_.cost < min_cost:
-  #                   min_cost = arc_.cost
-  #           for arc__ in arcs_in_same_ij:
-  #               if arc__.cost == min_cost:
-  #                   arc__.cost = 10000000
-  #                   break
+  # arcs_Drop_to_Pick을 순회하면서 같은 i, j내의 k개의 arc 중, cost가 가장 작은 arc의 cost를 1000000으로 설정
+  for Drop_index in range(number_of_Job):
+    for Pick_index in range(number_of_Job):
+        arcs_in_same_ij = []
+        for arc in arcs_Drop_to_Pick:
+          if arc.i == ['Drop', Drop_index] and arc.j == ['Pick', Pick_index]:
+            arcs_in_same_ij.append(arc)
+        # k가 1개보다 많으면
+        if len(arcs_in_same_ij) > 1:
+           # arcs_in_same_ij내에서 cost가 가장 작은 arc의 cost를 10000000으로 설정
+            min_cost = 10000000
+            for arc_ in arcs_in_same_ij: 
+                if arc_.cost < min_cost:
+                    min_cost = arc_.cost
+            for arc__ in arcs_in_same_ij:
+                if arc__.cost == min_cost:
+                    arc__.cost = 10000000
+                    break
               
           
                 
