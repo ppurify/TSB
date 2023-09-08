@@ -25,113 +25,116 @@ def main():
   grid, _YT_location_col_index, QC_locations, YC_locations = make_grid.Grid(grid_length, grid_height, block_length, block_height, block_num_in_row)
   
   
-  number_of_YT = 15
-  number_of_Job = 15
+  number_of_YT = 30
+  number_of_Job = 30
 
-  filename_Truck = 'prev_Truck_15_LP_0_0_100_1.csv'
-  filename_RoutePoints = 'prev_RoutePoints_15_LP_0_0_100_1.csv'
+  filename_Truck = 'now_Truck_30_with_prev_Truck_25_LP_60_30_10.csv'
+  filename_RoutePoints = 'now_RoutePoints_30_with_prev_RoutePoints_25_LP_60_30_10.csv'
 
-  # Assuming you have YC_locations and QC_locations defined
-  YT_locations = {}
-  Job_locations = {}
+  YT_locations = {0: (6, 17), 1: (4, 17), 2: (0, 17), 3: (2, 7), 4: (8, 17), 5: (4, 27), 6: (6, 27), 7: (8, 27), 8: (0, 27), 9: (6, 7), 10: (0, 7), 11: (2, 27), 12: (4, 7), 13: (2, 17), 14: (8, 7), 15: (6, 17), 16: (2, 7), 17: (0, 7), 18: (2, 27), 19: (4, 7), 20: (4, 27), 21: (6, 27), 22: (8, 27), 23: (4, 17), 24: (0, 17), 25: (8, 17), 26: (6, 7), 27: (8, 7), 28: (0, 27), 29: (2, 17)}
+  Job_locations = {0: [(0, 5), (8, 15)], 1: [(8, 25), (0, 25)], 2: [(6, 5), (0, 15)], 3: [(0, 15), (2, 5)], 4: [(2, 25), (0, 5)], 5: [(4, 15), (0, 25)], 6: [(2, 15), (0, 5)], 7: [(8, 5), (0, 15)], 8: [(6, 15), (0, 25)], 9: [(0, 5), (6, 25)], 10: [(4, 5), (0, 15)], 11: [(4, 25), (0, 25)], 12: [(8, 15), (0, 5)], 13: [(8, 5), (0, 15)], 14: [(6, 25), (0, 25)], 15: [(6, 5), (0, 5)], 16: [(0, 15), (4, 5)], 17: [(4, 15), (0, 25)], 18: [(0, 5), (2, 5)], 19: [(0, 15), (8, 25)], 20: [(2, 15), (0, 25)], 21: [(0, 15), (6, 15)], 22: [(0, 5), (4, 25)], 23: [(2, 25), (0, 25)], 24: [(8, 15), (0, 25)], 25: [(0, 15), (6, 5)], 26: [(2, 5), (0, 5)], 27: [(6, 15), (0, 25)], 28: [(0, 5), (4, 5)], 29: [(6, 25), (0, 15)]}
+
+  # # Assuming you have YC_locations and QC_locations defined
+  # YT_locations = {}
+  # Job_locations = {}
   
-  # Generate a shuffled list of all possible grid locations
-  possible_locations = [(i, j) for i in range(len(grid)) for j in range(len(grid[0]))]
-  random.shuffle(possible_locations)
+  # # Generate a shuffled list of all possible grid locations
+  # possible_locations = [(i, j) for i in range(len(grid)) for j in range(len(grid[0]))]
+  # random.shuffle(possible_locations)
 
-  # Create YT locations
-  for i in range(number_of_YT):
-      YT_location = None
-      while YT_location is None or grid[YT_location] == -1 or YT_location[1] not in _YT_location_col_index:
-          # YT_location = possible_locations[location_index]  # Use the current index
-          if len(possible_locations) > 0:
-            YT_location = possible_locations.pop()
-          else:
-            # print("No more possible YT locations")
-            possible_locations = [(i, j) for i in range(len(grid)) for j in range(len(grid[0]))]
-            random.shuffle(possible_locations)
-            YT_location = possible_locations.pop()
+  # # Create YT locations
+  # for i in range(number_of_YT):
+  #     YT_location = None
+  #     while YT_location is None or grid[YT_location] == -1 or YT_location[1] not in _YT_location_col_index:
+  #         # YT_location = possible_locations[location_index]  # Use the current index
+  #         if len(possible_locations) > 0:
+  #           YT_location = possible_locations.pop()
+  #         else:
+  #           # print("No more possible YT locations")
+  #           possible_locations = [(i, j) for i in range(len(grid)) for j in range(len(grid[0]))]
+  #           random.shuffle(possible_locations)
+  #           YT_location = possible_locations.pop()
     
-      YT_locations[i] = YT_location
+  #     YT_locations[i] = YT_location
 
-  # Shuffle YC and QC locations for better randomness
-  possible_YC_locations = YC_locations.copy()
-  possible_QC_locations = QC_locations.copy()
+  # # Shuffle YC and QC locations for better randomness
+  # possible_YC_locations = YC_locations.copy()
+  # possible_QC_locations = QC_locations.copy()
   
-  random.shuffle(possible_YC_locations)
-  random.shuffle(possible_QC_locations)
+  # random.shuffle(possible_YC_locations)
+  # random.shuffle(possible_QC_locations)
   
-  # Create Job locations
-  for j in range(number_of_Job):
-      # choice random number 0 or 1
-      random_num = np.random.randint(2)
+  # # Create Job locations
+  # for j in range(number_of_Job):
+  #     # choice random number 0 or 1
+  #     random_num = np.random.randint(2)
       
-      if(len(possible_YC_locations) > 0):
-        YC_loc = possible_YC_locations.pop()
+  #     if(len(possible_YC_locations) > 0):
+  #       YC_loc = possible_YC_locations.pop()
       
-      else:
-        # print("No more YC locations")
-        possible_YC_locations = YC_locations.copy()
-        random.shuffle(possible_YC_locations)
-        YC_loc = possible_YC_locations.pop()
+  #     else:
+  #       # print("No more YC locations")
+  #       possible_YC_locations = YC_locations.copy()
+  #       random.shuffle(possible_YC_locations)
+  #       YC_loc = possible_YC_locations.pop()
         
-      if(len(possible_QC_locations) > 0):
-        QC_loc = possible_QC_locations.pop()
+  #     if(len(possible_QC_locations) > 0):
+  #       QC_loc = possible_QC_locations.pop()
         
-      else:
-        # print("No more QC locations")
-        possible_QC_locations = QC_locations.copy()
-        random.shuffle(possible_QC_locations)
-        QC_loc = possible_QC_locations.pop()
+  #     else:
+  #       # print("No more QC locations")
+  #       possible_QC_locations = QC_locations.copy()
+  #       random.shuffle(possible_QC_locations)
+  #       QC_loc = possible_QC_locations.pop()
         
-      # 0 means Outbound => YC -> QC
-      if random_num == 0:
-          Pick_location = YC_loc  # Use random.choice for better randomness
-          Drop_location = QC_loc
-      # 1 means Inbound => QC -> YC
-      else:
-          Pick_location = QC_loc
-          Drop_location = YC_loc
+  #     # 0 means Outbound => YC -> QC
+  #     if random_num == 0:
+  #         Pick_location = YC_loc  # Use random.choice for better randomness
+  #         Drop_location = QC_loc
+  #     # 1 means Inbound => QC -> YC
+  #     else:
+  #         Pick_location = QC_loc
+  #         Drop_location = YC_loc
       
-      Job_locations[j] = [Pick_location, Drop_location]
+  #     Job_locations[j] = [Pick_location, Drop_location]
 
-  print("YT_locations =", YT_locations)
-  print("Job_locations =", Job_locations)
+  # print("YT_locations =", YT_locations)
+  # print("Job_locations =", Job_locations)
   
 
   number_of_final_route = 3
-  alpha1 = 0  # prev counter
-  alpha2 = 0  # now counter
-  alpha3 = 100 # distance
+  alpha1 = 60  # prev counter
+  alpha2 = 30  # now counter
+  alpha3 = 10 # distance
 
   # prev_count : t-1시점의 활성화된 A2 + A3의 누적 path정보
   # prev_count = np.zeros((len(grid), len(grid[0])))
-  prev_count = np.array([[ 4,  4,  4,  4,  4, 10,  9,  9,  9,  9, 13,  9,  9,  9,
-   9, 10,  5,  5,  5,  5,  8,  6,  6,  6,  6,  8,  3,  3,
-   3,  3,  3],
- [ 4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  8,  0,  0,  0,
-   0,  0,  0,  0,  0,  0,  5,  0,  0,  0,  0,  0,  0,  0,
-   0,  0,  3],
- [ 4,  0,  0,  0,  0,  1,  1,  1,  1,  1,  8,  0,  0,  0,
-   0,  1,  1,  1,  1,  1,  5,  0,  0,  0,  0,  2,  2,  2,
-   2,  2,  3],
- [ 4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  7,  0,  0,  0,
-   0,  0,  0,  0,  0,  0,  4,  0,  0,  0,  0,  0,  0,  0,
+  prev_count = np.array([[ 5,  5,  5,  5,  5, 12, 11, 11, 11, 11, 13,  8,  8,  8,
+   8, 11,  6,  6,  6,  6, 13,  9,  9,  9,  9, 10,  2,  2,
+   2,  2,  2],
+ [ 5,  0,  0,  0,  0,  0,  0,  0,  0,  0,  7,  0,  0,  0,
+   0,  0,  0,  0,  0,  0, 11,  0,  0,  0,  0,  0,  0,  0,
+   0,  0,  2],
+ [ 5,  2,  2,  2,  2,  2,  0,  0,  0,  0,  9,  5,  5,  5,
+   5,  6,  5,  5,  5,  5, 13,  1,  1,  1,  1,  2,  1,  1,
+   1,  1,  2],
+ [ 3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  6,  0,  0,  0,
+   0,  0,  0,  0,  0,  0,  9,  0,  0,  0,  0,  0,  0,  0,
    0,  0,  1],
- [ 4,  2,  2,  2,  2,  2,  0,  0,  0,  0,  7,  3,  3,  3,
-   3,  4,  3,  3,  3,  3,  6,  1,  1,  1,  1,  2,  1,  1,
-   1,  1,  1],
+ [ 3,  1,  1,  1,  1,  3,  2,  2,  2,  2,  6,  0,  0,  0,
+   0,  2,  2,  2,  2,  2,  9,  2,  2,  2,  2,  2,  0,  0,
+   0,  0,  1],
  [ 2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  4,  0,  0,  0,
-   0,  0,  0,  0,  0,  0,  4,  0,  0,  0,  0,  0,  0,  0,
-   0,  0,  0],
- [ 2,  1,  1,  1,  1,  2,  1,  1,  1,  1,  4,  1,  1,  1,
-   1,  1,  0,  0,  0,  0,  4,  2,  2,  2,  2,  2,  0,  0,
-   0,  0,  0],
- [ 1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  2,  0,  0,  0,
+   0,  0,  0,  0,  0,  0,  5,  0,  0,  0,  0,  0,  0,  0,
+   0,  0,  1],
+ [ 2,  2,  2,  2,  2,  2,  0,  0,  0,  0,  5,  2,  2,  2,
+   2,  3,  2,  2,  2,  2,  5,  1,  1,  1,  1,  2,  1,  1,
+   1,  1,  1],
+ [ 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  4,  0,  0,  0,
    0,  0,  0,  0,  0,  0,  2,  0,  0,  0,  0,  0,  0,  0,
    0,  0,  0],
- [ 1,  1,  1,  1,  1,  2,  1,  1,  1,  1,  2,  1,  1,  1,
-   1,  2,  1,  1,  1,  1,  2,  1,  1,  1,  1,  1,  0,  0,
+ [ 0,  0,  0,  0,  0,  2,  2,  2,  2,  2,  4,  2,  2,  2,
+   2,  2,  0,  0,  0,  0,  2,  2,  2,  2,  2,  2,  0,  0,
    0,  0,  0]])
   
   now_count = np.zeros((len(grid), len(grid[0])))
@@ -184,7 +187,7 @@ def main():
   make_csv.create_csv(activated_arcs, number_of_YT, grid, filename_Truck, filename_RoutePoints)
 
 
-  log_file_path =  "Model/Logs/" + filename_Truck + ".txt"
+  log_file_path =  "Model/Logs/Congestion/" + filename_Truck + ".txt"
   
   with open(log_file_path, 'w') as file:
       file.write("YT_locations = " + str(YT_locations) + "\n")
