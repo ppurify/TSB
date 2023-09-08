@@ -11,12 +11,12 @@ namespace TrafficSimulation{
         // Parameters
         private static string prevTruckFilePath = "C:\\Users\\USER\\workspace\\TSB\\Simulation\\Assets\\Data\\DH\\TimeTransition_Revision\\After";
 
-        private static string nowTruckFilePath = "C:\\Users\\USER\\workspace\\TSB\\Simulation\\Assets\\Data\\DH\\TimeTransition_Revision\\After";
+        private static string nowTruckFilePath = "C:\\Users\\USER\\workspace\\TSB\\Simulation\\Assets\\Data\\DH\\RoutingAlgorithm_Revision\\Before";
         
-        public static string prevTruckFileName = "prev_Truck_20_After_time_transition_LP_40_50_10.csv";
-        // public static string prevTruckFileName = "";
+        // public static string prevTruckFileName = "prev_Truck_20_After_time_transition_LP_40_50_10.csv";
+        public static string prevTruckFileName = "";
 
-        public static string nowTruckFileName = "now_Truck_20_After_time_transition_with_prev_20_LP_40_50_10.csv";
+        public static string nowTruckFileName = "Before_RA_revision_now_Truck_5_LP_0_0_100.csv";
         // public static string nowTruckFileName = "";
 
 
@@ -24,7 +24,7 @@ namespace TrafficSimulation{
         // file 1개 일 때
         public static bool isOneFile;
         // 1대씩 돌릴 때
-        public static bool isOneByOne = false;
+        public static bool isOneByOne = true;
 
         // --------------------------
 
