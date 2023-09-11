@@ -10,38 +10,12 @@ namespace TrafficSimulation{
     public class SaveFile : MonoBehaviour
     {
         // 파일 저장 위치
-        public static string csvFileName;
+        public string csvFileName;
         public string filePath;
 
-        public static List<ResultsData> resultsDataList = new List<ResultsData>();
+        public static List<ResultsData> resultsDataList;
+        private WholeProcess wholeProcess;
 
-        void Start()
-        {
-            if(CreateTruckAndStation.isTwoFile)
-            {
-                csvFileName = CreateTruckAndStation.nowTruckFileName;
-            }
-
-            else if(CreateTruckAndStation.prevTruckFileName != "")
-            {
-                csvFileName = CreateTruckAndStation.prevTruckFileName;
-            }
-            
-            else if(CreateTruckAndStation.nowTruckFileName != "")
-            {
-                csvFileName = CreateTruckAndStation.nowTruckFileName;
-            }
-
-            if(CreateTruckAndStation.isOneByOne)
-            {
-                filePath = "Assets/Results/result-NoCongestions-" + csvFileName;
-            }
-            
-            else
-            {
-                filePath = "Assets/Results/result-" + csvFileName;
-            }
-        }
 
         public void SaveToCSV(string _filePath, string _truckName, string _routeName, Vector3 _origin, Vector3 _destination, float _totalTime, List<float> _arrivalTimeList)
         {

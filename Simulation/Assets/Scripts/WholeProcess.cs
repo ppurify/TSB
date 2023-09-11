@@ -6,14 +6,17 @@ using System.IO;
 namespace TrafficSimulation {    
     public class WholeProcess : MonoBehaviour
     {
-
-        private string prevFolderPath ="Assets/Data/Congestion/prev_25";
+        // parameters
+        private string prevFolderPath ="Assets/Data/Congestion/prev_2";
         // private string prevFolderPath ="";
 
-        private string nowFolderPath = "Assets/Data/Congestion/prev_25_now_30";
+        private string nowFolderPath = "Assets/Data/Congestion/now_2";
         // private string nowFolderPath = "";
 
         private bool _isOnebyOne = false;
+
+        // --------------------------------------------------------
+
         private List<string> prevRouteFileList = new List<string>();
         private List<string> prevTruckFileList = new List<string>();
         private List<string> nowRouteFileList = new List<string>();
@@ -22,7 +25,7 @@ namespace TrafficSimulation {
         private int prevFileCount;
         private int nowFileCount;
         
-        private int folderCount;
+        public static int folderCount;
         public static int currentFileCount = 0;
         public static int totalFileCount;
 
@@ -66,9 +69,9 @@ namespace TrafficSimulation {
         // Corner Collider Parameters
         private static Vector3 cornerSize = new Vector3(40,10,40);
 
-        private string currentPrevRouteFilePath;
+        public string currentPrevRouteFilePath;
         private string currentPrevTruckFilePath;
-        private string currentNowRouteFilePath;
+        public string currentNowRouteFilePath;
         private string currentNowTruckFilePath;
 
         
@@ -87,11 +90,12 @@ namespace TrafficSimulation {
         private static Vector3 newRoPoint;
 
         private static TrafficSystem wps;
-        private float createTruckDelay = 10f;
+        private float createTruckDelay = 1f;
         
         private CreateTruckAndStation createTruckAndStation;
         private ExitPlayMode exitPlayMode;
-        public static bool nextFile = false;
+        private SaveFile saveFile;
+        public bool isPrevExist;
 
         // Start is called before the first frame update
         void Awake()
@@ -101,44 +105,83 @@ namespace TrafficSimulation {
             CreateTruckAndStation.fileCount = folderCount;
             createTruckAndStation = GetComponent<CreateTruckAndStation>();
             exitPlayMode = GetComponent<ExitPlayMode>();
+
+            if(prevFolderPath != "")
+            {
+                isPrevExist = true;
+            }
+
+            else
+            {
+                isPrevExist = false;
+            }
         }
 
         void Start()
         {
-            StartCoroutine(Process());
+            GameObject.Find("Roads").AddComponent<SaveFile>();
+            saveFile = GetComponent<SaveFile>();
+
+            Process();
         }
 
-        void Update()
+        public void Process()
+        {   
+            CreateAllRoutes();
+            Debug.Log("currentFileCount : " + currentFileCount + ", totalFileCount : " + totalFileCount);
+            SetSaveFileName();
+            exitPlayMode.nowTruckCount = 0;
+            exitPlayMode._totalFileCount = totalFileCount;
+
+            Invoke("CreateTruck", createTruckDelay);
+        }
+
+        private void SetSaveFileName()
         {
-            if(nextFile)
+            if(CreateTruckAndStation.isTwoFile)
             {
-                nextFile = false;
-                currentFileCount++;
-                StartCoroutine(Process());
+                saveFile.csvFileName = Path.GetFileName(currentNowRouteFilePath);
+            }
+
+            else if(prevFolderPath != "")
+            {
+                saveFile.csvFileName = Path.GetFileName(currentPrevRouteFilePath);
+            }
+            
+            else
+            {
+                saveFile.csvFileName = Path.GetFileName(currentNowRouteFilePath);
+            }
+
+            if(CreateTruckAndStation.isOneByOne)
+            {
+                saveFile.filePath = "Assets/Results/result-NoCongestions-" + saveFile.csvFileName;
+            }
+            
+            else
+            {
+                saveFile.filePath = "Assets/Results/result-" + saveFile.csvFileName;
             }
         }
 
-        public IEnumerator Process()
-        {   
-            CreateAllRoutes();
-            
-            yield return new WaitForSeconds(createTruckDelay);
-
+        private void CreateTruck()
+        {
             if(createTruckAndStation != null)
             {
-                createTruckAndStation.CreateingTrucks(currentPrevTruckFilePath, currentNowTruckFilePath);
+                createTruckAndStation.CreatingTrucks(currentPrevTruckFilePath, currentNowTruckFilePath);
 
-                if(CreateTruckAndStation.isTwoFile)
+
+                if(folderCount == 2)
                 {
                     exitPlayMode.totalTruckCount = CreateTruckAndStation.truckDataList_1.Count + CreateTruckAndStation.truckDataList_2.Count;
                 }
                 
-                else if(CreateTruckAndStation.prevTruckFileName != "")
+                else if(prevFolderPath != "")
                 {
                     exitPlayMode.totalTruckCount = CreateTruckAndStation.truckDataList_1.Count;
                 }
 
-                else if(CreateTruckAndStation.nowTruckFileName != "")
+                else if(nowFolderPath != "")
                 {
                     exitPlayMode.totalTruckCount = CreateTruckAndStation.truckDataList_2.Count;
                 }
@@ -148,7 +191,6 @@ namespace TrafficSimulation {
                 Debug.LogError("createTruckAndStation is null");
             }
         }
-
 
         private void CheckFolderCount()
         {   
@@ -235,6 +277,8 @@ namespace TrafficSimulation {
                 currentNowTruckFilePath = nowTruckFileList[currentFileCount];
                 nowRouteDictionary = CreateRouteList(currentNowRouteFilePath);
 
+                Debug.Log("Create prev Routes : " + currentPrevRouteFilePath + ", Create now Routes : " + currentNowRouteFilePath);
+
                 if(prevRouteDictionary != null)
                 {
                     CreateRoutes(currentPrevRouteFilePath, prevRouteDictionary, cornerPositions, intersectionPositions);
@@ -266,6 +310,8 @@ namespace TrafficSimulation {
                     currentPrevTruckFilePath = prevTruckFileList[currentFileCount];
                     prevRouteDictionary = CreateRouteList(currentPrevRouteFilePath);
 
+                    Debug.Log("Create prev Routes : " + currentPrevRouteFilePath);
+
                     if(prevRouteDictionary != null)
                     {
                         CreateRoutes(currentPrevRouteFilePath, prevRouteDictionary, cornerPositions, intersectionPositions);                    }
@@ -274,7 +320,7 @@ namespace TrafficSimulation {
                     {
                         Debug.LogError("prevRouteDictionary is null");
                     }
-                    // StartCoroutine(ReadCSV(prevFolderPath, prevRouteFileList, prevTruckFileList));
+                    
                 }
 
                 else if(nowFileCount != 0)
@@ -283,6 +329,8 @@ namespace TrafficSimulation {
                     currentNowRouteFilePath = nowRouteFileList[currentFileCount];
                     currentNowTruckFilePath = nowTruckFileList[currentFileCount];
                     nowRouteDictionary = CreateRouteList(currentNowRouteFilePath);
+
+                    Debug.Log("Create now Routes : " + currentNowRouteFilePath);
 
                     if(nowRouteDictionary != null)
                     {
@@ -371,6 +419,10 @@ namespace TrafficSimulation {
                 Debug.LogError("There is no corners or intersections");
             }
 
+            string parentGOName = Path.GetFileName(_routeFilePath);
+            GameObject parentGO = new GameObject(parentGOName);
+            parentGO.transform.position = Vector3.zero;
+
             foreach(int dict_key in _routeDictionary.Keys)
             {   
                 List<Vector3> route = _routeDictionary[dict_key];
@@ -380,15 +432,13 @@ namespace TrafficSimulation {
                 int newRouteNum = dict_key + routePlusNum;
                 string routeName = "Route-" + newRouteNum.ToString();
                 
-                GameObject mainGo = new GameObject();
-                mainGo.name = routeName;
+                GameObject mainGo = new GameObject(routeName);
                 mainGo.transform.position = Vector3.zero;
+                mainGo.transform.SetParent(parentGO.transform);
+
                 mainGo.AddComponent<TrafficSystem>();
                 mainGo.AddComponent<RouteInfo>();
 
-                // Selection.activeGameObject = mainGo;
-                // wps = Selection.activeGameObject.GetComponent<TrafficSystem>();
-                // RouteInfo routeInfo = Selection.activeGameObject.GetComponent<RouteInfo>();
                 wps = mainGo.GetComponent<TrafficSystem>();
                 RouteInfo routeInfo = mainGo.GetComponent<RouteInfo>();
 

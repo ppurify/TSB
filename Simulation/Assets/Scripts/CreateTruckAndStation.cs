@@ -9,14 +9,14 @@ namespace TrafficSimulation{
     public class CreateTruckAndStation : MonoBehaviour
     {
         // Parameters
-        private static string prevTruckFilePath = "C:\\Users\\USER\\workspace\\TSB\\Simulation\\Assets\\Data\\Congestion\\prev_25\\Trucks";
+        // private static string prevTruckFilePath = "C:\\Users\\USER\\workspace\\TSB\\Simulation\\Assets\\Data\\Congestion\\prev_25\\Trucks";
 
-        private static string nowTruckFilePath = "C:\\Users\\USER\\workspace\\TSB\\Simulation\\Assets\\Data\\Congestion\\prev_25_now_30\\Trucks";
+        // private static string nowTruckFilePath = "C:\\Users\\USER\\workspace\\TSB\\Simulation\\Assets\\Data\\Congestion\\prev_25_now_30\\Trucks";
         
-        public static string prevTruckFileName = "prev_Truck_25_LP_80_10_10.csv";
-        // public static string prevTruckFileName = "";
+        // public static string prevTruckFileName = "prev_Truck_25_LP_80_10_10.csv";
+        // // public static string prevTruckFileName = "";
 
-        public static string nowTruckFileName = "now_Truck_30_with_prev_Truck_25_LP_80_10_10.csv";
+        // public static string nowTruckFileName = "now_Truck_30_with_prev_Truck_25_LP_80_10_10.csv";
         // public static string nowTruckFileName = "";
 
 
@@ -26,11 +26,8 @@ namespace TrafficSimulation{
 
         // --------------------------
 
-        private static string prevTruckPath = Path.Combine(prevTruckFilePath, prevTruckFileName);
-        private static string nowTruckPath = Path.Combine(nowTruckFilePath, nowTruckFileName);
-
-        public static List<CreateTruckData> truckDataList_1 = new List<CreateTruckData>();
-        public static List<CreateTruckData> truckDataList_2 = new List<CreateTruckData>();
+        // private static string prevTruckPath = Path.Combine(prevTruckFilePath, prevTruckFileName);
+        // private static string nowTruckPath = Path.Combine(nowTruckFilePath, nowTruckFileName);
 
         private static float truckRotation_y;
 
@@ -43,6 +40,8 @@ namespace TrafficSimulation{
         // 동일한 시작 위치를 가진 트럭들을 포함하는 딕셔너리
         private static Dictionary<Vector3, List<Tuple<string, string, List<Vector3>>>> startPositionDict_1;
         private static Dictionary<Vector3, List<Tuple<string, string, List<Vector3>>>> startPositionDict_2;
+        public static List<CreateTruckData> truckDataList_1;
+        public static List<CreateTruckData> truckDataList_2;
 
         private static int truckIndexPlus_1 = 0;
         private static int truckIndexPlus_2 = 100;
@@ -59,14 +58,15 @@ namespace TrafficSimulation{
         private static float checkDelay = 0.5f;
 
         public static int fileCount;
-        void Start()
-        {   
-                
-        }
-    
 
-        public void CreateingTrucks(string _prevTruckFilePath, string _nowTruckFilePath)
-        {    
+        public void CreatingTrucks(string _prevTruckFilePath, string _nowTruckFilePath)
+        {   
+            truckDataList_1 = new List<CreateTruckData>();
+            truckDataList_2 = new List<CreateTruckData>();
+            SaveFile.resultsDataList = new List<ResultsData>();
+
+            Debug.Log("prevTruckFilePath: " + _prevTruckFilePath + ", nowTruckFilePath: " + _nowTruckFilePath);
+
             if(fileCount == 2)
             {   
                 isTwoFile = true;
@@ -105,7 +105,6 @@ namespace TrafficSimulation{
                         if(truckDataList_1 != null)
                         {
                             CreateTruckOneByOne(truckDataList_1[0]);
-                            Debug.Log("Create prev truck : " + truckDataList_1[0]);
                         }
 
                         else
@@ -141,7 +140,6 @@ namespace TrafficSimulation{
                         {   
                             Debug.Log("truckDataList_2.Count : " + truckDataList_2.Count);
                             CreateTruckOneByOne(truckDataList_2[0]);
-                            Debug.Log("Create now truck : " + truckDataList_2[0]);
                         }
 
                         else
@@ -381,7 +379,7 @@ namespace TrafficSimulation{
         // 딕셔너리 생성 함수
         private static void IsDuplicateStartPosition(List<CreateTruckData> dataList, float _truckIndexPlus)
         {
-            Debug.Log("dataList.Count: " + dataList.Count + " , _truckIndexPlus: " + _truckIndexPlus);
+            // Debug.Log("dataList.Count: " + dataList.Count + " , _truckIndexPlus: " + _truckIndexPlus);
 
             if(_truckIndexPlus == 0)
             {
@@ -591,7 +589,6 @@ namespace TrafficSimulation{
             {
                 if (collider.CompareTag("AutonomousVehicle"))
                 {
-                    // UnityEngine.Debug.Log("Truck detected: " + collider.gameObject.name);
                     return true;
                 }
             }

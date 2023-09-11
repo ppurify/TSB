@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
 using UnityEditor;
+using System.IO;
 
 namespace TrafficSimulation{
 
@@ -72,9 +73,11 @@ namespace TrafficSimulation{
         public NowStatus nowStatus;
         
         // 한대씩 돌릴 때 필요한 Data
-        private static CreateTruckAndStation createTruckAndStation;
+        // private static CreateTruckAndStation createTruckAndStation;
         private static List<CreateTruckData> truckDataList;
         private static bool _isOneByOne = CreateTruckAndStation.isOneByOne;
+
+        private WholeProcess wholeProcess;
 
         // Start is called before the first frame update
         void Awake()
@@ -85,22 +88,7 @@ namespace TrafficSimulation{
             truckTotalWatch = new Stopwatch();
             truckStationWatch = new Stopwatch();
             noReasonStopWatch = new Stopwatch();
-
-            // 한대씩 돌릴 때 필요한 Data
-            if(_isOneByOne)
-            {   
-                createTruckAndStation = GameObject.Find("Roads").GetComponent<CreateTruckAndStation>();
-                if(CreateTruckAndStation.prevTruckFileName != "")
-                {
-                    truckDataList = CreateTruckAndStation.truckDataList_1;
-                }
-
-                else if(CreateTruckAndStation.nowTruckFileName != "")
-                {
-                    truckDataList = CreateTruckAndStation.truckDataList_2;
-                }
-
-            }
+            // createTruckAndStation = GameObject.Find("Roads").GetComponent<CreateTruckAndStation>();
         }
 
         void Start()
@@ -116,6 +104,7 @@ namespace TrafficSimulation{
             nowStatus = NowStatus.NONE;
 
             saveFile = GameObject.Find("Roads").GetComponent<SaveFile>();
+            wholeProcess = GameObject.Find("Roads").GetComponent<WholeProcess>();
         }
         
         void Update()
@@ -319,7 +308,7 @@ namespace TrafficSimulation{
 
         private void Processing()
         {   
-            UnityEngine.Debug.Log(this.name + " processing ---> station : " + nowStationPos);
+            // UnityEngine.Debug.Log(this.name + " processing ---> station : " + nowStationPos);
 
             nowStatus = NowStatus.PROCESSING;
 
@@ -369,7 +358,7 @@ namespace TrafficSimulation{
         
         private void CheckRoad()
         {   
-            UnityEngine.Debug.Log(originalPos +" CheckRoad ");
+            // UnityEngine.Debug.Log(originalPos +" CheckRoad ");
             if(!ExistAnyTruck(originalPos, checkRange_1, checkRange_2))
             {
                 CancelInvoke("CheckRoad");
@@ -378,13 +367,13 @@ namespace TrafficSimulation{
 
             else
             {
-                UnityEngine.Debug.Log(originalPos + " ExistAnyTruck");
+                // UnityEngine.Debug.Log(originalPos + " ExistAnyTruck");
             }
         }
 
         private void MoveToOriginalPos()
         {   
-            UnityEngine.Debug.Log(vehicle.name + " move from " + nowStationPos + " to Original Pos ---> CheckRotation_IsToRight(vehicle) : " + CheckRotation_IsToRight(vehicle));
+            // UnityEngine.Debug.Log(vehicle.name + " move from " + nowStationPos + " to Original Pos ---> CheckRotation_IsToRight(vehicle) : " + CheckRotation_IsToRight(vehicle));
 
             if(CheckRotation_IsToRight(vehicle))
             {   
@@ -410,7 +399,7 @@ namespace TrafficSimulation{
 
         private void LastProcessing()
         {   
-            UnityEngine.Debug.Log(this.name + " Last Processing at " + nowStationPos + " station ");
+            // UnityEngine.Debug.Log(this.name + " Last Processing at " + nowStationPos + " station ");
             // Get Station information
             nowStationInfo.craneStatus += 1;
             nowStationInfo.processQueueList.Remove(vehicle);
@@ -425,14 +414,15 @@ namespace TrafficSimulation{
         private void FinishLastProcess()
         {
             truckTotalWatch.Stop();
-            UnityEngine.Debug.Log(vehicle.name + " truckTotalWatch stop ");
+            // UnityEngine.Debug.Log(vehicle.name + " truckTotalWatch stop ");
 
             float truckTotalTime = truckTotalWatch.ElapsedMilliseconds / 1000f * Time.timeScale;
             
-            UnityEngine.Debug.Log(vehicle.name + " process done --> truckTotalTime : " + truckTotalTime);
+            // UnityEngine.Debug.Log(vehicle.name + " process done --> truckTotalTime : " + truckTotalTime);
 
             nowStationInfo.craneStatus -= 1;
 
+            
             if(saveFile == null)
             {
                 saveFile = GameObject.Find("Roads").GetComponent<SaveFile>();
@@ -450,7 +440,7 @@ namespace TrafficSimulation{
                 exitPlayMode = GameObject.Find("Roads").GetComponent<ExitPlayMode>();
             }
 
-            exitPlayMode.nowTruckCount += 1;
+            exitPlayMode.nowTruckCount ++;
             truckDestination = nowStationPos;
 
 
@@ -458,22 +448,65 @@ namespace TrafficSimulation{
             resultsData.CreateResultData(saveFile.filePath, vehicle.name, truckRouteName, truckOrigin, truckDestination, truckTotalTime, truckStationWatchList);
             SaveFile.resultsDataList.Add(resultsData);
 
-            UnityEngine.Debug.Log(vehicle.name + " saved result data !!! ");
+            // UnityEngine.Debug.Log(vehicle.name + " saved result data !!! ");
             
             // 한대씩 돌릴 때
             if(_isOneByOne)
-            {
+            {   
+                if(wholeProcess.isPrevExist)
+                {
+                    truckDataList = CreateTruckAndStation.truckDataList_1;
+                }
+
+                else
+                {
+                    truckDataList = CreateTruckAndStation.truckDataList_2;
+                }
+
                 if(exitPlayMode.nowTruckCount < exitPlayMode.totalTruckCount)
                 {
                     CreateTruckAndStation.CreateTruckOneByOne(truckDataList[exitPlayMode.nowTruckCount]);
                 }
             }
-            
+
             if(exitPlayMode.nowTruckCount == exitPlayMode.totalTruckCount)
-            {   
-                WholeProcess.nextFile = true;
+            {  
+                WholeProcess.currentFileCount++;
+
+                if(WholeProcess.currentFileCount < WholeProcess.totalFileCount) 
+                {
+                    if(WholeProcess.folderCount == 2)
+                    {
+                        string prevRouteFilename = Path.GetFileName(wholeProcess.currentPrevRouteFilePath);
+                        string nowRouteFilename = Path.GetFileName(wholeProcess.currentNowRouteFilePath);
+                        GameObject prevRouteGO = GameObject.Find(prevRouteFilename);
+                        GameObject nowRouteGO = GameObject.Find(nowRouteFilename);
+                        
+                        Destroy(prevRouteGO);
+                        Destroy(nowRouteGO);
+                    }
+
+                    else
+                    {
+                        if(wholeProcess.isPrevExist)
+                        {
+                            string prevRouteFilename = Path.GetFileName(wholeProcess.currentPrevRouteFilePath);
+                            GameObject prevRouteGO = GameObject.Find(prevRouteFilename);
+                            Destroy(prevRouteGO);       
+                        }
+
+                        else
+                        {
+                            string nowRouteFilename = Path.GetFileName(wholeProcess.currentNowRouteFilePath);
+                            GameObject nowRouteGO = GameObject.Find(nowRouteFilename);
+                            Destroy(nowRouteGO);
+                        }
+                    }
+
+                    wholeProcess.Process();
+                }
+                
                 List<ResultsData> dataList = SaveFile.resultsDataList;
-    
                 foreach(ResultsData data in dataList)
                 {
                     saveFile.SaveToCSV(data.FilePath, data.Vehicle, data.Route, data.Origin, data.Destination, data.TotalTime, data.StopwathTimeList);
@@ -482,7 +515,7 @@ namespace TrafficSimulation{
             }
 
             UnityEngine.Debug.Log(vehicle.name + " is finished !!!");
-
+        
             Destroy(vehicle);
         }
         
@@ -548,7 +581,6 @@ namespace TrafficSimulation{
             while(_nowStationFinshedQueueCount > 0)
             {
                 yield return new WaitForSeconds(_checkDelay);
-                UnityEngine.Debug.Log(this.name + " can't go to next station, has to wait ! ");
 
                 if(CheckRotation_IsToRight(vehicle))
                 {
@@ -559,11 +591,7 @@ namespace TrafficSimulation{
                 {
                     _nowStationFinshedQueueCount = nowStation.GetComponent<CranesInfo>().finishedQueueList_toLeft.Count;
                 }
-
-                UnityEngine.Debug.Log("nowStationInfo : " + nowStationInfo.name + " , _nowStationFinshedQueueCount : " + _nowStationFinshedQueueCount);
             }
-
-            UnityEngine.Debug.Log(this.name + " can go ! ");
 
             thisVehicleAI.vehicleStatus = Status.GO;
             nowStatus = NowStatus.NONE;

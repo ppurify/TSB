@@ -1,0 +1,3 @@
+Truck_id,Route_id,Origin,Destination,Total Time,PickupSta AT,DropSta AT
+Truck-0,Route-0,(175.0 0.0 205.5),(375.0 0.0 150.0),69.44,6.904,47.488
+Truck-1,Route-1,(175.0 0.0 155.5),(375.0 0.0 200.0),64.832,6.952,42.784
