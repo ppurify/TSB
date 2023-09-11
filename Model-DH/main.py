@@ -12,21 +12,20 @@ def main():
 
   # 가로로 3개
   block_num_in_row = 3
-  
   block_length = 9
   block_height = 1
-
   grid_length = 31
   grid_height = 9
-  
-
   grid, _YT_location_col_index, QC_locations, YC_locations = make_grid.Grid(grid_length, grid_height, block_length, block_height, block_num_in_row)
   
   
+
+
+
   number_of_YT = 30
   number_of_Job = 30
-  filename_Truck = 'Model-DH/Result-DH/cost_time_cost_taveltime_correlation/prev_Truck_30_cost_taveltime_correlation_0_0_100_Min.csv'
-  filename_RoutePoints = 'Model-DH/Result-DH/cost_time_cost_taveltime_correlation/prev_RoutePoints_30_cost_taveltime_correlation_0_0_100_Min.csv'
+  filename_Truck = 'Model-DH/Result-DH/now_Truck_30_path_time_translation_40_55_5.csv'
+  filename_RoutePoints = 'Model-DH/Result-DH/now_RoutePoints_30_path_time_translation_40_55_5.csv'
 
   YT_locations = {0: (6, 27), 1: (8, 17), 2: (6, 17), 3: (4, 17), 4: (0, 27), 5: (8, 7), 6: (8, 27), 7: (4, 7), 8: (2, 17), 9: (2, 27), 10: (0, 7), 11: (0, 17), 12: 
   (6, 7), 13: (4, 27), 14: (2, 7), 15: (4, 17), 16: (6, 7), 17: (2, 27), 18: (8, 7), 19: (6, 17), 20: (8, 17), 21: (0, 7), 22: (0, 17), 23: (8, 27), 24: (4, 27), 25: (2, 17), 26: (4, 7), 27: (0, 27), 28: (2, 7), 29: (6, 27)}
@@ -107,9 +106,9 @@ def main():
   # print("Job_locations =", Job_locations)
 
   number_of_final_route = 3
-  alpha1 = 0  # prev counter
-  alpha2 = 0  # now counter
-  alpha3 = 100 # distance
+  alpha1 = 90  # prev counter
+  alpha2 = 5  # now counter
+  alpha3 = 5 # distance
 
   # prev_count : t-1시점의 활성화된 A2 + A3의 누적 path정보
   prev_count = np.zeros((len(grid), len(grid[0])))
@@ -157,62 +156,62 @@ def main():
   all_arcs = arcs_YT_to_Pick + arcs_Pick_to_Drop + arcs_Drop_to_Pick + arcs_Drop_to_Sink + arcs_YT_to_Sink
 
 
-  # arcs_YT_to_Pick을 순회하면서 같은 i, j내의 k개의 arc 중, cost가 가장 작은 arc의 cost를 1000000으로 설정  
-  for YT_index in range(number_of_YT):
-    for Pick_index in range(number_of_Job):
-        arcs_in_same_ij = []
-        for arc in arcs_YT_to_Pick:
-          if arc.i == ['YT', YT_index] and arc.j == ['Pick', Pick_index]:
-            arcs_in_same_ij.append(arc)
-        # k가 1개보다 많으면
-        if len(arcs_in_same_ij) > 1:
-           # arcs_in_same_ij내에서 cost가 가장 작은 arc의 cost를 10000000으로 설정
-            min_cost = 10000000
-            for arc_ in arcs_in_same_ij: 
-                if arc_.cost < min_cost:
-                    min_cost = arc_.cost
-            for arc__ in arcs_in_same_ij:
-                if arc__.cost == min_cost:
-                    arc__.cost = 10000000
-                    break
+  # # arcs_YT_to_Pick을 순회하면서 같은 i, j내의 k개의 arc 중, cost가 가장 작은 arc의 cost를 1000000으로 설정  
+  # for YT_index in range(number_of_YT):
+  #   for Pick_index in range(number_of_Job):
+  #       arcs_in_same_ij = []
+  #       for arc in arcs_YT_to_Pick:
+  #         if arc.i == ['YT', YT_index] and arc.j == ['Pick', Pick_index]:
+  #           arcs_in_same_ij.append(arc)
+  #       # k가 1개보다 많으면
+  #       if len(arcs_in_same_ij) > 1:
+  #          # arcs_in_same_ij내에서 cost가 가장 작은 arc의 cost를 10000000으로 설정
+  #           min_cost = 10000000
+  #           for arc_ in arcs_in_same_ij: 
+  #               if arc_.cost < min_cost:
+  #                   min_cost = arc_.cost
+  #           for arc__ in arcs_in_same_ij:
+  #               if arc__.cost == min_cost:
+  #                   arc__.cost = 10000000
+  #                   break
                 
-  # arcs_Pick_to_Drop을 순회하면서 같은 i, j내의 k개의 arc 중, cost가 가장 작은 arc의 cost를 1000000으로 설정
-  for Pick_index in range(number_of_Job):
-    for Drop_index in range(number_of_Job):
-        arcs_in_same_ij = []
-        for arc in arcs_Pick_to_Drop:
-          if arc.i == ['Pick', Pick_index] and arc.j == ['Drop', Drop_index]:
-            arcs_in_same_ij.append(arc)
-        # k가 1개보다 많으면
-        if len(arcs_in_same_ij) > 1:
-           # arcs_in_same_ij내에서 cost가 가장 작은 arc의 cost를 10000000으로 설정
-            min_cost = 10000000
-            for arc_ in arcs_in_same_ij: 
-                if arc_.cost < min_cost:
-                    min_cost = arc_.cost
-            for arc__ in arcs_in_same_ij:
-                if arc__.cost == min_cost:
-                    arc__.cost = 10000000
-                    break
+  # # arcs_Pick_to_Drop을 순회하면서 같은 i, j내의 k개의 arc 중, cost가 가장 작은 arc의 cost를 1000000으로 설정
+  # for Pick_index in range(number_of_Job):
+  #   for Drop_index in range(number_of_Job):
+  #       arcs_in_same_ij = []
+  #       for arc in arcs_Pick_to_Drop:
+  #         if arc.i == ['Pick', Pick_index] and arc.j == ['Drop', Drop_index]:
+  #           arcs_in_same_ij.append(arc)
+  #       # k가 1개보다 많으면
+  #       if len(arcs_in_same_ij) > 1:
+  #          # arcs_in_same_ij내에서 cost가 가장 작은 arc의 cost를 10000000으로 설정
+  #           min_cost = 10000000
+  #           for arc_ in arcs_in_same_ij: 
+  #               if arc_.cost < min_cost:
+  #                   min_cost = arc_.cost
+  #           for arc__ in arcs_in_same_ij:
+  #               if arc__.cost == min_cost:
+  #                   arc__.cost = 10000000
+  #                   break
                 
-  # arcs_Drop_to_Pick을 순회하면서 같은 i, j내의 k개의 arc 중, cost가 가장 작은 arc의 cost를 1000000으로 설정
-  for Drop_index in range(number_of_Job):
-    for Pick_index in range(number_of_Job):
-        arcs_in_same_ij = []
-        for arc in arcs_Drop_to_Pick:
-          if arc.i == ['Drop', Drop_index] and arc.j == ['Pick', Pick_index]:
-            arcs_in_same_ij.append(arc)
-        # k가 1개보다 많으면
-        if len(arcs_in_same_ij) > 1:
-           # arcs_in_same_ij내에서 cost가 가장 작은 arc의 cost를 10000000으로 설정
-            min_cost = 10000000
-            for arc_ in arcs_in_same_ij: 
-                if arc_.cost < min_cost:
-                    min_cost = arc_.cost
-            for arc__ in arcs_in_same_ij:
-                if arc__.cost == min_cost:
-                    arc__.cost = 10000000
-                    break
+  # # arcs_Drop_to_Pick을 순회하면서 같은 i, j내의 k개의 arc 중, cost가 가장 작은 arc의 cost를 1000000으로 설정
+  # for Drop_index in range(number_of_Job):
+  #   for Pick_index in range(number_of_Job):
+  #       arcs_in_same_ij = []
+  #       for arc in arcs_Drop_to_Pick:
+  #         if arc.i == ['Drop', Drop_index] and arc.j == ['Pick', Pick_index]:
+  #           arcs_in_same_ij.append(arc)
+  #       # k가 1개보다 많으면
+  #       if len(arcs_in_same_ij) > 1:
+  #          # arcs_in_same_ij내에서 cost가 가장 작은 arc의 cost를 10000000으로 설정
+  #           min_cost = 10000000
+  #           for arc_ in arcs_in_same_ij: 
+  #               if arc_.cost < min_cost:
+  #                   min_cost = arc_.cost
+  #           for arc__ in arcs_in_same_ij:
+  #               if arc__.cost == min_cost:
+  #                   arc__.cost = 10000000
+  #                   break
               
           
                 
