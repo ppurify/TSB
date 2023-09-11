@@ -465,10 +465,22 @@ namespace TrafficSimulation{
             {
                 if(exitPlayMode.nowTruckCount < exitPlayMode.totalTruckCount)
                 {
-                    createTruckAndStation.CreateOneTruck_1(truckDataList[exitPlayMode.nowTruckCount]);
+                    CreateTruckAndStation.CreateTruckOneByOne(truckDataList[exitPlayMode.nowTruckCount]);
                 }
             }
             
+            if(exitPlayMode.nowTruckCount == exitPlayMode.totalTruckCount)
+            {   
+                WholeProcess.nextFile = true;
+                List<ResultsData> dataList = SaveFile.resultsDataList;
+    
+                foreach(ResultsData data in dataList)
+                {
+                    saveFile.SaveToCSV(data.FilePath, data.Vehicle, data.Route, data.Origin, data.Destination, data.TotalTime, data.StopwathTimeList);
+                    UnityEngine.Debug.Log("Save " + data.FilePath + "  --> " + data.Vehicle + " data");
+                }
+            }
+
             UnityEngine.Debug.Log(vehicle.name + " is finished !!!");
 
             Destroy(vehicle);

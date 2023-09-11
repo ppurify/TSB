@@ -310,6 +310,7 @@ namespace TrafficSimulation {
 
             float initRay = (raysNumber / 2f) * raySpacing;
             float hitDist =  -1f;
+
             for(float a=-initRay; a<=initRay; a+=raySpacing){
                 CastRay(raycastAnchor.transform.position, a, this.transform.forward, raycastLength, out detectedObstacle, out hitDist);
 
@@ -338,13 +339,19 @@ namespace TrafficSimulation {
             int layer = 1 << LayerMask.NameToLayer("AutonomousVehicle");
             int finalMask = layer;
 
-            foreach(string layerName in trafficSystem.collisionLayers){
-                int id = 1 << LayerMask.NameToLayer(layerName);
-                finalMask = finalMask | id;
+            if(trafficSystem.collisionLayers != null)
+            {
+                Debug.Log("trafficSystem.collisionLayers.Length : " + trafficSystem.collisionLayers.Length);
+                foreach(string layerName in trafficSystem.collisionLayers)
+                {
+                    int id = 1 << LayerMask.NameToLayer(layerName);
+                    finalMask = finalMask | id;
+                }
             }
 
             RaycastHit hit;
-            if(Physics.Raycast(_anchor, Quaternion.Euler(0, _angle, 0) * _dir, out hit, _length, finalMask)){
+            if(Physics.Raycast(_anchor, Quaternion.Euler(0, _angle, 0) * _dir, out hit, _length, finalMask))
+            {
                 _outObstacle = hit.collider.gameObject;
                 _outHitDistance = hit.distance;
             }

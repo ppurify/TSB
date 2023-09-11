@@ -8,29 +8,16 @@ using UnityEditor;
 namespace TrafficSimulation{
     public class ExitPlayMode : MonoBehaviour
     {
-        public int nowTruckCount;
+        public int nowTruckCount = 0;
         public int totalTruckCount;
 
         private SaveFile saveFile;
 
+        public int _currentFileCount;
+        public int _totalFileCount = WholeProcess.totalFileCount;
+
         void Start()
         {
-            nowTruckCount = 0;
-            if(CreateTruckAndStation.isTwoFile)
-            {
-                totalTruckCount = CreateTruckAndStation.truckDataList_1.Count + CreateTruckAndStation.truckDataList_2.Count;
-            }
-            
-            else if(CreateTruckAndStation.prevTruckFileName != "")
-            {
-                totalTruckCount = CreateTruckAndStation.truckDataList_1.Count;
-            }
-
-            else if(CreateTruckAndStation.nowTruckFileName != "")
-            {
-                totalTruckCount = CreateTruckAndStation.truckDataList_2.Count;
-            }
-
             GameObject.Find("Roads").AddComponent<SaveFile>();
 
             saveFile = GetComponent<SaveFile>();
@@ -39,29 +26,24 @@ namespace TrafficSimulation{
         // Update is called once per frame
         void Update()
         {
-            if(CompareTruckCount(nowTruckCount, totalTruckCount))
-            {   
-                List<ResultsData> dataList = SaveFile.resultsDataList;
-     
-                foreach(ResultsData resultsData in dataList)
-                {
-                    saveFile.SaveToCSV(resultsData.FilePath, resultsData.Vehicle, resultsData.Route, resultsData.Origin, resultsData.Destination, resultsData.TotalTime, resultsData.StopwathTimeList);
-                    UnityEngine.Debug.Log("Save " + resultsData.FilePath + "  --> " + resultsData.Vehicle + " data");
-                }
-
+            _currentFileCount = WholeProcess.currentFileCount;
+            
+            if(CompareCount(_currentFileCount, _totalFileCount))
+            {
                 Debug.Log("Exit Play Mode");
                 EditorApplication.ExitPlaymode();
+            }
 
 #if UNITY_EDITOR
                 AssetDatabase.Refresh();
 #endif
-            }
+            
 
         }
 
-        public bool CompareTruckCount(int _nowTruckCount, int _totalTruckCount)
+        public bool CompareCount(int _nowCount, int _totalCount)
         {
-            return _nowTruckCount == _totalTruckCount;
+            return _nowCount == _totalCount;
         }
     }
 }

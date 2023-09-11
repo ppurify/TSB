@@ -382,7 +382,7 @@ namespace TrafficSimulation {
 
 
         // 2. tile 38
-          private static List<Vector3> ChangeToRotate(Vector3 previousPoint, Vector3 nowPoint, Vector3 nextPoint)
+        private static List<Vector3> ChangeToRotate(Vector3 previousPoint, Vector3 nowPoint, Vector3 nextPoint)
         {   
             float nowPoint_x = nowPoint.x;
             float nowPoint_z = nowPoint.z;

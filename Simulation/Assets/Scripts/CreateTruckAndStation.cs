@@ -21,10 +21,8 @@ namespace TrafficSimulation{
 
 
         public static bool isTwoFile;
-        // file 1개 일 때
-        public static bool isOneFile;
         // 1대씩 돌릴 때
-        public static bool isOneByOne = false;
+        public static bool isOneByOne;
 
         // --------------------------
 
@@ -40,71 +38,73 @@ namespace TrafficSimulation{
         private static Vector3 stationSize = new Vector3(75,10,30);
 
         private static float stationPos_y = stationSize.y/2;
-        private string stationTagName = "Station";
+        public static string stationTagName = "Station";
 
         // 동일한 시작 위치를 가진 트럭들을 포함하는 딕셔너리
         private static Dictionary<Vector3, List<Tuple<string, string, List<Vector3>>>> startPositionDict_1;
         private static Dictionary<Vector3, List<Tuple<string, string, List<Vector3>>>> startPositionDict_2;
 
-        private int truckIndexPlus_1 = 0;
-        private int truckIndexPlus_2 = 100;
+        private static int truckIndexPlus_1 = 0;
+        private static int truckIndexPlus_2 = 100;
 
 
         // 동일한 시작 위치를 가진 트럭들의 생성 주기
-        private float createDelay = 160f;
+        private static float createDelay = 160f;
         
         // 이전에 스케줄링이 된게 없고 현재 한대만 돌릴 때는 truckIndexPlus_1을 100으로 해주기
         // 두대 돌리거나 이전에 스케줄링 된 걸 돌릴때는 truckIndexPlus_1을 0으로 해주기
         
-        private float checkRange_1 = 7f;
-        private float checkRange_2 = 3f;
-        private float checkDelay = 0.5f;
+        private static float checkRange_1 = 7f;
+        private static float checkRange_2 = 3f;
+        private static float checkDelay = 0.5f;
 
+        public static int fileCount;
         void Start()
         {   
-            int fileCount = 0;
+                
+        }
+    
 
-            if(prevTruckFileName != "")
-            {
-                fileCount ++;
-
-                ReadFile(prevTruckPath, truckIndexPlus_1);
-                CreateStations(truckDataList_1, stationTagName);
-            }
-            
-            if(nowTruckFileName != "")
-            {
-                fileCount ++;
-
-                ReadFile(nowTruckPath, truckIndexPlus_2);
-                CreateStations(truckDataList_2, stationTagName);
-            }
-            
-            Debug.Log("fileCount: " + fileCount);
-
+        public void CreateingTrucks(string _prevTruckFilePath, string _nowTruckFilePath)
+        {    
             if(fileCount == 2)
             {   
                 isTwoFile = true;
+                ReadFile(_prevTruckFilePath, truckIndexPlus_1);
+                CreateStations(truckDataList_1, stationTagName);
+
+                ReadFile(_nowTruckFilePath, truckIndexPlus_2);
+                CreateStations(truckDataList_2, stationTagName);
+
+                Debug.Log("truckDataList_1.Count : " + truckDataList_1.Count + ", truckDataList_2.Count : " + truckDataList_2.Count);
                 if(ExistRoute(truckDataList_1))
                 {   
                     IsDuplicateStartPosition(truckDataList_1, truckIndexPlus_1);
                     CreateTrucks(startPositionDict_1, checkRange_1, checkRange_2, checkDelay);
                     Debug.Log("Create prev trucks");
+
+                    StartCoroutine(CreateNewTrucksDelay(createDelay));
                 }
 
-                StartCoroutine(CreateNewTrucksDelay(createDelay));
+                else
+                {
+                    Debug.LogError("truckDataList_1's Route doesn't found.");
+                }       
             }
 
 
             else if(fileCount == 1)
             {   
-                if(prevTruckFileName != "")
-                {
+                if(_prevTruckFilePath != null)
+                {   
+                    ReadFile(_prevTruckFilePath, truckIndexPlus_1);
+                    CreateStations(truckDataList_1, stationTagName);
+                    
                     if(isOneByOne)
                     {
                         if(truckDataList_1 != null)
                         {
-                            CreateOneTruck_1(truckDataList_1[0]);
+                            CreateTruckOneByOne(truckDataList_1[0]);
                             Debug.Log("Create prev truck : " + truckDataList_1[0]);
                         }
 
@@ -116,8 +116,6 @@ namespace TrafficSimulation{
 
                     else
                     {
-                        isOneFile = true;
-
                         if(ExistRoute(truckDataList_1))
                         {   
                             IsDuplicateStartPosition(truckDataList_1, truckIndexPlus_1);
@@ -132,14 +130,17 @@ namespace TrafficSimulation{
                     }
                 }
 
-                else if(nowTruckFileName != "")
+                else
                 {
+                    ReadFile(_nowTruckFilePath, truckIndexPlus_2);
+                    CreateStations(truckDataList_2, stationTagName);
+
                     if(isOneByOne)
                     {
                         if(truckDataList_2 != null)
                         {   
                             Debug.Log("truckDataList_2.Count : " + truckDataList_2.Count);
-                            CreateOneTruck_1(truckDataList_2[0]);
+                            CreateTruckOneByOne(truckDataList_2[0]);
                             Debug.Log("Create now truck : " + truckDataList_2[0]);
                         }
 
@@ -151,8 +152,6 @@ namespace TrafficSimulation{
 
                     else
                     {
-                        isOneFile = true;
-
                         if(ExistRoute(truckDataList_2))
                         {   
                             Debug.Log("truckDataList_2.Count : " + truckDataList_2.Count);
@@ -167,60 +166,8 @@ namespace TrafficSimulation{
                         }
                     }
                 }
-                
             }
         }
-
-        // // 2개 파일일때
-        // void Start()
-        // {
-        //     if(prevTruckFilePath != null)
-        //     {
-        //         ReadFile(prevTruckFilePath, truckIndexPlus_1);
-        //         CreateStations(truckDataList_1, stationTagName);
-        //     }
-
-        //     else
-        //     {
-        //         Debug.LogError("check truckFilePath_1.");
-        //     }
-            
-        //     if(isTwoFile)
-        //     {
-        //         ReadFile(nowTruckFilePath, truckIndexPlus_2);
-        //         CreateStations(truckDataList_2, stationTagName);
-
-        //         if(ExistRoute(truckDataList_1))
-        //         {   
-        //             IsDuplicateStartPosition(truckDataList_1, truckIndexPlus_1);
-        //             CreateTrucks(startPositionDict_1, checkRange_1, checkRange_2, checkDelay);
-        //         }
-                
-        //         StartCoroutine(CreateNewTrucksDelay(createDelay));
-        //     }
-            
-        //     else if(isOneFile)
-        //     {
-        //         if(ExistRoute(truckDataList_1))
-        //         {   
-        //             IsDuplicateStartPosition(truckDataList_1, truckIndexPlus_1);
-        //             CreateTrucks(startPositionDict_1, checkRange_1, checkRange_2, checkDelay);
-        //         }
-        //     }
-            
-        //     else if(isOneByOne)
-        //     {   
-        //         if(truckDataList_1 != null)
-        //         {
-        //             CreateOneTruck_1(truckDataList_1[0]);
-        //         }
-
-        //         else
-        //         {
-        //             Debug.LogError("truckDataList_1 is null.");
-        //         }
-        //     }    
-        // }
 
         // 경로 유무 확인 함수
         public static void ReadFile(string filePath, int _truckIndexPlus)
@@ -354,7 +301,7 @@ namespace TrafficSimulation{
 
 
         // Station 생성 함수
-        public void CreateStations(List<CreateTruckData> dataList, string _stationTagName)
+        public static void CreateStations(List<CreateTruckData> dataList, string _stationTagName)
         {   
             GameObject stationsOB = GameObject.Find("Stations");
 
@@ -537,11 +484,8 @@ namespace TrafficSimulation{
         
 
         // 트럭 생성 함수
-        public void CreateTruck(string _truckName, string _routeName, List<Vector3> _workStaions)
+        public static void CreateTruck(string _truckName, string _routeName, List<Vector3> _workStaions)
         {
-            // Generate a random number between 1 and 4 (inclusive)
-            // int randomNumber = UnityEngine.Random.Range(1, 5);
-            // string truckPrefabName = "Truck" + randomNumber.ToString();
             string truckPrefabName = "Truck7";
    
             GameObject truckPrefab = Resources.Load(truckPrefabName) as GameObject;
@@ -570,9 +514,7 @@ namespace TrafficSimulation{
                 truckInfo.truckWorkStationsNum = _workStaions.Count;
 
                 int workStationCount = _workStaions.Count;
-                // truckInfo.truckOrigin = _workStaions[0];
                 truckInfo.truckOrigin = truck.transform.position;
-                // truckInfo.truckDestination = _workStaions[workStationCount - 1];
                 truckInfo.truckRouteName = _routeName;
                 truckInfo.turnStations = GameObject.Find(_routeName).GetComponent<RouteInfo>().uTurnStations;
             }
@@ -629,7 +571,7 @@ namespace TrafficSimulation{
 
         
         // Tag 존재하는지 확인하는 함수
-        private bool ExistTag(string _tagName)
+        private static bool ExistTag(string _tagName)
         {
             foreach(string existingTag in UnityEditorInternal.InternalEditorUtility.tags)
             {
@@ -641,7 +583,7 @@ namespace TrafficSimulation{
             return false;
         }
 
-        private bool ExistAnyTruck(Vector3 _position, float _checkRange_1, float _checkRange_2)
+        private static bool ExistAnyTruck(Vector3 _position, float _checkRange_1, float _checkRange_2)
         {
             Collider[] colliders = Physics.OverlapSphere(_position, Mathf.Max(_checkRange_1, _checkRange_2));
             
@@ -659,13 +601,8 @@ namespace TrafficSimulation{
     
         private IEnumerator CreateNewTrucksDelay(float _createDelay)
         {   
-            Debug.Log("Start Coroutine for CreateNewTrucksDelay.");
             yield return new WaitForSeconds(_createDelay);
             Debug.Log("Create now trucks.");
-            // Create new trucks
-
-            // ReadFile(truckFilePath_2, truckIndexPlus_2);
-            // CreateStations(truckDataList_2, stationTagName);
 
             if(ExistRoute(truckDataList_2))
             {   
@@ -699,7 +636,7 @@ namespace TrafficSimulation{
         }
             
 
-        public void CreateOneTruck_1(CreateTruckData _value)
+        public static void CreateTruckOneByOne(CreateTruckData _value)
         {   
             string _truckName = _value.Name;
             string _routeName = "Route-" + _value.Route;
