@@ -18,14 +18,32 @@ def main():
     grid_height = 9
     grid, _YT_location_col_index, QC_locations, YC_locations = make_grid.Grid(grid_length, grid_height, block_length, block_height, block_num_in_row)
 
+    
+    prev_YT_counter = 25
+    prev_Job_counter = 25
+    
+    now_YT_counter = 30
+    now_Job_counter = 30
+    
+    if(now_YT_counter == 0):
+        number_of_YT = prev_YT_counter
+        number_of_Job = prev_Job_counter
+        
+    else:
+        number_of_YT = now_YT_counter
+        number_of_Job = now_Job_counter
+    
+    
+    alpha1 = 80  # prev counter
+    alpha2 = 10  # now counter
+    alpha3 = 10 # distance
+    
+    folder_path = 'Simulation/Assets/Data/Congestion'
+    
 
+    YT_locations = {0: (2, 27), 1: (6, 27), 2: (8, 27), 3: (2, 7), 4: (0, 17), 5: (6, 17), 6: (6, 7), 7: (0, 27), 8: (8, 7), 9: (2, 17), 10: (4, 17), 11: (4, 7), 12: (0, 7), 13: (8, 17), 14: (4, 27), 15: (2, 17), 16: (4, 17), 17: (6, 27), 18: (0, 17), 19: (2, 27), 20: (2, 7), 21: (0, 27), 22: (8, 7), 23: (0, 7), 24: (8, 27), 25: (4, 27), 26: (6, 17), 27: (6, 7), 28: (4, 7), 29: (8, 17)}
+    Job_locations = {0: [(0, 25), (2, 15)], 1: [(0, 15), (8, 25)], 2: [(0, 5), (8, 15)], 3: [(8, 5), (0, 25)], 4: [(2, 25), (0, 5)], 5: [(0, 15), (6, 5)], 6: [(4, 25), (0, 25)], 7: [(4, 15), (0, 15)], 8: [(4, 5), (0, 5)], 9: [(6, 25), (0, 5)], 10: [(0, 15), (2, 5)], 11: [(0, 25), (6, 15)], 12: [(4, 25), (0, 15)], 13: [(0, 25), (8, 15)], 14: [(0, 5), (6, 25)], 15: [(8, 5), (0, 5)], 16: [(6, 15), (0, 25)], 17: [(4, 15), (0, 15)], 18: [(2, 15), (0, 5)], 19: [(2, 5), (0, 25)], 20: [(6, 5), (0, 15)], 21: [(2, 25), (0, 15)], 22: [(0, 25), (4, 5)], 23: [(8, 25), (0, 5)], 24: [(8, 25), (0, 15)], 25: [(0, 25), (2, 25)], 26: [(4, 15), (0, 5)], 27: [(0, 25), (6, 5)], 28: [(0, 5), (4, 25)], 29: [(0, 15), (6, 15)]}
 
-
-
-    number_of_YT = 25
-    number_of_Job = 25
-    filename_Truck = 'Simulation/Assets/Data/Congestion/prev_25/prev_Truck_25_LP_20_70_10.csv'
-    filename_RoutePoints = 'Simulation/Assets/Data/Congestion/prev_25/prev_RoutePoints_25_LP_20_70_10.csv'
     
     # # Assuming you have YC_locations and QC_locations defined
     # YT_locations = {}
@@ -96,39 +114,37 @@ def main():
     # print("Job_locations =", Job_locations)
 
     number_of_final_route = 3
-    alpha1 = 20  # prev counter
-    alpha2 = 70  # now counter
-    alpha3 = 10 # distance
+    
 
     # prev_count : t-1시점의 활성화된 A2 + A3의 누적 path정보
-    prev_count = np.zeros((len(grid), len(grid[0])))
-#     prev_count = np.array([[ 7,  7,  7,  7,  7, 12,  9,  9,  9,  9, 13, 10, 10, 10,
-#   10, 13,  7,  7,  7,  7, 10,  7,  7,  7,  7, 10,  5,  5,
-#    5,  5,  5],
-#  [ 7,  0,  0,  0,  0,  0,  0,  0,  0,  0,  7,  0,  0,  0,
-#    0,  0,  0,  0,  0,  0,  6,  0,  0,  0,  0,  0,  0,  0,
-#    0,  0,  5],
-#  [ 7,  2,  2,  2,  2,  3,  1,  1,  1,  1,  7,  2,  2,  2,
-#    2,  3,  2,  2,  2,  2,  7,  1,  1,  1,  1,  2,  1,  1,
-#    1,  1,  5],
-#  [ 5,  0,  0,  0,  0,  0,  0,  0,  0,  0,  4,  0,  0,  0,
-#    0,  0,  0,  0,  0,  0,  5,  0,  0,  0,  0,  0,  0,  0,
-#    0,  0,  4],
-#  [ 5,  2,  2,  2,  2,  2,  0,  0,  0,  0,  4,  0,  0,  0,
-#    0,  2,  2,  2,  2,  2,  5,  1,  1,  1,  1,  2,  1,  1,
-#    1,  1,  4],
-#  [ 3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  4,  0,  0,  0,
-#    0,  0,  0,  0,  0,  0,  2,  0,  0,  0,  0,  0,  0,  0,
-#    0,  0,  3],
-#  [ 3,  1,  1,  1,  1,  2,  1,  1,  1,  1,  4,  1,  1,  1,
-#    1,  2,  1,  1,  1,  1,  3,  1,  1,  1,  1,  3,  3,  3,
-#    3,  3,  3],
-#  [ 2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  2,  0,  0,  0,
-#    0,  0,  0,  0,  0,  0,  2,  0,  0,  0,  0,  0,  0,  0,
-#    0,  0,  0],
-#  [ 2,  2,  2,  2,  2,  2,  0,  0,  0,  0,  2,  2,  2,  2,
-#    2,  3,  2,  2,  2,  2,  3,  2,  2,  2,  2,  2,  0,  0,
-#    0,  0,  0]])
+    # prev_count = np.zeros((len(grid), len(grid[0])))
+    prev_count = np.array([[ 7,  7,  7,  7,  7, 12,  9,  9,  9,  9, 12,  9,  9,  9,
+   9, 13,  8,  8,  8,  8, 11,  7,  7,  7,  7, 10,  5,  5,
+   5,  5,  5],
+ [ 7,  0,  0,  0,  0,  0,  0,  0,  0,  0,  6,  0,  0,  0,
+   0,  0,  0,  0,  0,  0,  7,  0,  0,  0,  0,  0,  0,  0,
+   0,  0,  5],
+ [ 7,  2,  2,  2,  2,  3,  1,  1,  1,  1,  6,  2,  2,  2,
+   2,  3,  2,  2,  2,  2,  8,  1,  1,  1,  1,  2,  1,  1,
+   1,  1,  5],
+ [ 5,  0,  0,  0,  0,  0,  0,  0,  0,  0,  3,  0,  0,  0,
+   0,  0,  0,  0,  0,  0,  6,  0,  0,  0,  0,  0,  0,  0,
+   0,  0,  4],
+ [ 5,  2,  2,  2,  2,  2,  0,  0,  0,  0,  3,  0,  0,  0,
+   0,  2,  2,  2,  2,  2,  6,  1,  1,  1,  1,  2,  1,  1,
+   1,  1,  4],
+ [ 3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  3,  0,  0,  0,
+   0,  0,  0,  0,  0,  0,  3,  0,  0,  0,  0,  0,  0,  0,
+   0,  0,  3],
+ [ 3,  1,  1,  1,  1,  2,  1,  1,  1,  1,  3,  1,  1,  1,
+   1,  2,  1,  1,  1,  1,  4,  1,  1,  1,  1,  3,  3,  3,
+   3,  3,  3],
+ [ 2,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  0,  0,  0,
+   0,  0,  0,  0,  0,  0,  3,  0,  0,  0,  0,  0,  0,  0,
+   0,  0,  0],
+ [ 2,  2,  2,  2,  2,  2,  0,  0,  0,  0,  1,  1,  1,  1,
+   1,  3,  3,  3,  3,  3,  4,  2,  2,  2,  2,  2,  0,  0,
+   0,  0,  0]])
 
     now_count = np.zeros((len(grid), len(grid[0])))
 
@@ -147,19 +163,6 @@ def main():
 
 
     objective_value, activated_arcs = network_LP.solve(all_arcs, number_of_YT, number_of_Job)
-
-    # activated_arcs들의 각 정보 출력
-    # print('activated_arcs')
-    # for arc in activated_arcs:
-    #     print('arc.i : ', arc.i)
-    #     print('arc.j : ', arc.j)
-    #     print('arc.k : ', arc.k)
-    #     print('arc cost : ', arc.cost)
-    #     print('arc path : ', arc.path)
-    #     print("")
-
-    # print('objective_value: ', objective_value)
-    # print('activated_arcs: ', activated_arcs)
 
     # 다음번 스케줄링을 위한 next_prev_count : A2 + A3의 누적 path정보
     next_prev_count = np.zeros((len(grid), len(grid[0])))
@@ -187,13 +190,23 @@ def main():
   # print('grid_for_visualization')
   # print(np.array2string(grid_for_visualization, separator=', ').replace('.', ''))
 
-
+    if now_YT_counter == 0:
+        truck_filename = f'prev_{prev_YT_counter}/prev_Truck_{prev_YT_counter}'
+        route_filename = f'prev_{prev_YT_counter}/prev_RoutePoints_{prev_YT_counter}'
+    else:
+        truck_filename = f'prev_{prev_YT_counter}_now_{now_YT_counter}/now_Truck_{now_YT_counter}_with_prev_Truck_{prev_YT_counter}'
+        route_filename = f'prev_{prev_YT_counter}_now_{now_YT_counter}/now_RoutePoints_{now_YT_counter}_with_prev_RoutePoints_{prev_YT_counter}'
+    
+    filename_Truck = f'{folder_path}/{truck_filename}_LP_{alpha1}_{alpha2}_{alpha3}.csv'
+    filename_RoutePoints = f'{folder_path}/{route_filename}_LP_{alpha1}_{alpha2}_{alpha3}.csv'
+        
     # Create csv file for Unity simulation/
     make_csv.create_csv(activated_arcs, number_of_YT, grid, filename_Truck, filename_RoutePoints)
-
-
+    
+    
+    
     log_file_path =  "Model/Logs/Congestion/" + os.path.basename(filename_Truck) + ".txt"
-
+    
     with open(log_file_path, 'w') as file:
         file.write("YT_locations = " + str(YT_locations) + "\n")
         file.write("Job_locations = " + str(Job_locations) + "\n")
