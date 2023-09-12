@@ -22,83 +22,83 @@ def main():
 
 
 
-    number_of_YT = 30
-    number_of_Job = 30
-    filename_Truck = 'Simulation/Assets/Data/Congestion/prev_30/prev_Truck_30_LP_0_0_100.csv'
-    filename_RoutePoints = 'Simulation/Assets/Data/Congestion/prev_30/prev_RoutePoints_30_LP_0_0_100.csv'
+    number_of_YT = 25
+    number_of_Job = 25
+    filename_Truck = 'Simulation/Assets/Data/Congestion/prev_25/prev_Truck_25_LP_20_70_10.csv'
+    filename_RoutePoints = 'Simulation/Assets/Data/Congestion/prev_25/prev_RoutePoints_25_LP_20_70_10.csv'
     
-    # Assuming you have YC_locations and QC_locations defined
-    YT_locations = {}
-    Job_locations = {}
+    # # Assuming you have YC_locations and QC_locations defined
+    # YT_locations = {}
+    # Job_locations = {}
     
-    # Generate a shuffled list of all possible grid locations
-    possible_locations = [(i, j) for i in range(len(grid)) for j in range(len(grid[0]))]
-    random.shuffle(possible_locations)
-    # location_index = 0  # Initialize the index
+    # # Generate a shuffled list of all possible grid locations
+    # possible_locations = [(i, j) for i in range(len(grid)) for j in range(len(grid[0]))]
+    # random.shuffle(possible_locations)
+    # # location_index = 0  # Initialize the index
 
-    # Create YT locations
-    for i in range(number_of_YT):
-        YT_location = None
-        while YT_location is None or grid[YT_location] == -1 or YT_location[1] not in _YT_location_col_index:
-            # YT_location = possible_locations[location_index]  # Use the current index
-            if len(possible_locations) > 0:
-                YT_location = possible_locations.pop()
-            else:
-                # print("No more possible YT locations")
-                possible_locations = [(i, j) for i in range(len(grid)) for j in range(len(grid[0]))]
-                random.shuffle(possible_locations)
-                YT_location = possible_locations.pop()
+    # # Create YT locations
+    # for i in range(number_of_YT):
+    #     YT_location = None
+    #     while YT_location is None or grid[YT_location] == -1 or YT_location[1] not in _YT_location_col_index:
+    #         # YT_location = possible_locations[location_index]  # Use the current index
+    #         if len(possible_locations) > 0:
+    #             YT_location = possible_locations.pop()
+    #         else:
+    #             # print("No more possible YT locations")
+    #             possible_locations = [(i, j) for i in range(len(grid)) for j in range(len(grid[0]))]
+    #             random.shuffle(possible_locations)
+    #             YT_location = possible_locations.pop()
         
-        YT_locations[i] = YT_location
+    #     YT_locations[i] = YT_location
 
-    # Shuffle YC and QC locations for better randomness
-    possible_YC_locations = YC_locations.copy()
-    possible_QC_locations = QC_locations.copy()
+    # # Shuffle YC and QC locations for better randomness
+    # possible_YC_locations = YC_locations.copy()
+    # possible_QC_locations = QC_locations.copy()
     
-    random.shuffle(possible_YC_locations)
-    random.shuffle(possible_QC_locations)
+    # random.shuffle(possible_YC_locations)
+    # random.shuffle(possible_QC_locations)
     
-    # Create Job locations
-    for j in range(number_of_Job):
-        # choice random number 0 or 1
-        random_num = np.random.randint(2)
+    # # Create Job locations
+    # for j in range(number_of_Job):
+    #     # choice random number 0 or 1
+    #     random_num = np.random.randint(2)
         
-        if(len(possible_YC_locations) > 0):
-            YC_loc = possible_YC_locations.pop()
+    #     if(len(possible_YC_locations) > 0):
+    #         YC_loc = possible_YC_locations.pop()
         
-        else:
-            # print("No more YC locations")
-            possible_YC_locations = YC_locations.copy()
-            random.shuffle(possible_YC_locations)
-            YC_loc = possible_YC_locations.pop()
+    #     else:
+    #         # print("No more YC locations")
+    #         possible_YC_locations = YC_locations.copy()
+    #         random.shuffle(possible_YC_locations)
+    #         YC_loc = possible_YC_locations.pop()
             
-        if(len(possible_QC_locations) > 0):
-            QC_loc = possible_QC_locations.pop()
+    #     if(len(possible_QC_locations) > 0):
+    #         QC_loc = possible_QC_locations.pop()
             
-        else:
-            # print("No more QC locations")
-            possible_QC_locations = QC_locations.copy()
-            random.shuffle(possible_QC_locations)
-            QC_loc = possible_QC_locations.pop()
+    #     else:
+    #         # print("No more QC locations")
+    #         possible_QC_locations = QC_locations.copy()
+    #         random.shuffle(possible_QC_locations)
+    #         QC_loc = possible_QC_locations.pop()
             
-        # 0 means Outbound => YC -> QC
-        if random_num == 0:
-            Pick_location = YC_loc  # Use random.choice for better randomness
-            Drop_location = QC_loc
-        # 1 means Inbound => QC -> YC
-        else:
-            Pick_location = QC_loc
-            Drop_location = YC_loc
+    #     # 0 means Outbound => YC -> QC
+    #     if random_num == 0:
+    #         Pick_location = YC_loc  # Use random.choice for better randomness
+    #         Drop_location = QC_loc
+    #     # 1 means Inbound => QC -> YC
+    #     else:
+    #         Pick_location = QC_loc
+    #         Drop_location = YC_loc
         
-        Job_locations[j] = [Pick_location, Drop_location]
+    #     Job_locations[j] = [Pick_location, Drop_location]
 
-    print("YT_locations =", YT_locations)
-    print("Job_locations =", Job_locations)
+    # print("YT_locations =", YT_locations)
+    # print("Job_locations =", Job_locations)
 
     number_of_final_route = 3
-    alpha1 = 0  # prev counter
-    alpha2 = 0  # now counter
-    alpha3 = 100 # distance
+    alpha1 = 20  # prev counter
+    alpha2 = 70  # now counter
+    alpha3 = 10 # distance
 
     # prev_count : t-1시점의 활성화된 A2 + A3의 누적 path정보
     prev_count = np.zeros((len(grid), len(grid[0])))
