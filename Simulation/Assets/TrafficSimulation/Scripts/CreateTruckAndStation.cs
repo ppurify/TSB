@@ -9,14 +9,14 @@ namespace TrafficSimulation{
     public class CreateTruckAndStation : MonoBehaviour
     {
         // Parameters
-        private static string prevTruckFilePath = "C:\\Users\\USER\\workspace\\TSB\\Model-DH\\Result-DH";
+        private static string prevTruckFilePath = "C:\\Users\\USER\\workspace\\TSB\\Model-DH\\Result-DH\\cost_traveltime_correlation";
   
-        private static string nowTruckFilePath = "C:\\Users\\USER\\workspace\\TSB\\Model-DH\\Result-DH";
+        private static string nowTruckFilePath = "C:\\Users\\USER\\workspace\\TSB\\Model-DH\\Result-DH\\cost_traveltime_correlation";
         
-        public static string prevTruckFileName = "prev_Truck_30_cost_prevcount_allarc_40_50_10.csv";
+        public static string prevTruckFileName = "Prev_Truck_30_20_70_10_Max.csv";
         // public static string prevTruckFileName = "";
 
-        public static string nowTruckFileName = "now_Truck_30_cost_prevcount_allarc_40_50_10.csv";
+        public static string nowTruckFileName = "Now_Truck_30_20_70_10_Max.csv";
         // public static string nowTruckFileName = "";
 
 
