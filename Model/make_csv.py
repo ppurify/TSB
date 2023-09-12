@@ -1,5 +1,4 @@
 import csv
-import os
 
 def create_csv(activated_arcs, number_of_YT, grid, filename_Truck, filename_RoutePoints):
     # Traversing_info : 각 YT들이 어떤 노드를 거치는지 저장하는 dictionary
@@ -46,10 +45,7 @@ def create_csv(activated_arcs, number_of_YT, grid, filename_Truck, filename_Rout
             Trucks.append(temp_list)
 
     # Write the Trucks list to a CSV file
-    # truck_folder_path = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\Completion_time\\now_40_prev_20"
-    truck_folder_path = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\DH"
-    
-    filename = os.path.join(truck_folder_path, filename_Truck)
+    filename = filename_Truck
     with open(filename, mode='w', newline='') as file:
         writer = csv.writer(file)
         writer.writerows(Trucks)
@@ -92,10 +88,8 @@ def create_csv(activated_arcs, number_of_YT, grid, filename_Truck, filename_Rout
                 RoutePoints['x'].append(point[1] * tile_size)
                 RoutePoints['y'].append(0)
                 RoutePoints['z'].append((len(grid) - 1 - point[0]) * tile_size)
-  
-    route_folder_path = "C:\\Users\\USER\\workspace\\TSB\\Traffic_Simulation\\Assets\\Data\\DH"
-    
-    filename = os.path.join(route_folder_path, filename_RoutePoints)
+
+    filename = filename_RoutePoints
     header = list(RoutePoints.keys())
 
     with open(filename, mode='w', newline='') as file:
