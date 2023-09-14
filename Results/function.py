@@ -71,15 +71,30 @@ def create_YT_A_Data(_keyword, _variance_all_csv_data):
     return _data_list, _column_names
 
 # ------------------------------------------------------------------------------
-def create_congestion_df(csv_data):
-    columns = ['Truck_num', 'repeat_time'] + csv_data[0][1][0]
+def create_congestion_df(_folderPath):
+    csv_data = load_csv_files_in_folder(_folderPath)
+    folder_name = os.path.basename(os.path.normpath(_folderPath))
+    
+    prev_truck_num = re.findall(r'prev_(\d+)', folder_name)[0]
+    now_truck_num = re.findall(r'now_(\d+)', folder_name)[0]
+
+    columns = ["Prev Truck Number", "Now Truck Number", "repeat_num", "alpha_1", "alpha_2", "alpha_3"] + csv_data[0][1][0]
 
     wt_data_list = []
     wot_data_list = []
 
+
     for file_name, file_data in csv_data:
+        
+        alphas_match = re.search(r"LP_(\d+)_(\d+)_(\d+)", file_name)
+        
+        if alphas_match:
+            alpha1 = int(alphas_match.group(1))
+            alpha2 = int(alphas_match.group(2))
+            alpha3 = int(alphas_match.group(3))
             
-        truck_num = file_name.split('_')[2]
+            alphas = [alpha1, alpha2, alpha3]
+            
         # remove .csv
         repeat_time = file_name.split('_')[-1].split('.')[0]
         
@@ -89,13 +104,12 @@ def create_congestion_df(csv_data):
                 repeat_time = '1'
         
         else:
-            if repeat_time == '100':
-                repeat_time = '1'
-            
+            repeat_time = '1'
+        
         for row in file_data[1:]:
             # print(row)
             row[4:] = [float(value) for value in row[4:]]
-            new_row = [truck_num, repeat_time] + row
+            new_row = [prev_truck_num, now_truck_num, repeat_time] + alphas + row
             
             if 'NoCongestions' in file_name:
                 wot_data_list.append(new_row)
@@ -105,8 +119,11 @@ def create_congestion_df(csv_data):
     wt_df = pd.DataFrame(wt_data_list, columns=columns)
     wot_df = pd.DataFrame(wot_data_list, columns=columns)
     
+    # remove unnecessary columns : "Origin", "Destination", "Route-id"
+    wt_df = wt_df.drop(['Origin', 'Destination', 'Route_id'], axis=1)
+    wot_df = wot_df.drop(['Origin', 'Destination', 'Route_id'], axis=1)
+    
     return wt_df, wot_df
-
 
 def create_completion_df(csv_data):
     columns = ["Prev Truck Number", "Now Truck Number", "alpha_1", "alpha_2", "alpha_3"] + csv_data[0][1][0]
