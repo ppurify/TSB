@@ -72,26 +72,41 @@ def create_YT_A_Data(_keyword, _variance_all_csv_data):
 
 # ------------------------------------------------------------------------------
 def create_congestion_df(csv_data):
-    columns = ['Truck_num', 'Repeat_time'] + csv_data[0][1][0]
+    columns = ['Truck_num', 'repeat_time'] + csv_data[0][1][0]
 
-    data_list = []
+    wt_data_list = []
+    wot_data_list = []
 
     for file_name, file_data in csv_data:
+            
         truck_num = file_name.split('_')[2]
         # remove .csv
         repeat_time = file_name.split('_')[-1].split('.')[0]
         
-        if repeat_time == '100' :
-            repeat_time == '1'
+        # if repeat_time doesn't contain "rep"
+        if "rep" in repeat_time:
+            if repeat_time[0] == '0':
+                repeat_time = '1'
+        
+        else:
+            if repeat_time == '100':
+                repeat_time = '1'
             
         for row in file_data[1:]:
             # print(row)
             row[4:] = [float(value) for value in row[4:]]
             new_row = [truck_num, repeat_time] + row
-            data_list.append(new_row)
+            
+            if 'NoCongestions' in file_name:
+                wot_data_list.append(new_row)
+            else:
+                wt_data_list.append(new_row)
 
-    df = pd.DataFrame(data_list, columns=columns)
-    return df
+    wt_df = pd.DataFrame(wt_data_list, columns=columns)
+    wot_df = pd.DataFrame(wot_data_list, columns=columns)
+    
+    return wt_df, wot_df
+
 
 def create_completion_df(csv_data):
     columns = ["Prev Truck Number", "Now Truck Number", "alpha_1", "alpha_2", "alpha_3"] + csv_data[0][1][0]

@@ -8,26 +8,9 @@ using System;
 namespace TrafficSimulation{
     public class CreateTruckAndStation : MonoBehaviour
     {
-        // Parameters
-        // private static string prevTruckFilePath = "C:\\Users\\USER\\workspace\\TSB\\Simulation\\Assets\\Data\\Congestion\\prev_25\\Trucks";
-
-        // private static string nowTruckFilePath = "C:\\Users\\USER\\workspace\\TSB\\Simulation\\Assets\\Data\\Congestion\\prev_25_now_30\\Trucks";
-        
-        // public static string prevTruckFileName = "prev_Truck_25_LP_80_10_10.csv";
-        // // public static string prevTruckFileName = "";
-
-        // public static string nowTruckFileName = "now_Truck_30_with_prev_Truck_25_LP_80_10_10.csv";
-        // public static string nowTruckFileName = "";
-
-
         public static bool isTwoFile;
         // 1대씩 돌릴 때
         public static bool isOneByOne;
-
-        // --------------------------
-
-        // private static string prevTruckPath = Path.Combine(prevTruckFilePath, prevTruckFileName);
-        // private static string nowTruckPath = Path.Combine(nowTruckFilePath, nowTruckFileName);
 
         private static float truckRotation_y;
 
