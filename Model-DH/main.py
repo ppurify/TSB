@@ -89,8 +89,8 @@ def main(number_of_YT, number_of_Job, casename, time, prev_count, alpha1, alpha2
     grid, _YT_location_col_index, QC_locations, YC_locations = make_grid.Grid(
         grid_length, grid_height, block_length, block_height, block_num_in_row)
 
-    filename_Truck = 'Model-DH/Result-DH/'+str(casename)+'/'+ str(time) + '_Truck_'+str(number_of_YT)+'_LP_'+str(alpha1)+'_'+str(alpha2)+'_'+str(alpha3)+'_'+str(rep)+'rep'+'.csv'
-    filename_RoutePoints = 'Model-DH/Result-DH/'+str(casename)+'/'+ str(time) + '_RoutePoints_'+str(number_of_YT)+'_LP_'+str(alpha1)+'_'+str(alpha2)+'_'+str(alpha3)+'_'+str(rep)+'rep'+'.csv'
+    filename_Truck = 'Model/Result-DH/'+str(casename)+'/'+ str(time) + '_Truck_'+str(number_of_YT)+'_LP_'+str(alpha1)+'_'+str(alpha2)+'_'+str(alpha3)+'_'+str(rep)+'rep'+'.csv'
+    filename_RoutePoints = 'Model/Result-DH/'+str(casename)+'/'+ str(time) + '_RoutePoints_'+str(number_of_YT)+'_LP_'+str(alpha1)+'_'+str(alpha2)+'_'+str(alpha3)+'_'+str(rep)+'rep'+'.csv'
 
 
     YT_locations, Job_locations = generate_locations(grid, number_of_YT, number_of_Job, _YT_location_col_index, QC_locations, YC_locations)
@@ -141,8 +141,8 @@ def main(number_of_YT, number_of_Job, casename, time, prev_count, alpha1, alpha2
 if __name__ == "__main__":
 
     #casename에 해당하는 폴더가 없다면 생성
-    # if not os.path.exists('Model-DH/Result-DH/Congestion'):
-    #     os.makedirs('Model-DH/Result-DH/Congestion')
+    # if not os.path.exists('Model/Result-DH/Congestion'):
+    #     os.makedirs('Model/Result-DH/Congestion')
 
     casename = 'Congestion'
     Prev_number_of_YT = 5
