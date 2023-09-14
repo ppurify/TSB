@@ -125,6 +125,26 @@ def create_congestion_df(_folderPath):
     
     return wt_df, wot_df
 
+def get_congestion_ratio_df(_folder_path):
+
+    wt_df, wot_df = create_congestion_df(_folder_path)
+    # Perform the subtraction and division
+    merged_df = wt_df.merge(wot_df, on=['Prev Truck Number', 'Now Truck Number', 'alpha_1', 'repeat_num', 'alpha_2', 'alpha_3', 'Truck_id'], suffixes=('_wt', '_wot'))
+    merged_df['Pickup_Congestion_ratio'] = (merged_df['PickupSta AT_wt'] - merged_df['PickupSta AT_wot'])/merged_df['PickupSta AT_wot']
+    merged_df['Drop_Congestion_ratio'] = (merged_df['DropSta AT_wt'] - merged_df['DropSta AT_wot'])/merged_df['DropSta AT_wot']
+    # alpha값들에 따라서 그룹화를 한후 Pickup_Congestion_ratio, Drop_Congestion_ratio의 전체 평균을 구한다.
+    merged_df_congestion_ratio = merged_df.groupby(['alpha_1', 'alpha_2', 'alpha_3'])[['Pickup_Congestion_ratio', 'Drop_Congestion_ratio']].mean()
+
+    # index to column
+    merged_df_congestion_ratio = merged_df_congestion_ratio.reset_index()
+
+    # 각 행별로 평균 구하기
+    merged_df_congestion_ratio['Congestion_ratio'] = (merged_df_congestion_ratio['Pickup_Congestion_ratio'] + merged_df_congestion_ratio['Drop_Congestion_ratio'])/2
+    # drop unnecessary columns
+    merged_df_congestion_ratio = merged_df_congestion_ratio.drop(['Pickup_Congestion_ratio', 'Drop_Congestion_ratio'], axis=1)
+    return merged_df_congestion_ratio
+
+
 def create_completion_df(csv_data):
     columns = ["Prev Truck Number", "Now Truck Number", "alpha_1", "alpha_2", "alpha_3"] + csv_data[0][1][0]
 
@@ -167,8 +187,101 @@ def draw_plot(_x_values, _y_values, _title_name, x_label, y_label):
 
     plt.grid(True)
     plt.show()
+
+
+
+def draw_plot_congestion(_df, _x_label, _y_label):
+
+    # 현재 스케줄링 대상 트럭
+    x_value_2 = _df["alpha_1"]
+    y_value_2 = _df["Congestion_ratio"]
+
+    # 그래프 그리기
+    plt.figure(figsize=(5,3))
+    # plt.plot(x_value_1, y_value_1 , marker='o', linestyle='-', color = 'steelblue')
+    plt.plot(x_value_2, y_value_2 , marker='o', linestyle='-', color = 'blue')
+
+    plt.xlabel(_x_label, fontsize=9)
+    plt.ylabel(_y_label, fontsize=9)
+
+    # plt.ylim(int(y_value_2.min()) - 0.05, int(y_value_2.max()) + 0.05)
+    
+    plt.axhline(y=y_value_2.iloc[0], color='gray', linestyle='--')
+
+    plt.show()
     
 
+def Create_subplot_congestion(_directory_path, _x_label, _y_label, _title, row_num, col_num, fig_size):
+    
+    folder_name_list = []
+    congestion_df_list = []
+    
+    for folder_name in os.listdir(_directory_path):
+        
+        # 확장자 얻기
+        extension = os.path.splitext(folder_name)[-1]
+
+        # .csv 파일만 가져오기
+        if extension != '.meta':
+            folder_path = os.path.join(_directory_path, folder_name)
+            
+            if os.path.isdir(folder_path):
+                folder_name_list.append(folder_name)
+                
+                congestion_df = get_congestion_ratio_df(folder_path)
+                congestion_df_list.append(congestion_df)
+                            
+            else:
+                print("Please Check Directory Path")
+    
+    f, axes = plt.subplots(row_num, col_num)
+    
+    # 격자 크기 설정
+    f.set_size_inches(fig_size)
+
+    # 격자 여백 설정
+    plt.subplots_adjust(wspace = 0.3, hspace = 0.3)
+    
+    row_index = 0
+    col_index = 0
+    
+    for i in range(len(congestion_df_list)):
+
+        x_value_1 = congestion_df_list[i]["alpha_1"]
+        y_value_1 = congestion_df_list[i]['Congestion_ratio']
+        
+        if row_num == 1:
+            plt.subplot(1, col_num, col_index + 1)
+            plt.plot(x_value_1, y_value_1 , marker='o', linestyle='-', color = 'steelblue')
+
+            plt.xlabel(_x_label, fontsize=9, ha='center')
+            plt.ylabel(_y_label, fontsize=9)
+            # x축 10 단위로 표시
+            # plt.xticks(range(x_value_1.min(), x_value_1.max() + 10, 10))
+            plt.title(_title + ' (' + folder_name_list[i] + ')', fontsize=9, ha='center')
+            plt.axhline(y=y_value_1.iloc[0], color='gray', linestyle='--')
+            
+        else:
+            # x축 10 단위로 표시
+            # axes[row_index, col_index].set_xticks(range(x_value_1.min(), x_value_1.max() + 10, 10))
+            axes[row_index, col_index].plot(x_value_1, y_value_1 , marker='o', linestyle='-', color = 'steelblue')
+            plt.axhline(y=y_value_1.iloc[0], color='gray', linestyle='--')
+            
+            # title_name = "Completion Time by alpha_1 (prev_20_now_20)"
+            title_name = _title +  ' (' + folder_name_list[i] + ')'
+            
+            axes[row_index, col_index].set_xlabel(_x_label, fontsize=9, ha='center')
+            axes[row_index, col_index].set_ylabel(_y_label, fontsize=9)
+            axes[row_index, col_index].set_title(title_name, fontsize=9, ha='center')
+
+        col_index += 1
+        if(col_index == col_num):
+            col_index = 0
+            row_index += 1
+        
+    plt.show()
+    
+    
 def merge_df(df1, df2):
     merged_df = pd.merge(df1, df2, on=['Truck_num', 'Truck_id'], suffixes=('_wt', '_wot'))
     return merged_df
