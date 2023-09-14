@@ -141,16 +141,16 @@ def main(number_of_YT, number_of_Job, casename, time, prev_count, alpha1, alpha2
 if __name__ == "__main__":
 
     #casename에 해당하는 폴더가 없다면 생성
+    # if not os.path.exists('Model-DH/Result-DH/Congestion'):
+    #     os.makedirs('Model-DH/Result-DH/Congestion')
 
-    if not os.path.exists('Model-DH/Result-DH/Congestion'):
-        os.makedirs('Model-DH/Result-DH/Congestion')
     casename = 'Congestion'
-    Prev_number_of_YT = 30
-    Prev_number_of_Job = 30
-    Now_number_of_YT = 35
-    Now_number_of_Job = 35
+    Prev_number_of_YT = 5
+    Prev_number_of_Job = 5
+    Now_number_of_YT = 5
+    Now_number_of_Job = 5
 
-    reps = 1
+    reps = 6
 
     alphas = [[0, 80, 70, 60, 50, 40, 30, 20, 10],
               [0, 10, 20, 30, 40, 50, 60, 70, 80],
