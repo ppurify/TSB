@@ -95,32 +95,32 @@ def sort_and_cost(YT_locations, Job_locations, arcs_YT_to_Pick, arcs_Pick_to_Dro
             now_count[(arcs_Pick_to_Drop[i].path[j][0], arcs_Pick_to_Drop[i].path[j][1])] += 1
 
     '---'
-    # # A2_prev_count_for_cost : cost계산을 위한 A2의 prev count
-    # # A1내에서 YT당 최저 cost를 가지는 아크의 path를 누적한 grid 생성
-    # A2_prev_count_for_cost = np.zeros((len(prev_count), len(prev_count[0])))
-
-    # for i in range(len(YT_locations)):
-    #     min_cost_in_YT = sys.maxsize
-    #     for j in range(len(arcs_YT_to_Pick)):
-    #         if arcs_YT_to_Pick[j].i == ['YT', i]:
-    #             if min_cost_in_YT > arcs_YT_to_Pick[j].cost:
-    #                 min_cost_in_YT = arcs_YT_to_Pick[j].cost
-    #                 min_cost_in_YT_index = j
-    #     if min_cost_in_YT != sys.maxsize:
-    #         for k in range(len(arcs_YT_to_Pick[min_cost_in_YT_index].path)):
-    #             A2_prev_count_for_cost[(arcs_YT_to_Pick[min_cost_in_YT_index].path[k][0], arcs_YT_to_Pick[min_cost_in_YT_index].path[k][1])] += 1
-    '---'
-
-
-
-    '---'
     # A2_prev_count_for_cost : cost계산을 위한 A2의 prev count
-    # A1내의 모든 아크의 path를 누적한 grid 생성
+    # A1내에서 YT당 최저 cost를 가지는 아크의 path를 누적한 grid 생성
     A2_prev_count_for_cost = np.zeros((len(prev_count), len(prev_count[0])))
-    for i in range(len(arcs_YT_to_Pick)):
-        for j in range(len(arcs_YT_to_Pick[i].path)):
-            A2_prev_count_for_cost[(arcs_YT_to_Pick[i].path[j][0], arcs_YT_to_Pick[i].path[j][1])] += 1
+
+    for i in range(len(YT_locations)):
+        min_cost_in_YT = sys.maxsize
+        for j in range(len(arcs_YT_to_Pick)):
+            if arcs_YT_to_Pick[j].i == ['YT', i]:
+                if min_cost_in_YT > arcs_YT_to_Pick[j].cost:
+                    min_cost_in_YT = arcs_YT_to_Pick[j].cost
+                    min_cost_in_YT_index = j
+        if min_cost_in_YT != sys.maxsize:
+            for k in range(len(arcs_YT_to_Pick[min_cost_in_YT_index].path)):
+                A2_prev_count_for_cost[(arcs_YT_to_Pick[min_cost_in_YT_index].path[k][0], arcs_YT_to_Pick[min_cost_in_YT_index].path[k][1])] += 1
     '---'
+
+
+
+    # '---'
+    # # A2_prev_count_for_cost : cost계산을 위한 A2의 prev count
+    # # A1내의 모든 아크의 path를 누적한 grid 생성
+    # A2_prev_count_for_cost = np.zeros((len(prev_count), len(prev_count[0])))
+    # for i in range(len(arcs_YT_to_Pick)):
+    #     for j in range(len(arcs_YT_to_Pick[i].path)):
+    #         A2_prev_count_for_cost[(arcs_YT_to_Pick[i].path[j][0], arcs_YT_to_Pick[i].path[j][1])] += 1
+    # '---'
 
     # for _ in range(len(arcs_YT_to_Pick)):
     #     print(arcs_YT_to_Pick[_].i, arcs_YT_to_Pick[_].j, arcs_YT_to_Pick[_].k)
