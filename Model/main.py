@@ -109,8 +109,7 @@ def main(_grid, _YT_locations, _Job_locations, number_of_YT, number_of_Job, case
       alpha1=alpha1, alpha2=alpha2, alpha3=alpha3,
       grid=_grid, prev_count=_prev_count, now_count=now_count, time_consumed_per_grid=time_consumed_per_grid, processing_time=processing_time)
 
-  all_arcs = arcs_YT_to_Pick + arcs_Pick_to_Drop + \
-      arcs_Drop_to_Pick + arcs_Drop_to_Sink + arcs_YT_to_Sink
+  all_arcs = arcs_YT_to_Pick + arcs_Pick_to_Drop + arcs_Drop_to_Pick + arcs_Drop_to_Sink + arcs_YT_to_Sink
 
 
   objective_value, activated_arcs = network_LP.solve(
