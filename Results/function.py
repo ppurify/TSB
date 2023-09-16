@@ -72,7 +72,7 @@ def create_YT_A_Data(_keyword, _variance_all_csv_data):
 
 # ------------------------------------------------------------------------------
 def create_congestion_df(_folderPath):
-    csv_data = load_csv_files_in_folder(_folderPath)
+    csv_data = f.load_csv_files_in_folder(_folderPath)
     folder_name = os.path.basename(os.path.normpath(_folderPath))
     
     prev_truck_num = re.findall(r'prev_(\d+)', folder_name)[0]
@@ -124,6 +124,8 @@ def create_congestion_df(_folderPath):
     wot_df = wot_df.drop(['Origin', 'Destination', 'Route_id'], axis=1)
     
     return wt_df, wot_df
+
+
 
 def get_congestion_ratio_df(_folder_path):
 
@@ -187,7 +189,6 @@ def draw_plot(_x_values, _y_values, _title_name, x_label, y_label):
 
     plt.grid(True)
     plt.show()
-
 
 
 def draw_plot_congestion(_df, _x_label, _y_label):
@@ -265,7 +266,7 @@ def Create_subplot_congestion(_directory_path, _x_label, _y_label, _title, row_n
             # x축 10 단위로 표시
             # axes[row_index, col_index].set_xticks(range(x_value_1.min(), x_value_1.max() + 10, 10))
             axes[row_index, col_index].plot(x_value_1, y_value_1 , marker='o', linestyle='-', color = 'steelblue')
-            plt.axhline(y=y_value_1.iloc[0], color='gray', linestyle='--')
+            axes[row_index, col_index].axhline(y=y_value_1.iloc[0], color='gray', linestyle='--')
             
             # title_name = "Completion Time by alpha_1 (prev_20_now_20)"
             title_name = _title +  ' (' + folder_name_list[i] + ')'
