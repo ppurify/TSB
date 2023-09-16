@@ -30,11 +30,13 @@ def min_max_normalization(data):
 # route로 다수의 경로 받아서 최종 number_of_final_route개의 경로 final_route 반환
 def penalty(normalized_prev_count, route, number_of_final_route, alpha1, alpha3, time_consumed_per_grid):
     penalty_list = []
-
+    # print('route : ', route)
     for i in range(len(route)):
+        # print('route[i] : ', route[i])
         sum_of_counter_of_prev_count = 0
         sum_of_move = len(route[i])
         for j in range(len(route[i])):
+            # print('route[i][j] : ', route[i][j])
             sum_of_counter_of_prev_count += normalized_prev_count[(route[i][j][0], route[i][j][1])]
 
         # 각 경로의 penalty 산출하여 리스트에 저장
