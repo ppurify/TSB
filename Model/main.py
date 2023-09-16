@@ -87,12 +87,14 @@ def main(_grid, _YT_locations, _Job_locations, number_of_YT, number_of_Job, case
   
   # 폴더 없으면 생성
   
-  folder_path = f'Simulation/Assets/Data/{casefolder_path}/{folder_name}'
+  folder_path = f'Simulation/Assets/Data/{casefolder_path}_{rep}/{folder_name}'
   os.makedirs(folder_path, exist_ok=True)
   
   filename_Truck = f'{folder_path}/{time}_Truck_{number_of_YT}_LP_{alpha1}_{alpha2}_{alpha3}_{rep}rep.csv'
   filename_RoutePoints = f'{folder_path}/{time}_RoutePoints_{number_of_YT}_LP_{alpha1}_{alpha2}_{alpha3}_{rep}rep.csv'
 
+  print("\n Loading --- ", os.path.basename(filename_Truck))
+  
   number_of_final_route = 3
   now_count = np.zeros((len(_grid), len(_grid[0])))
 
@@ -130,16 +132,19 @@ def main(_grid, _YT_locations, _Job_locations, number_of_YT, number_of_Job, case
   # Create csv file for Unity simulation/
   make_csv.create_csv(activated_arcs, number_of_YT, _grid, filename_Truck, filename_RoutePoints)
 
-  # # Save Log file
-  # os.makedirs(f'Model/Logs/{casefolder_path}/', exist_ok=True)
-  # log_file_path = f'Model/Logs/{casefolder_path}/' + os.path.basename(filename_Truck) + '.txt'
+
+  # Save Log file
+  log_folder_path = f'Model/Logs/{casefolder_path}_{rep}/'
   
-  # with open(log_file_path, 'w') as f:
-  #   f.write("YT_locations = " + str(_YT_locations) + "\n")
-  #   f.write("Job_locations = " + str(_Job_locations) + "\n")
-  #   f.write("objective_value = " + str(objective_value) + "\n")
-  #   next_prev_count_str = np.array2string(_next_prev_count, separator=', ').replace('.', '')
-  #   f.write("next prev count : \n" + next_prev_count_str + "\n")
+  os.makedirs(log_folder_path, exist_ok=True)
+  log_file_path = log_folder_path + os.path.basename(filename_Truck) + '.txt'
+  
+  with open(log_file_path, 'w') as f:
+    f.write("YT_locations = " + str(_YT_locations) + "\n")
+    f.write("Job_locations = " + str(_Job_locations) + "\n")
+    f.write("objective_value = " + str(objective_value) + "\n")
+    next_prev_count_str = np.array2string(_next_prev_count, separator=', ').replace('.', '')
+    f.write("next prev count : \n" + next_prev_count_str + "\n")
   
   return _next_prev_count
 
@@ -147,10 +152,10 @@ def main(_grid, _YT_locations, _Job_locations, number_of_YT, number_of_Job, case
 if __name__ == "__main__":
 
     casename = 'Congestion'
-    Prev_number_of_YT = 5
-    Prev_number_of_Job = 5
-    Now_number_of_YT = 5
-    Now_number_of_Job = 5
+    Prev_number_of_YT = 25
+    Prev_number_of_Job = 25
+    Now_number_of_YT = 30
+    Now_number_of_Job = 30
     
     case_folder_path = f'{casename}/prev_{Prev_number_of_YT}_now_{Now_number_of_YT}'
 
@@ -162,10 +167,10 @@ if __name__ == "__main__":
     grid_height = 9
     grid, YT_location_col_index, QC_locations, YC_locations = make_grid.Grid(grid_length, grid_height, block_length, block_height, block_num_in_row)
     
-    reps = 1
+    reps = 3
 
-    alphas = [[0, 80, 70, 60, 50, 40, 30, 20, 10],
-              [0, 10, 20, 30, 40, 50, 60, 70, 80],
+    alphas = [[0, 10, 20, 30, 40, 50, 60, 70, 80],
+              [0, 80, 70, 60, 50, 40, 30, 20, 10],
               [100, 10, 10, 10, 10, 10, 10, 10, 10]]
     
     for rep in range(reps):
