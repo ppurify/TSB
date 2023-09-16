@@ -78,68 +78,81 @@ def generate_locations(grid, number_of_YT, number_of_Job, _YT_location_col_index
     return YT_locations, Job_locations
 
 
-def main(_grid, _YT_locations, _Job_locations, number_of_YT, number_of_Job, _top_folder_name, time, prev_count, alpha1, alpha2, alpha3, rep):
+def main(_grid, _YT_locations, _Job_locations, number_of_YT, number_of_Job, casefolder_path, time, _prev_count, alpha1, alpha2, alpha3, rep):
+  
+  if time == 'prev':
+    folder_name = f'prev_{number_of_YT}'
+  else:
+    folder_name = f'now_{number_of_YT}'
+  
+  # 폴더 없으면 생성
+  
+  folder_path = f'Simulation/Assets/Data/{casefolder_path}/{folder_name}'
+  os.makedirs(folder_path, exist_ok=True)
+  
+  filename_Truck = f'{folder_path}/{time}_Truck_{number_of_YT}_LP_{alpha1}_{alpha2}_{alpha3}_{rep}rep.csv'
+  filename_RoutePoints = f'{folder_path}/{time}_RoutePoints_{number_of_YT}_LP_{alpha1}_{alpha2}_{alpha3}_{rep}rep.csv'
 
-    if time == 'prev':
-      folder_name = f'prev_{number_of_YT}'
-    else:
-      folder_name = f'now_{number_of_YT}'
-    
-    # 폴더 없으면 생성
-    os.makedirs(f'{_top_folder_name}/{folder_name}', exist_ok=True)
-    
-    filename_Truck = f'{_top_folder_name}/{folder_name}/{time}_Truck_{number_of_YT}_LP_{alpha1}_{alpha2}_{alpha3}_{rep}rep.csv'
-    filename_RoutePoints = f'{_top_folder_name}/{folder_name}/{time}_RoutePoints_{number_of_YT}_LP_{alpha1}_{alpha2}_{alpha3}_{rep}rep.csv'
+  number_of_final_route = 3
+  now_count = np.zeros((len(_grid), len(_grid[0])))
 
-    number_of_final_route = 3
-    now_count = np.zeros((len(_grid), len(_grid[0])))
+  processing_time = 150
+  time_consumed_per_grid = 1
 
-    processing_time = 150
-    time_consumed_per_grid = 1
+  ra.set_grid(_grid)
 
-    ra.set_grid(_grid)
+  # Create arcs
+  arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink, now_count = make_arc.create_arcs(
+      YT_locations=_YT_locations, Job_locations=_Job_locations, number_of_final_route=number_of_final_route,
+      alpha1=alpha1, alpha2=alpha2, alpha3=alpha3,
+      grid=_grid, prev_count=_prev_count, now_count=now_count, time_consumed_per_grid=time_consumed_per_grid, processing_time=processing_time)
 
-    # Create arcs
-    arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink, now_count = make_arc.create_arcs(
-        YT_locations=_YT_locations, Job_locations=_Job_locations, number_of_final_route=number_of_final_route,
-        alpha1=alpha1, alpha2=alpha2, alpha3=alpha3,
-        grid=_grid, prev_count=prev_count, now_count=now_count, time_consumed_per_grid=time_consumed_per_grid, processing_time=processing_time)
-
-    all_arcs = arcs_YT_to_Pick + arcs_Pick_to_Drop + \
-        arcs_Drop_to_Pick + arcs_Drop_to_Sink + arcs_YT_to_Sink
+  all_arcs = arcs_YT_to_Pick + arcs_Pick_to_Drop + \
+      arcs_Drop_to_Pick + arcs_Drop_to_Sink + arcs_YT_to_Sink
 
 
-    objective_value, activated_arcs = network_LP.solve(
-        all_arcs, number_of_YT, number_of_Job)
-    print('objective_value: ', objective_value)
+  objective_value, activated_arcs = network_LP.solve(
+      all_arcs, number_of_YT, number_of_Job)
+  print('objective_value: ', objective_value)
 
-    # 다음번 스케줄링을 위한 next_prev_count : A2 + A3의 누적 path정보
-    next_prev_count = np.zeros((len(grid), len(grid[0])))
-    for arc in activated_arcs:
-        # A2이거나 A3이면
-        if arc.i[0] == 'Pick':
-            # arc.path에 있는 모든 좌표에 1씩 더해줌
-            for i in range(len(arc.path)):
-                next_prev_count[arc.path[i][0]][arc.path[i][1]] += 1
-        elif arc.i[0] == 'Drop' and arc.j[0] == 'Pick':
-            for i in range(len(arc.path)):
-                next_prev_count[arc.path[i][0]][arc.path[i][1]] += 1
+  # 다음번 스케줄링을 위한 next_prev_count : A2 + A3의 누적 path정보
+  _next_prev_count = np.zeros((len(grid), len(grid[0])))
+  for arc in activated_arcs:
+      # A2이거나 A3이면
+      if arc.i[0] == 'Pick':
+          # arc.path에 있는 모든 좌표에 1씩 더해줌
+          for i in range(len(arc.path)):
+              _next_prev_count[arc.path[i][0]][arc.path[i][1]] += 1
+      elif arc.i[0] == 'Drop' and arc.j[0] == 'Pick':
+          for i in range(len(arc.path)):
+              _next_prev_count[arc.path[i][0]][arc.path[i][1]] += 1
 
-    # Create csv file for Unity simulation/
-    make_csv.create_csv(activated_arcs, number_of_YT, _grid, filename_Truck, filename_RoutePoints)
+  # Create csv file for Unity simulation/
+  make_csv.create_csv(activated_arcs, number_of_YT, _grid, filename_Truck, filename_RoutePoints)
 
-    return next_prev_count
+  # # Save Log file
+  # os.makedirs(f'Model/Logs/{casefolder_path}/', exist_ok=True)
+  # log_file_path = f'Model/Logs/{casefolder_path}/' + os.path.basename(filename_Truck) + '.txt'
+  
+  # with open(log_file_path, 'w') as f:
+  #   f.write("YT_locations = " + str(_YT_locations) + "\n")
+  #   f.write("Job_locations = " + str(_Job_locations) + "\n")
+  #   f.write("objective_value = " + str(objective_value) + "\n")
+  #   next_prev_count_str = np.array2string(_next_prev_count, separator=', ').replace('.', '')
+  #   f.write("next prev count : \n" + next_prev_count_str + "\n")
+  
+  return _next_prev_count
 
 
 if __name__ == "__main__":
 
     casename = 'Congestion'
-    Prev_number_of_YT = 25
-    Prev_number_of_Job = 25
-    Now_number_of_YT = 25
-    Now_number_of_Job = 25
+    Prev_number_of_YT = 5
+    Prev_number_of_Job = 5
+    Now_number_of_YT = 5
+    Now_number_of_Job = 5
     
-    top_folder_name = f'Simulation/Assets/Data/{casename}/prev_{Prev_number_of_YT}_now_{Now_number_of_YT}'
+    case_folder_path = f'{casename}/prev_{Prev_number_of_YT}_now_{Now_number_of_YT}'
 
     # 가로로 3개
     block_num_in_row = 3
@@ -157,13 +170,12 @@ if __name__ == "__main__":
     
     for rep in range(reps):
       
-      prev_YT_locations, prev_Job_locations = generate_locations(grid, Prev_number_of_YT, Prev_number_of_Job, YT_location_col_index, QC_locations, YC_locations)
-      print("------- prev \n YT_locations =", prev_YT_locations)
-      print("------- prev \n Job_locations =", prev_Job_locations)
+      rep = rep + 1
       
+      prev_YT_locations, prev_Job_locations = generate_locations(grid, Prev_number_of_YT, Prev_number_of_Job, YT_location_col_index, QC_locations, YC_locations)
+
       now_YT_locations, now_Job_locations = generate_locations(grid, Prev_number_of_YT, Prev_number_of_Job, YT_location_col_index, QC_locations, YC_locations)
-      print("------- now \n YT_locations =", now_YT_locations)
-      print("------- now \n Job_locations =", now_Job_locations)
+
       
       for i in range(len(alphas[0])):
         
@@ -175,33 +187,6 @@ if __name__ == "__main__":
         # prev_count = np.zeros((9, 31),dtype=np.int8)
         prev_count = np.zeros((len(grid), len(grid[0])))
 
-        next_prev_count = main(grid, prev_YT_locations, prev_Job_locations, Prev_number_of_YT, Prev_number_of_Job, top_folder_name, 'prev', prev_count, alpha1, alpha2, alpha3, rep)
+        next_prev_count = main(grid, prev_YT_locations, prev_Job_locations, Prev_number_of_YT, Prev_number_of_Job, case_folder_path, 'prev', prev_count, alpha1, alpha2, alpha3, rep)
         
-        main(grid, now_YT_locations, now_Job_locations, Now_number_of_YT, Now_number_of_Job, top_folder_name, 'now', next_prev_count, alpha1, alpha2, alpha3, rep)
-        
-    # for i in range(len(alphas[0])):
-    #     alpha1 = alphas[0][i]
-    #     alpha2 = alphas[1][i]
-    #     alpha3 = alphas[2][i]
-        
-    #     for rep in range(reps):
-    #         # Prev
-    #         # prev_count = np.zeros((9, 31),dtype=np.int8)
-    #         prev_count = np.zeros((len(grid), len(grid[0])))
-    #         prev_YT_locations, prev_Job_locations = generate_locations(grid, Prev_number_of_YT, Prev_number_of_Job, YT_location_col_index, QC_locations, YC_locations)
-
-    #         print("------- prev \n YT_locations =", prev_YT_locations)
-    #         print("------- prev \n Job_locations =", prev_Job_locations)
-            
-    #         next_prev_count = main(grid, prev_YT_locations, prev_Job_locations, Prev_number_of_YT, Prev_number_of_Job, top_folder_name, 'prev', prev_count, alpha1, alpha2, alpha3, rep)
-            
-            
-    #         # Now
-            
-    #         now_YT_locations, now_Job_locations = generate_locations(grid, Prev_number_of_YT, Prev_number_of_Job, YT_location_col_index, QC_locations, YC_locations)
-
-    #         print("------- now \n YT_locations =", now_YT_locations)
-    #         print("------- now \n Job_locations =", now_Job_locations)
-            
-    #         prev_count = next_prev_count
-    #         main(grid, now_YT_locations, now_Job_locations, Now_number_of_YT, Now_number_of_Job, top_folder_name, 'now', prev_count, alpha1, alpha2, alpha3, rep)
+        main(grid, now_YT_locations, now_Job_locations, Now_number_of_YT, Now_number_of_Job, case_folder_path, 'now', next_prev_count, alpha1, alpha2, alpha3, rep)
