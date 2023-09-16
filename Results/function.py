@@ -126,7 +126,6 @@ def create_congestion_df(_folderPath):
     return wt_df, wot_df
 
 
-
 def get_congestion_ratio_df(_folder_path):
 
     wt_df, wot_df = create_congestion_df(_folder_path)
