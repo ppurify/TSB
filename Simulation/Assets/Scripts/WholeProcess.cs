@@ -7,10 +7,10 @@ namespace TrafficSimulation {
     public class WholeProcess : MonoBehaviour
     {
         // parameters
-        // private string prevFolderPath ="Assets/Data/Congestion/prev_25";
-        private string prevFolderPath ="";
+        private string prevFolderPath ="Assets/Data/Congestion/prev_25_now_25_AllArcCost_2/prev_25";
+        // private string prevFolderPath ="";
 
-        private string nowFolderPath = "Assets/Data/Congestion/prev_25_now_30";
+        private string nowFolderPath = "Assets/Data/Congestion/prev_25_now_25_AllArcCost_2/now_25";
         // private string nowFolderPath = "";
 
         private bool _isOnebyOne = false;
@@ -531,12 +531,14 @@ namespace TrafficSimulation {
 
         private static void GetPlusNum(string _routefilePath)
         {   
-            if(_routefilePath.Contains("now"))
+            string fileName = Path.GetFileName(_routefilePath);
+            
+            if(fileName.Contains("now"))
             {
                 routePlusNum = 100;
             }
 
-            else if(_routefilePath.Contains("prev"))
+            else if(fileName.Contains("prev"))
             {
                 routePlusNum = 0;
             }

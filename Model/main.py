@@ -78,211 +78,119 @@ def generate_locations(grid, number_of_YT, number_of_Job, _YT_location_col_index
     return YT_locations, Job_locations
 
 
-def main(number_of_YT, number_of_Job, casename, time, prev_count, alpha1, alpha2, alpha3, rep):
+def main(_grid, _YT_locations, _Job_locations, number_of_YT, number_of_Job, casefolder_path, time, _prev_count, alpha1, alpha2, alpha3, rep):
+  
+  if time == 'prev':
+    folder_name = f'prev_{number_of_YT}'
+  else:
+    folder_name = f'now_{number_of_YT}'
+  
+  # 폴더 없으면 생성
+  
+  folder_path = f'Simulation/Assets/Data/{casefolder_path}_{rep}/{folder_name}'
+  os.makedirs(folder_path, exist_ok=True)
+  
+  filename_Truck = f'{folder_path}/{time}_Truck_{number_of_YT}_LP_{alpha1}_{alpha2}_{alpha3}_{rep}rep.csv'
+  filename_RoutePoints = f'{folder_path}/{time}_RoutePoints_{number_of_YT}_LP_{alpha1}_{alpha2}_{alpha3}_{rep}rep.csv'
 
-    # 가로로 3개
-    block_num_in_row = 3
-    block_length = 9
-    block_height = 1
-    grid_length = 31
-    grid_height = 9
-    grid, _YT_location_col_index, QC_locations, YC_locations = make_grid.Grid(
-        grid_length, grid_height, block_length, block_height, block_num_in_row)
+  print("\n Loading --- ", os.path.basename(filename_Truck))
+  
+  number_of_final_route = 3
+  now_count = np.zeros((len(_grid), len(_grid[0])))
 
-    filename_Truck = 'Model/Result-DH/'+str(casename)+'/'+ str(time) + '_Truck_'+str(number_of_YT)+'_LP_'+str(alpha1)+'_'+str(alpha2)+'_'+str(alpha3)+'_'+str(rep)+'rep'+'.csv'
-    filename_RoutePoints = 'Model/Result-DH/'+str(casename)+'/'+ str(time) + '_RoutePoints_'+str(number_of_YT)+'_LP_'+str(alpha1)+'_'+str(alpha2)+'_'+str(alpha3)+'_'+str(rep)+'rep'+'.csv'
+  processing_time = 150
+  time_consumed_per_grid = 1
 
+  ra.set_grid(_grid)
 
-    YT_locations, Job_locations = generate_locations(grid, number_of_YT, number_of_Job, _YT_location_col_index, QC_locations, YC_locations)
+  # Create arcs
+  arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink, now_count = make_arc.create_arcs(
+      YT_locations=_YT_locations, Job_locations=_Job_locations, number_of_final_route=number_of_final_route,
+      alpha1=alpha1, alpha2=alpha2, alpha3=alpha3,
+      grid=_grid, prev_count=_prev_count, now_count=now_count, time_consumed_per_grid=time_consumed_per_grid, processing_time=processing_time)
 
-    # print("YT_locations =", YT_locations)
-    # print("Job_locations =", Job_locations)
-
-    number_of_final_route = 3
-    now_count = np.zeros((len(grid), len(grid[0])))
-
-    processing_time = 150
-    time_consumed_per_grid = 1
-
-    ra.set_grid(grid)
-
-    # Create arcs
-    arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink, now_count = make_arc.create_arcs(
-        YT_locations=YT_locations, Job_locations=Job_locations, number_of_final_route=number_of_final_route,
-        alpha1=alpha1, alpha2=alpha2, alpha3=alpha3,
-        grid=grid, prev_count=prev_count, now_count=now_count, time_consumed_per_grid=time_consumed_per_grid, processing_time=processing_time)
-
-    all_arcs = arcs_YT_to_Pick + arcs_Pick_to_Drop + \
-        arcs_Drop_to_Pick + arcs_Drop_to_Sink + arcs_YT_to_Sink
+  all_arcs = arcs_YT_to_Pick + arcs_Pick_to_Drop + arcs_Drop_to_Pick + arcs_Drop_to_Sink + arcs_YT_to_Sink
 
 
-    objective_value, activated_arcs = network_LP.solve(
-        all_arcs, number_of_YT, number_of_Job)
-    print('objective_value: ', objective_value)
+  objective_value, activated_arcs = network_LP.solve(
+      all_arcs, number_of_YT, number_of_Job)
+  print('objective_value: ', objective_value)
 
-    # 다음번 스케줄링을 위한 next_prev_count : A2 + A3의 누적 path정보
-    next_prev_count = np.zeros((len(grid), len(grid[0])))
-    for arc in activated_arcs:
-        # A2이거나 A3이면
-        if arc.i[0] == 'Pick':
-            # arc.path에 있는 모든 좌표에 1씩 더해줌
-            for i in range(len(arc.path)):
-                next_prev_count[arc.path[i][0]][arc.path[i][1]] += 1
-        elif arc.i[0] == 'Drop' and arc.j[0] == 'Pick':
-            for i in range(len(arc.path)):
-                next_prev_count[arc.path[i][0]][arc.path[i][1]] += 1
+  # 다음번 스케줄링을 위한 next_prev_count : A2 + A3의 누적 path정보
+  _next_prev_count = np.zeros((len(grid), len(grid[0])))
+  for arc in activated_arcs:
+      # A2이거나 A3이면
+      if arc.i[0] == 'Pick':
+          # arc.path에 있는 모든 좌표에 1씩 더해줌
+          for i in range(len(arc.path)):
+              _next_prev_count[arc.path[i][0]][arc.path[i][1]] += 1
+      elif arc.i[0] == 'Drop' and arc.j[0] == 'Pick':
+          for i in range(len(arc.path)):
+              _next_prev_count[arc.path[i][0]][arc.path[i][1]] += 1
 
-    # Create csv file for Unity simulation/
-    make_csv.create_csv(activated_arcs, number_of_YT, grid, filename_Truck, filename_RoutePoints)
+  # Create csv file for Unity simulation/
+  make_csv.create_csv(activated_arcs, number_of_YT, _grid, filename_Truck, filename_RoutePoints)
 
-    return next_prev_count
+
+  # Save Log file
+  log_folder_path = f'Model/Logs/{casefolder_path}_{rep}/'
+  
+  os.makedirs(log_folder_path, exist_ok=True)
+  log_file_path = log_folder_path + os.path.basename(filename_Truck) + '.txt'
+  
+  with open(log_file_path, 'w') as f:
+    f.write("YT_locations = " + str(_YT_locations) + "\n")
+    f.write("Job_locations = " + str(_Job_locations) + "\n")
+    f.write("objective_value = " + str(objective_value) + "\n")
+    next_prev_count_str = np.array2string(_next_prev_count, separator=', ').replace('.', '')
+    f.write("next prev count : \n" + next_prev_count_str + "\n")
+  
+  return _next_prev_count
 
 
 if __name__ == "__main__":
 
-    #casename에 해당하는 폴더가 없다면 생성
-    # if not os.path.exists('Model/Result-DH/Congestion'):
-    #     os.makedirs('Model/Result-DH/Congestion')
+  casename = 'Congestion'
+  Prev_number_of_YT = 25
+  Prev_number_of_Job = 25
+  Now_number_of_YT = 30
+  Now_number_of_Job = 30
+  
+  case_folder_path = f'{casename}/prev_{Prev_number_of_YT}_now_{Now_number_of_YT}'
 
-    casename = 'Congestion'
-    Prev_number_of_YT = 5
-    Prev_number_of_Job = 5
-    Now_number_of_YT = 5
-    Now_number_of_Job = 5
+  # 가로로 3개
+  block_num_in_row = 3
+  block_length = 9
+  block_height = 1
+  grid_length = 31
+  grid_height = 9
+  grid, YT_location_col_index, QC_locations, YC_locations = make_grid.Grid(grid_length, grid_height, block_length, block_height, block_num_in_row)
+  
+  reps = 3
 
-    reps = 6
+  alphas = [[0, 10, 20, 30, 40, 50, 60, 70, 80],
+            [0, 80, 70, 60, 50, 40, 30, 20, 10],
+            [100, 10, 10, 10, 10, 10, 10, 10, 10]]
+    
+  for rep in range(reps):
+    
+    rep = rep + 1
+    
+    prev_YT_locations, prev_Job_locations = generate_locations(grid, Prev_number_of_YT, Prev_number_of_Job, YT_location_col_index, QC_locations, YC_locations)
 
-    alphas = [[0, 80, 70, 60, 50, 40, 30, 20, 10],
-              [0, 10, 20, 30, 40, 50, 60, 70, 80],
-              [100, 10, 10, 10, 10, 10, 10, 10, 10]]
+    now_YT_locations, now_Job_locations = generate_locations(grid, Prev_number_of_YT, Prev_number_of_Job, YT_location_col_index, QC_locations, YC_locations)
+
     
     for i in range(len(alphas[0])):
-        alpha1 = alphas[0][i]
-        alpha2 = alphas[1][i]
-        alpha3 = alphas[2][i]
-        for rep in range(reps):
-            # Prev
-            prev_count = np.zeros((9, 31),dtype=np.int8)
-            next_prev_count = main(Prev_number_of_YT, Prev_number_of_Job, casename, 'Prev', prev_count, alpha1, alpha2, alpha3, rep)
-            # Now
-            prev_count = next_prev_count
-            next_prev_count = main(Now_number_of_YT, Now_number_of_Job, casename, 'Now', prev_count, alpha1, alpha2, alpha3, rep)
+      
+      alpha1 = alphas[0][i]
+      alpha2 = alphas[1][i]
+      alpha3 = alphas[2][i]
+      
+      # Prev
+      # prev_count = np.zeros((9, 31),dtype=np.int8)
+      prev_count = np.zeros((len(grid), len(grid[0])))
 
-
-
-# def change_min_arcs_cost_to_bignumber(arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, arcs_Drop_to_Sink, arcs_YT_to_Sink, number_of_YT, number_of_Job):
-#     """페어 당 가장작은 코스트의 아크의 코스트를 1000000으로 설정"""
-#     # arcs_YT_to_Pick을 순회하면서 같은 i, j내의 k개의 arc 중, cost가 가장 작은 arc의 cost를 1000000으로 설정
-#     for YT_index in range(number_of_YT):
-#         for Pick_index in range(number_of_Job):
-#             arcs_in_same_ij = []
-#             for arc in arcs_YT_to_Pick:
-#                 if arc.i == ['YT', YT_index] and arc.j == ['Pick', Pick_index]:
-#                     arcs_in_same_ij.append(arc)
-#             # k가 1개보다 많으면
-#             if len(arcs_in_same_ij) > 1:
-#                # arcs_in_same_ij내에서 cost가 가장 작은 arc의 cost를 10000000으로 설정
-#                 min_cost = 10000000
-#                 for arc_ in arcs_in_same_ij:
-#                     if arc_.cost < min_cost:
-#                         min_cost = arc_.cost
-#                 for arc__ in arcs_in_same_ij:
-#                     if arc__.cost == min_cost:
-#                         arc__.cost = 10000000
-#                         break
-
-#     # arcs_Pick_to_Drop을 순회하면서 같은 i, j내의 k개의 arc 중, cost가 가장 작은 arc의 cost를 1000000으로 설정
-#     for Pick_index in range(number_of_Job):
-#         for Drop_index in range(number_of_Job):
-#             arcs_in_same_ij = []
-#             for arc in arcs_Pick_to_Drop:
-#                 if arc.i == ['Pick', Pick_index] and arc.j == ['Drop', Drop_index]:
-#                     arcs_in_same_ij.append(arc)
-#             # k가 1개보다 많으면
-#             if len(arcs_in_same_ij) > 1:
-#                # arcs_in_same_ij내에서 cost가 가장 작은 arc의 cost를 10000000으로 설정
-#                 min_cost = 10000000
-#                 for arc_ in arcs_in_same_ij:
-#                     if arc_.cost < min_cost:
-#                         min_cost = arc_.cost
-#                 for arc__ in arcs_in_same_ij:
-#                     if arc__.cost == min_cost:
-#                         arc__.cost = 10000000
-#                         break
-
-#     # arcs_Drop_to_Pick을 순회하면서 같은 i, j내의 k개의 arc 중, cost가 가장 작은 arc의 cost를 1000000으로 설정
-#     for Drop_index in range(number_of_Job):
-#         for Pick_index in range(number_of_Job):
-#             arcs_in_same_ij = []
-#             for arc in arcs_Drop_to_Pick:
-#                 if arc.i == ['Drop', Drop_index] and arc.j == ['Pick', Pick_index]:
-#                     arcs_in_same_ij.append(arc)
-#             # k가 1개보다 많으면
-#             if len(arcs_in_same_ij) > 1:
-#                # arcs_in_same_ij내에서 cost가 가장 작은 arc의 cost를 10000000으로 설정
-#                 min_cost = 10000000
-#                 for arc_ in arcs_in_same_ij:
-#                     if arc_.cost < min_cost:
-#                         min_cost = arc_.cost
-#                 for arc__ in arcs_in_same_ij:
-#                     if arc__.cost == min_cost:
-#                         arc__.cost = 10000000
-#                         break
-# def change_second_min_arcs_cost_to_bignumber(arcs_YT_to_Pick, arcs_Pick_to_Drop, arcs_Drop_to_Pick, number_of_YT, number_of_Job, number_of_final_route):
-
-    # # arcs_YT_to_Pick을 순회하면서 같은 i, j내의 k개의 arc 중, cost가 가장 작은 arc의 cost를 1000000으로 설정
-    # for YT_index in range(number_of_YT):
-    #     for Pick_index in range(number_of_Job):
-    #         arcs_in_same_ij = []
-    #         for arc in arcs_YT_to_Pick:
-    #             if arc.i == ['YT', YT_index] and arc.j == ['Pick', Pick_index]:
-    #                 arcs_in_same_ij.append(arc)
-    #         # k가 number_of_final_route개면
-    #         if len(arcs_in_same_ij) == number_of_final_route:
-    #             # arcs_in_same_ij내에서 cost가 가장 작은 arc의 cost를 10000000으로 설정
-    #             min_cost = 10000000
-    #             for arc_ in arcs_in_same_ij:
-    #                 if arc_.cost < min_cost:
-    #                     min_cost = arc_.cost
-    #             for arc__ in arcs_in_same_ij:
-    #                 if arc__.cost == min_cost:
-    #                     arc__.cost = 10000000
-    #                     break
-
-    # # arcs_Pick_to_Drop을 순회하면서 같은 i, j내의 k개의 arc 중, cost가 가장 작은 arc의 cost를 1000000으로 설정
-    # for Pick_index in range(number_of_Job):
-    #     for Drop_index in range(number_of_Job):
-    #         arcs_in_same_ij = []
-    #         for arc in arcs_Pick_to_Drop:
-    #             if arc.i == ['Pick', Pick_index] and arc.j == ['Drop', Drop_index]:
-    #                 arcs_in_same_ij.append(arc)
-    #         # k가 number_of_final_route개면
-    #         if len(arcs_in_same_ij) == number_of_final_route:
-    #             # arcs_in_same_ij내에서 cost가 가장 작은 arc의 cost를 10000000으로 설정
-    #             min_cost = 10000000
-    #             for arc_ in arcs_in_same_ij:
-    #                 if arc_.cost < min_cost:
-    #                     min_cost = arc_.cost
-    #             for arc__ in arcs_in_same_ij:
-    #                 if arc__.cost == min_cost:
-    #                     arc__.cost = 10000000
-    #                     break
-
-    # # arcs_Drop_to_Pick을 순회하면서 같은 i, j내의 k개의 arc 중, cost가 가장 작은 arc의 cost를 1000000으로 설정
-    # for Drop_index in range(number_of_Job):
-    #     for Pick_index in range(number_of_Job):
-    #         arcs_in_same_ij = []
-    #         for arc in arcs_Drop_to_Pick:
-    #             if arc.i == ['Drop', Drop_index] and arc.j == ['Pick', Pick_index]:
-    #                 arcs_in_same_ij.append(arc)
-    #         # k가 number_of_final_route개면
-    #         if len(arcs_in_same_ij) == number_of_final_route:
-    #             # arcs_in_same_ij내에서 cost가 가장 작은 arc의 cost를 10000000으로 설정
-    #             min_cost = 10000000
-    #             for arc_ in arcs_in_same_ij:
-    #                 if arc_.cost < min_cost:
-    #                     min_cost = arc_.cost
-    #             for arc__ in arcs_in_same_ij:
-    #                 if arc__.cost == min_cost:
-    #                     arc__.cost = 10000000
-    #                     break
+      next_prev_count = main(grid, prev_YT_locations, prev_Job_locations, Prev_number_of_YT, Prev_number_of_Job, case_folder_path, 'prev', prev_count, alpha1, alpha2, alpha3, rep)
+      
+      main(grid, now_YT_locations, now_Job_locations, Now_number_of_YT, Now_number_of_Job, case_folder_path, 'now', next_prev_count, alpha1, alpha2, alpha3, rep)
