@@ -531,12 +531,14 @@ namespace TrafficSimulation {
 
         private static void GetPlusNum(string _routefilePath)
         {   
-            if(_routefilePath.Contains("now"))
+            string fileName = Path.GetFileName(_routefilePath);
+            
+            if(fileName.Contains("now"))
             {
                 routePlusNum = 100;
             }
 
-            else if(_routefilePath.Contains("prev"))
+            else if(fileName.Contains("prev"))
             {
                 routePlusNum = 0;
             }
