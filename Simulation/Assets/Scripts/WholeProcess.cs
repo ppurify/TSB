@@ -10,7 +10,7 @@ namespace TrafficSimulation {
         // private string prevFolderPath ="Assets/Data/Congestion/prev_25_now_25_3/prev_25";
         private string prevFolderPath ="";
 
-        private string nowFolderPath = "Assets/Data/Congestion/prev_25_now_25_3/now_25";
+        private string nowFolderPath = "Assets/Data/Congestion/prev_25_now_25_experiments/now_25";
         // private string nowFolderPath = "";
 
         private bool _isOnebyOne = true;
