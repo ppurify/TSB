@@ -11,7 +11,6 @@ namespace TrafficSimulation {
         private string prevFolderPath ="";
 
         private string nowFolderPath = "Assets/Data/Congestion/prev_25_now_25_experiments/now_25";
-
         // private string nowFolderPath = "";
 
         private bool _isOnebyOne = true;
