@@ -87,7 +87,11 @@ def main(_grid, _YT_locations, _Job_locations, number_of_YT, number_of_Job, case
   
   # 폴더 없으면 생성
   
+<<<<<<< HEAD
   folder_path = f'Simulation/Assets/Data/{casefolder_path}/{folder_name}'
+=======
+  folder_path = f'Simulation/Assets/Data/{casefolder_path}_{rep}/{folder_name}'
+>>>>>>> main
   os.makedirs(folder_path, exist_ok=True)
   
   filename_Truck = f'{folder_path}/{time}_Truck_{number_of_YT}_LP_{alpha1}_{alpha2}_{alpha3}_{rep}rep.csv'
