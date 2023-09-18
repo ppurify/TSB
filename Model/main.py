@@ -112,8 +112,7 @@ def main(_grid, _YT_locations, _Job_locations, number_of_YT, number_of_Job, case
   all_arcs = arcs_YT_to_Pick + arcs_Pick_to_Drop + arcs_Drop_to_Pick + arcs_Drop_to_Sink + arcs_YT_to_Sink
 
 
-  objective_value, activated_arcs = network_LP.solve(
-      all_arcs, number_of_YT, number_of_Job)
+  objective_value, activated_arcs = network_LP.solve(all_arcs, number_of_YT, number_of_Job)
   print('objective_value: ', objective_value)
 
   # 다음번 스케줄링을 위한 next_prev_count : A2 + A3의 누적 path정보
@@ -178,7 +177,7 @@ if __name__ == "__main__":
     
     prev_YT_locations, prev_Job_locations = generate_locations(grid, Prev_number_of_YT, Prev_number_of_Job, YT_location_col_index, QC_locations, YC_locations)
 
-    now_YT_locations, now_Job_locations = generate_locations(grid, Prev_number_of_YT, Prev_number_of_Job, YT_location_col_index, QC_locations, YC_locations)
+    now_YT_locations, now_Job_locations = generate_locations(grid, Now_number_of_YT, Now_number_of_Job, YT_location_col_index, QC_locations, YC_locations)
 
     
     for i in range(len(alphas[0])):
