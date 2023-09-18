@@ -152,8 +152,8 @@ if __name__ == "__main__":
   casename = 'Congestion'
   Prev_number_of_YT = 25
   Prev_number_of_Job = 25
-  Now_number_of_YT = 30
-  Now_number_of_Job = 30
+  Now_number_of_YT = 25
+  Now_number_of_Job = 25
   
   case_folder_path = f'{casename}/prev_{Prev_number_of_YT}_now_{Now_number_of_YT}'
 

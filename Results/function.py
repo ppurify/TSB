@@ -227,7 +227,6 @@ def draw_plot_congestion(_df, _x_label, _y_label):
 
     plt.show()
 
-
 def subplot_congestion_avg(_directory_path, _x_label, _y_label, _title, row_num, col_num, fig_size):
     f, axes = plt.subplots(row_num, col_num)
     # 격자 크기 설정
@@ -246,19 +245,22 @@ def subplot_congestion_avg(_directory_path, _x_label, _y_label, _title, row_num,
         key = list(grouped_data.keys())[i]
         # 행별로 각 데이터프레임의 Congestion_ratio 열의 합계를 초기화\n",
         sum_congestion = pd.Series(0.0, index=grouped_data[key][0].index)
-    
+
         # 데이터프레임 리스트를 순회하면서 행별로 Congestion_ratio 열을 합산
         for df in grouped_data[key]:
             sum_congestion += df['Congestion_ratio']
-
+        
         # 데이터프레임의 개수로 나누어 각 행별 평균을 계산\n",
         average_congestion = sum_congestion / len(grouped_data[key])
-    
+       
         # 결과를 새로운 데이터프레임으로 생성\n",
         result_df = pd.DataFrame({'alpha_1' : df['alpha_1'].values, 'alpha_2' : df['alpha_2'].values, 'alpha_3' : df['alpha_3'].values, 'Congestion_ratio_mean': average_congestion})
-        x_value_1 = result_df[i]['alpha_1']
-        y_value_1 = result_df[i]['Congestion_ratio_mean']
-
+        print('key : ', key, ', col_index : ', col_index, ' , row_index : ', row_index)
+        
+        x_value_1 = result_df['alpha_1']
+        y_value_1 = result_df['Congestion_ratio_mean']
+        _title_name = _title + ' (prev_' + str(key[0]) + '_now_' + str(key[1]) +')'
+        
         if row_num == 1:
             plt.subplot(1, col_num, col_index + 1)
             plt.plot(x_value_1, y_value_1 , marker='o', linestyle='-', color = 'steelblue')
@@ -267,7 +269,7 @@ def subplot_congestion_avg(_directory_path, _x_label, _y_label, _title, row_num,
             plt.ylabel(_y_label, fontsize=9)
             # x축 10 단위로 표시
             # plt.xticks(range(x_value_1.min(), x_value_1.max() + 10, 10))
-            plt.title(_title + ' (prev_' + key[0] + '_now_' + key[1] +')', fontsize=9, ha='center')
+            plt.title(_title_name, fontsize=9, ha='center')
             plt.axhline(y=y_value_1.iloc[0], color='gray', linestyle='--')
                 
         else:
@@ -276,20 +278,17 @@ def subplot_congestion_avg(_directory_path, _x_label, _y_label, _title, row_num,
             axes[row_index, col_index].plot(x_value_1, y_value_1 , marker='o', linestyle='-', color = 'steelblue')
             axes[row_index, col_index].axhline(y=y_value_1.iloc[0], color='gray', linestyle='--')
             
-            # title_name = "Completion Time by alpha_1 (prev_20_now_20)"
-            title_name = _title +  ' (prev_' + key[0] + '_now_' + key[1] +')'
-            
             axes[row_index, col_index].set_xlabel(_x_label, fontsize=9, ha='center')
             axes[row_index, col_index].set_ylabel(_y_label, fontsize=9)
-            axes[row_index, col_index].set_title(title_name, fontsize=9, ha='center')
+            axes[row_index, col_index].set_title(_title_name, fontsize=9, ha='center')
 
-            col_index += 1
-            if(col_index == col_num):
-                col_index = 0
-                row_index += 1
+        col_index += 1
+        if(col_index == col_num):
+            col_index = 0
+            row_index += 1
             
-        plt.show()
-        
+    plt.show()
+         
 
 def Create_subplot_congestion(_directory_path, _x_label, _y_label, _title, row_num, col_num, fig_size):
     
