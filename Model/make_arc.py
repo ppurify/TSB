@@ -41,7 +41,7 @@ def penalty(normalized_prev_count, route, number_of_final_route, alpha1, alpha3,
 
         # 각 경로의 penalty 산출하여 리스트에 저장
         # penalty_list.append((alpha1 * sum_of_counter_of_prev_count) + (alpha3 * sum_of_move))
-        penalty_list.append((alpha1 * sum_of_counter_of_prev_count) + (sum_of_move * time_consumed_per_grid))
+        penalty_list.append((alpha1 * sum_of_counter_of_prev_count) + alpha3 * (sum_of_move * time_consumed_per_grid))
     # penalty가 가장 작은 number_of_final_route개의 경로의 인덱스를 추출하여 final_three_route 리스트에 저장
     final_route_idx = heapq.nsmallest(number_of_final_route, range(len(penalty_list)), key=penalty_list.__getitem__)
     final_route = [route[i] for i in final_route_idx]
