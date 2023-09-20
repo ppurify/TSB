@@ -114,7 +114,7 @@ def create_congestion_df(_folderPath, _prev_or_now):
             row[4:] = [float(value) for value in row[4:]]
             new_row = [prev_truck_num, now_truck_num, repeat_time] + alphas + row
             
-            isOnebyOne_file_name = 'NoCongestions' + _prev_or_now
+            isOnebyOne_file_name = 'NoCongestions-' + _prev_or_now
             
             if isOnebyOne_file_name in file_name:
                 wot_data_list.append(new_row)
