@@ -150,8 +150,8 @@ def main(_grid, _YT_locations, _Job_locations, number_of_YT, number_of_Job, case
 if __name__ == "__main__":
 
   casename = 'Congestion'
-  Prev_number_of_YT = 25
-  Prev_number_of_Job = 25
+  Prev_number_of_YT = 30
+  Prev_number_of_Job = 30
   Now_number_of_YT = 30
   Now_number_of_Job = 30
   
