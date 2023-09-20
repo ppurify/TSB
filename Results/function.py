@@ -75,7 +75,7 @@ def create_YT_A_Data(_keyword, _variance_all_csv_data):
 '---- Congestion Ratio ----'
 
 def create_congestion_df(_folderPath, _prev_or_now):
-    csv_data = f.load_csv_files_in_folder(_folderPath)
+    csv_data = load_csv_files_in_folder(_folderPath)
     folder_name = os.path.basename(os.path.normpath(_folderPath))
     
     prev_truck_num = re.findall(r'prev_(\d+)', folder_name)[0]
@@ -438,7 +438,7 @@ def create_subplot(_dfs, _folder_name, _row_num, _col_num, _x_label, _y_label, _
 def create_completion_df(_folderPath):
 
     data_list = []
-    csv_data = f.load_csv_files_in_folder(_folderPath)
+    csv_data = load_csv_files_in_folder(_folderPath)
     folder_name = os.path.basename(os.path.normpath(_folderPath))
     
     prev_truck_num = re.findall(r'prev_(\d+)', folder_name)[0]
