@@ -7,13 +7,13 @@ namespace TrafficSimulation {
     public class WholeProcess : MonoBehaviour
     {
         // parameters
-        // private string prevFolderPath ="Assets/Data/Congestion/prev_25_now_25_3/prev_25";
-        private string prevFolderPath ="";
+        private string prevFolderPath ="Assets/Data/Prevcount_Penalty_all_Cost_all/prev_15_now_15/prev_15";
+        // private string prevFolderPath ="";
 
-        private string nowFolderPath = "Assets/Data/Congestion/prev_25_now_25_experiments/now_25";
+        private string nowFolderPath = "Assets/Data/Prevcount_Penalty_all_Cost_all/prev_15_now_15/now_15";
         // private string nowFolderPath = "";
 
-        private bool _isOnebyOne = true;
+        private bool _isOnebyOne = false;
 
         // --------------------------------------------------------
 
