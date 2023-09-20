@@ -74,8 +74,8 @@ def create_YT_A_Data(_keyword, _variance_all_csv_data):
 
 '---- Congestion Ratio ----'
 
-def create_congestion_df(_folderPath):
-    csv_data = load_csv_files_in_folder(_folderPath)
+def create_congestion_df(_folderPath, _prev_or_now):
+    csv_data = f.load_csv_files_in_folder(_folderPath)
     folder_name = os.path.basename(os.path.normpath(_folderPath))
     
     prev_truck_num = re.findall(r'prev_(\d+)', folder_name)[0]
@@ -114,9 +114,11 @@ def create_congestion_df(_folderPath):
             row[4:] = [float(value) for value in row[4:]]
             new_row = [prev_truck_num, now_truck_num, repeat_time] + alphas + row
             
-            if 'NoCongestions' in file_name:
+            isOnebyOne_file_name = 'NoCongestions' + _prev_or_now
+            
+            if _prev_or_now in file_name:
                 wot_data_list.append(new_row)
-            else:
+            elif 'result-now' in file_name:
                 wt_data_list.append(new_row)
 
     wt_df = pd.DataFrame(wt_data_list, columns=columns)
@@ -128,28 +130,47 @@ def create_congestion_df(_folderPath):
     
     return wt_df, wot_df
 
+# --- Travel Time -----
+# def get_congestion_ratio_df(_folder_path, _prev_or_now):
 
-def get_congestion_ratio_df(_folder_path):
+#     wt_df, wot_df = create_congestion_df(_folder_path, _prev_or_now)
+#     # Perform the subtraction and division
+#     merged_df = wt_df.merge(wot_df, on=['Prev Truck Number', 'Now Truck Number', 'alpha_1', 'repeat_num', 'alpha_2', 'alpha_3', 'Truck_id'], suffixes=('_wt', '_wot'))
+#     merged_df['Pickup_Congestion_ratio'] = (merged_df['PickupSta AT_wt'] - merged_df['PickupSta AT_wot'])/merged_df['PickupSta AT_wot']
+#     merged_df['Drop_Congestion_ratio'] = (merged_df['DropSta AT_wt'] - merged_df['DropSta AT_wot'])/merged_df['DropSta AT_wot']
+#     # alpha값들에 따라서 그룹화를 한후 Pickup_Congestion_ratio, Drop_Congestion_ratio의 전체 평균을 구한다.
+#     merged_df_congestion_ratio = merged_df.groupby(['alpha_1', 'alpha_2', 'alpha_3'])[['Pickup_Congestion_ratio', 'Drop_Congestion_ratio']].mean()
 
-    wt_df, wot_df = create_congestion_df(_folder_path)
+#     # index to column
+#     merged_df_congestion_ratio = merged_df_congestion_ratio.reset_index()
+
+#     # 각 행별로 평균 구하기
+#     merged_df_congestion_ratio['Congestion_ratio'] = (merged_df_congestion_ratio['Pickup_Congestion_ratio'] + merged_df_congestion_ratio['Drop_Congestion_ratio'])/2
+#     # drop unnecessary columns
+#     merged_df_congestion_ratio = merged_df_congestion_ratio.drop(['Pickup_Congestion_ratio', 'Drop_Congestion_ratio'], axis=1)
+#     return merged_df_congestion_ratio
+
+# ----- Total Time -----
+def get_congestion_ratio_df(_folder_path, _prev_or_now):
+    
+    wt_df, wot_df = create_congestion_df(_folder_path, _prev_or_now)
     # Perform the subtraction and division
     merged_df = wt_df.merge(wot_df, on=['Prev Truck Number', 'Now Truck Number', 'alpha_1', 'repeat_num', 'alpha_2', 'alpha_3', 'Truck_id'], suffixes=('_wt', '_wot'))
-    merged_df['Pickup_Congestion_ratio'] = (merged_df['PickupSta AT_wt'] - merged_df['PickupSta AT_wot'])/merged_df['PickupSta AT_wot']
-    merged_df['Drop_Congestion_ratio'] = (merged_df['DropSta AT_wt'] - merged_df['DropSta AT_wot'])/merged_df['DropSta AT_wot']
-    # alpha값들에 따라서 그룹화를 한후 Pickup_Congestion_ratio, Drop_Congestion_ratio의 전체 평균을 구한다.
-    merged_df_congestion_ratio = merged_df.groupby(['alpha_1', 'alpha_2', 'alpha_3'])[['Pickup_Congestion_ratio', 'Drop_Congestion_ratio']].mean()
-
-    # index to column
-    merged_df_congestion_ratio = merged_df_congestion_ratio.reset_index()
-
-    # 각 행별로 평균 구하기
-    merged_df_congestion_ratio['Congestion_ratio'] = (merged_df_congestion_ratio['Pickup_Congestion_ratio'] + merged_df_congestion_ratio['Drop_Congestion_ratio'])/2
-    # drop unnecessary columns
-    merged_df_congestion_ratio = merged_df_congestion_ratio.drop(['Pickup_Congestion_ratio', 'Drop_Congestion_ratio'], axis=1)
-    return merged_df_congestion_ratio
+    merged_df['Congestion_ratio'] = ((merged_df['Total Time_wt'] - 300) - (merged_df['Total Time_wot'] - 300)) / (merged_df['Total Time_wot'] - 300)
+    merged_df.drop(['PickupSta AT_wt', 'DropSta AT_wt', 'PickupSta AT_wot', 'DropSta AT_wot'], axis=1, inplace=True)
+    
+    dataframes = {}
+    
+    unique_values = merged_df['repeat_num'].unique()
+    for value in unique_values:
+        df = merged_df[merged_df['repeat_num'] == value]
+        grouped_df = df.groupby(['alpha_1', 'alpha_2', 'alpha_3'])['Congestion_ratio'].mean().reset_index()
+        dataframes[value] = grouped_df
+    return dataframes
 
 
-def group_folders_by_truck_numbers(_directory_path):
+
+def group_folders_by_truck_numbers(_directory_path, _prev_or_now):
     folder_groups = {}
     
     for folder_name in os.listdir(_directory_path):
@@ -160,7 +181,7 @@ def group_folders_by_truck_numbers(_directory_path):
             folder_path = os.path.join(_directory_path, folder_name)
             # list to tuple
             key = tuple(map(int, re.findall('(d+\)', folder_name)[:2]))
-            congestion_df = get_congestion_ratio_df(folder_path)
+            congestion_df = get_congestion_ratio_df(folder_path, _prev_or_now)
             if key in folder_groups:
                 folder_groups[key].append(congestion_df)
             else:
@@ -189,9 +210,9 @@ def draw_plot_congestion(_df, _x_label, _y_label):
     plt.show()
 
 
-def subplot_congestion_avg(_directory_path, _x_label, _y_label, _title, _col_num, _fig_size):
+def subplot_congestion_avg(_directory_path, _prev_or_now, _x_label, _y_label, _title, _col_num, _fig_size):
     
-    grouped_data = group_folders_by_truck_numbers(_directory_path)
+    grouped_data = group_folders_by_truck_numbers(_directory_path, _prev_or_now)
     
     folder_num = len(grouped_data)
     
@@ -259,38 +280,34 @@ def subplot_congestion_avg(_directory_path, _x_label, _y_label, _title, _col_num
             row_index += 1
             
     plt.show()
-         
 
-def create_subplot_congestion(_directory_path, _x_label, _y_label, _title, _col_num, _fig_size):
-
-    folder_name_list = []
-    congestion_df_list = []
+#------- File 기준 --------- ex) prev_25_now_25 > prev_rep_1, now_rep_1 ...
+def create_subplot_congestion(_directory_path, _prev_or_now, _x_label, _y_label, _title, _col_num, _fig_size):
     
     for folder_name in os.listdir(_directory_path):
         
         # 확장자 얻기
         extension = os.path.splitext(folder_name)[-1]
-
         # .csv 파일만 가져오기
         if extension != '.meta':
             folder_path = os.path.join(_directory_path, folder_name)
-            
+
             if os.path.isdir(folder_path):
-                folder_name_list.append(folder_name)
+         
+                dfs = get_congestion_ratio_df(folder_path, _prev_or_now)
                 
-                congestion_df = get_congestion_ratio_df(folder_path)
-                congestion_df_list.append(congestion_df)
-                            
+                folder_num = len(dfs)
+                if folder_num % _col_num == 0:
+                    _row_num = folder_num // _col_num
+                else:
+                    _row_num = folder_num // _col_num + 1
+                
+                create_subplot(dfs, folder_name, _row_num, _col_num, _x_label, _y_label, _title, _fig_size)
+                    
             else:
-                print("Please Check Directory Path")
-    
-    folder_num = len(folder_name_list)
-    
-    if folder_num % _col_num == 0:
-        _row_num = folder_num // _col_num
-    else:
-        _row_num = folder_num // _col_num + 1
-        
+                print(folder_name + " is not a directory")
+
+def create_subplot(_dfs, _folder_name, _row_num, _col_num, _x_label, _y_label, _title, _fig_size):  
     f, axes = plt.subplots(_row_num, _col_num)
     
     # 격자 크기 설정
@@ -302,30 +319,29 @@ def create_subplot_congestion(_directory_path, _x_label, _y_label, _title, _col_
     row_index = 0
     col_index = 0
     
-    for i in range(len(congestion_df_list)):
+    for key, value in _dfs.items():
 
-        x_value_1 = congestion_df_list[i]["alpha_1"]
-        y_value_1 = congestion_df_list[i]['Congestion_ratio']
+        x_value = value["alpha_1"]
+        y_value = value['Congestion_ratio']
         
+        # tilte 
+        title_name = _title + ' (' + _folder_name + '_' + key + ')'
+            
         if _row_num == 1:
             plt.subplot(1, _col_num, col_index + 1)
-            plt.plot(x_value_1, y_value_1 , marker='o', linestyle='-', color = 'steelblue')
+            plt.plot(x_value, y_value , marker='o', linestyle='-', color = 'steelblue')
 
             plt.xlabel(_x_label, fontsize=9, ha='center')
             plt.ylabel(_y_label, fontsize=9)
-            # x축 10 단위로 표시
-            # plt.xticks(range(x_value_1.min(), x_value_1.max() + 10, 10))
-            plt.title(_title + ' (' + folder_name_list[i] + ')', fontsize=9, ha='center')
-            plt.axhline(y=y_value_1.iloc[0], color='gray', linestyle='--')
+            
+            plt.title(title_name, fontsize=9, ha='center')
+            plt.axhline(y=y_value.iloc[0], color='gray', linestyle='--')
             
         else:
             # x축 10 단위로 표시
             # axes[row_index, col_index].set_xticks(range(x_value_1.min(), x_value_1.max() + 10, 10))
-            axes[row_index, col_index].plot(x_value_1, y_value_1 , marker='o', linestyle='-', color = 'steelblue')
-            axes[row_index, col_index].axhline(y=y_value_1.iloc[0], color='gray', linestyle='--')
-            
-            # title_name = "Completion Time by alpha_1 (prev_20_now_20)"
-            title_name = _title +  ' (' + folder_name_list[i] + ')'
+            axes[row_index, col_index].plot(x_value, y_value , marker='o', linestyle='-', color = 'steelblue')
+            axes[row_index, col_index].axhline(y=y_value.iloc[0], color='gray', linestyle='--')
             
             axes[row_index, col_index].set_xlabel(_x_label, fontsize=9, ha='center')
             axes[row_index, col_index].set_ylabel(_y_label, fontsize=9)
@@ -337,6 +353,85 @@ def create_subplot_congestion(_directory_path, _x_label, _y_label, _title, _col_
             row_index += 1
         
     plt.show()
+    
+    
+#--------Folder 기준 ex) folder : prev_25_now_25_rep_1, prev_25_now_25_rep2 ----------
+# def create_subplot_congestion(_directory_path, _x_label, _y_label, _title, _col_num, _fig_size):
+
+#     folder_name_list = []
+#     congestion_df_list = []
+    
+#     for folder_name in os.listdir(_directory_path):
+        
+#         # 확장자 얻기
+#         extension = os.path.splitext(folder_name)[-1]
+
+#         # .csv 파일만 가져오기
+#         if extension != '.meta':
+#             folder_path = os.path.join(_directory_path, folder_name)
+            
+#             if os.path.isdir(folder_path):
+#                 folder_name_list.append(folder_name)
+                
+#                 congestion_df = get_congestion_ratio_df(folder_path)
+#                 congestion_df_list.append(congestion_df)
+                            
+#             else:
+#                 print("Please Check Directory Path")
+    
+#     folder_num = len(folder_name_list)
+    
+#     if folder_num % _col_num == 0:
+#         _row_num = folder_num // _col_num
+#     else:
+#         _row_num = folder_num // _col_num + 1
+        
+#     f, axes = plt.subplots(_row_num, _col_num)
+    
+#     # 격자 크기 설정
+#     f.set_size_inches(_fig_size)
+
+#     # 격자 여백 설정
+#     plt.subplots_adjust(wspace = 0.3, hspace = 0.3)
+    
+#     row_index = 0
+#     col_index = 0
+    
+#     for i in range(len(congestion_df_list)):
+
+#         x_value_1 = congestion_df_list[i]["alpha_1"]
+#         y_value_1 = congestion_df_list[i]['Congestion_ratio']
+        
+#         if _row_num == 1:
+#             plt.subplot(1, _col_num, col_index + 1)
+#             plt.plot(x_value_1, y_value_1 , marker='o', linestyle='-', color = 'steelblue')
+
+#             plt.xlabel(_x_label, fontsize=9, ha='center')
+#             plt.ylabel(_y_label, fontsize=9)
+#             # x축 10 단위로 표시
+#             # plt.xticks(range(x_value_1.min(), x_value_1.max() + 10, 10))
+#             plt.title(_title + ' (' + folder_name_list[i] + ')', fontsize=9, ha='center')
+#             plt.axhline(y=y_value_1.iloc[0], color='gray', linestyle='--')
+            
+#         else:
+#             # x축 10 단위로 표시
+#             # axes[row_index, col_index].set_xticks(range(x_value_1.min(), x_value_1.max() + 10, 10))
+#             axes[row_index, col_index].plot(x_value_1, y_value_1 , marker='o', linestyle='-', color = 'steelblue')
+#             axes[row_index, col_index].axhline(y=y_value_1.iloc[0], color='gray', linestyle='--')
+            
+#             # title_name = "Completion Time by alpha_1 (prev_20_now_20)"
+#             title_name = _title +  ' (' + folder_name_list[i] + ')'
+            
+#             axes[row_index, col_index].set_xlabel(_x_label, fontsize=9, ha='center')
+#             axes[row_index, col_index].set_ylabel(_y_label, fontsize=9)
+#             axes[row_index, col_index].set_title(title_name, fontsize=9, ha='center')
+
+#         col_index += 1
+#         if(col_index == _col_num):
+#             col_index = 0
+#             row_index += 1
+        
+#     plt.show()
     
 '---- Completion Time ----'
 
