@@ -116,7 +116,7 @@ def create_congestion_df(_folderPath, _prev_or_now):
             
             isOnebyOne_file_name = 'NoCongestions' + _prev_or_now
             
-            if _prev_or_now in file_name:
+            if isOnebyOne_file_name in file_name:
                 wot_data_list.append(new_row)
             elif 'result-now' in file_name:
                 wt_data_list.append(new_row)
