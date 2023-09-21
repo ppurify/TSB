@@ -139,7 +139,6 @@ def get_congestion_ratio_df(_folder_path, _prev_or_now):
     merged_df = wt_df.merge(wot_df, on=['Prev Truck Number', 'Now Truck Number', 'alpha_1', 'repeat_num', 'alpha_2', 'alpha_3', 'Truck_id'], suffixes=('_wt', '_wot'))
     merged_df['Congestion_ratio'] = ((merged_df['Total Time_wt'] - 300) - (merged_df['Total Time_wot'] - 300)) / (merged_df['Total Time_wot'] - 300)
     merged_df.drop(['PickupSta AT_wt', 'DropSta AT_wt', 'PickupSta AT_wot', 'DropSta AT_wot'], axis=1, inplace=True)
-
     return merged_df
 
 
@@ -268,7 +267,7 @@ def create_subplot(_dfs, _folder_name, _row_num, _col_num, _x_label, _y_label, _
 
         x_value = value["alpha_1"]
         y_value = value['Congestion_ratio']
-        print(x_value, '---> ', y_value)
+    
         # tilte 
         title_name = _title + ' (' + _folder_name + '_' + key + ')'
             
