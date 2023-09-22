@@ -408,7 +408,7 @@ def create_subplot_completion(_directory_path, _x_label, _y_label, _title, _col_
                 unique_values = df['repeat_num'].unique()
                 for value in unique_values:
                     repeat_df = df[df['repeat_num'] == value]
-                    dataframes[value] = f.classify_by_truck_id(repeat_df)
+                    dataframes[value] = classify_by_truck_id(repeat_df)
                                 
                 
                 folder_num = len(dataframes)
