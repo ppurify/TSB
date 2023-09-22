@@ -390,7 +390,7 @@ def classify_by_truck_id(_df):
     
     return df
 
-def create_subplot_completion(_directory_path, _x_label, _y_label, _title, _col_num, _fig_size):    
+def create_subplot_completion(_directory_path, _x_label, _y_label, _title, _col_num, _y_lim, _fig_size):    
     
     for folder_name in os.listdir(_directory_path):
         
@@ -416,9 +416,9 @@ def create_subplot_completion(_directory_path, _x_label, _y_label, _title, _col_
                     _row_num = folder_num // _col_num
                 else:
                     _row_num = folder_num // _col_num + 1
-                draw_subplot_completion(dataframes, _x_label, _y_label, folder_name, _title, _row_num, _col_num, _fig_size)
+                draw_subplot_completion(dataframes, _x_label, _y_label, folder_name, _title, _row_num, _col_num, _y_lim,_fig_size)
 
-def draw_subplot_completion(_dfs, _x_label, _y_label, _folder_name, _title, _row_num, _col_num, _fig_size):
+def draw_subplot_completion(_dfs, _x_label, _y_label, _folder_name, _title, _row_num, _col_num, _y_lim, _fig_size):
     
     f, axes = plt.subplots(_row_num, _col_num)
     
@@ -454,6 +454,7 @@ def draw_subplot_completion(_dfs, _x_label, _y_label, _folder_name, _title, _row
             
             plt.title(title_name, fontsize=9, ha='center')
             plt.axhline(y=y_value_1.iloc[0], color='gray', linestyle='--')
+            plt.ylim(_y_lim[0], _y_lim[1])
             #legend
             plt.legend(['Prev', 'Now'], loc='upper right', fontsize=9)
             
@@ -463,6 +464,7 @@ def draw_subplot_completion(_dfs, _x_label, _y_label, _folder_name, _title, _row
             axes[row_index, col_index].plot(x_value_1, y_value_1 , marker='o', linestyle='-', color = 'steelblue')
             axes[row_index, col_index].plot(x_value_2, y_value_2 , marker='o', linestyle='-', color = 'crimson')
             axes[row_index, col_index].axhline(y=y_value_1.iloc[0], color='gray', linestyle='--')
+            axes[row_index, col_index].set_ylim(_y_lim[0], _y_lim[1])
             
 
             axes[row_index, col_index].set_xlabel(_x_label, fontsize=9, ha='center')
