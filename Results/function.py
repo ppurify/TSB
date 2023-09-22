@@ -211,6 +211,7 @@ def create_subplot_Congestion_avg(_folder_list, _folder_name_list, _x_label, _y_
             axes[row_index, col_index].set_xlabel(_x_label, fontsize=9, ha='center')
             axes[row_index, col_index].set_ylabel(_y_label, fontsize=9)
             axes[row_index, col_index].set_title(_title_name, fontsize=9, ha='center')
+            axes[row_index, col_index].set_ylim(0, _y_lim)
 
         col_index += 1
         if(col_index == _col_num):
