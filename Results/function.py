@@ -141,8 +141,8 @@ def get_congestion_ratio_df(_folder_path, _prev_or_now):
     merged_df.drop(['PickupSta AT_wt', 'DropSta AT_wt', 'PickupSta AT_wot', 'DropSta AT_wot'], axis=1, inplace=True)
     return merged_df
 
-
-def subplot_congestion_avg(_directory_path, _prev_or_now, _x_label, _y_label, _title, _col_num, _fig_size):
+# --- 이 함수 사용----
+def subplot_congestion_avg(_directory_path, _prev_or_now, _x_label, _y_label, _title, _col_num, _y_lim, _fig_size):
     
     folder_list = []
     folder_name_list = []
@@ -168,9 +168,10 @@ def subplot_congestion_avg(_directory_path, _prev_or_now, _x_label, _y_label, _t
     else:
         _row_num = folder_num // _col_num + 1
     
-    create_subplot_Congestion_avg(folder_list, folder_name_list, _x_label, _y_label, _title, _row_num, _col_num, _fig_size)
+    create_subplot_Congestion_avg(folder_list, folder_name_list, _x_label, _y_label, _title, _row_num, _col_num, _y_lim, _fig_size)
 
-def create_subplot_Congestion_avg(_folder_list, _folder_name_list, _x_label, _y_label, _title, _row_num, _col_num, _fig_size):
+
+def create_subplot_Congestion_avg(_folder_list, _folder_name_list, _x_label, _y_label, _title, _row_num, _col_num, _y_lim, _fig_size):
     f, axes = plt.subplots(_row_num, _col_num)
     # 격자 크기 설정
     f.set_size_inches(_fig_size)
@@ -198,10 +199,12 @@ def create_subplot_Congestion_avg(_folder_list, _folder_name_list, _x_label, _y_
         
             plt.title(_title_name, fontsize=9, ha='center')
             plt.axhline(y=y_value_1.iloc[0], color='gray', linestyle='--')
+            # y축 통일하기
+            plt.ylim(0, _y_lim)
                 
         else:
-            # x축 10 단위로 표시
-            # axes[row_index, col_index].set_xticks(range(x_value_1.min(), x_value_1.max() + 10, 10))
+            # y축 통일하기
+            plt.ylim(0, _y_lim)
             axes[row_index, col_index].plot(x_value_1, y_value_1 , marker='o', linestyle='-', color = 'steelblue')
             axes[row_index, col_index].axhline(y=y_value_1.iloc[0], color='gray', linestyle='--')
             
@@ -218,7 +221,7 @@ def create_subplot_Congestion_avg(_folder_list, _folder_name_list, _x_label, _y_
      
 
 #------- File 기준 --------- ex) prev_25_now_25 > prev_rep_1, now_rep_1 ...
-def create_subplot_congestion(_directory_path, _prev_or_now, _x_label, _y_label, _title, _col_num, _fig_size):
+def create_subplot_congestion(_directory_path, _prev_or_now, _x_label, _y_label, _title, _col_num, _y_lim, _fig_size):
     
     for folder_name in os.listdir(_directory_path):
         
@@ -229,7 +232,6 @@ def create_subplot_congestion(_directory_path, _prev_or_now, _x_label, _y_label,
             folder_path = os.path.join(_directory_path, folder_name)
 
             if os.path.isdir(folder_path):
-         
                 merged_df = get_congestion_ratio_df(folder_path, _prev_or_now)
                 
                 dfs = {}
@@ -246,12 +248,12 @@ def create_subplot_congestion(_directory_path, _prev_or_now, _x_label, _y_label,
                 else:
                     _row_num = folder_num // _col_num + 1
                 
-                create_subplot(dfs, folder_name, _row_num, _col_num, _x_label, _y_label, _title, _fig_size)
+                create_subplot(dfs, folder_name, _row_num, _col_num, _x_label, _y_label, _title, _y_lim, _fig_size)
                     
             else:
                 print(folder_name + " is not a directory")
 
-def create_subplot(_dfs, _folder_name, _row_num, _col_num, _x_label, _y_label, _title, _fig_size):  
+def create_subplot(_dfs, _folder_name, _row_num, _col_num, _x_label, _y_label, _title, _y_lim, _fig_size):  
     f, axes = plt.subplots(_row_num, _col_num)
     
     # 격자 크기 설정
@@ -280,6 +282,8 @@ def create_subplot(_dfs, _folder_name, _row_num, _col_num, _x_label, _y_label, _
             
             plt.title(title_name, fontsize=9, ha='center')
             plt.axhline(y=y_value.iloc[0], color='gray', linestyle='--')
+            # y축 통일
+            plt.ylim(0, _y_lim)
             
         else:
             # x축 10 단위로 표시
@@ -290,6 +294,8 @@ def create_subplot(_dfs, _folder_name, _row_num, _col_num, _x_label, _y_label, _
             axes[row_index, col_index].set_xlabel(_x_label, fontsize=9, ha='center')
             axes[row_index, col_index].set_ylabel(_y_label, fontsize=9)
             axes[row_index, col_index].set_title(title_name, fontsize=9, ha='center')
+            # y축 통일
+            axes[row_index, col_index].set_ylim(0, _y_lim)
 
         col_index += 1
         if(col_index == _col_num):
