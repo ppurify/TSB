@@ -21,6 +21,7 @@ namespace TrafficSimulation{
         public int truckWorkStationsNum;
         public Vector3 truckOrigin;
         public Vector3 truckDestination;
+        public float truckCompletionTime_alone;
         public string truckRouteName;
         public int truckStatus;
 
@@ -414,11 +415,8 @@ namespace TrafficSimulation{
         private void FinishLastProcess()
         {
             truckTotalWatch.Stop();
-            // UnityEngine.Debug.Log(vehicle.name + " truckTotalWatch stop ");
 
-            float truckTotalTime = truckTotalWatch.ElapsedMilliseconds / 1000f * Time.timeScale;
-            
-            // UnityEngine.Debug.Log(vehicle.name + " process done --> truckTotalTime : " + truckTotalTime);
+            float truckCompletionTime = truckTotalWatch.ElapsedMilliseconds / 1000f * Time.timeScale;
 
             nowStationInfo.craneStatus -= 1;
 
@@ -443,9 +441,8 @@ namespace TrafficSimulation{
             exitPlayMode.nowTruckCount ++;
             truckDestination = nowStationPos;
 
-
             ResultsData resultsData = ScriptableObject.CreateInstance<ResultsData>();
-            resultsData.CreateResultData(saveFile.filePath, vehicle.name, truckRouteName, truckOrigin, truckDestination, truckTotalTime, truckStationWatchList);
+            resultsData.CreateResultData(saveFile.filePath, vehicle.name, truckRouteName, truckOrigin, truckDestination, truckCompletionTime_alone, truckCompletionTime, truckStationWatchList);
             SaveFile.resultsDataList.Add(resultsData);
 
             // UnityEngine.Debug.Log(vehicle.name + " saved result data !!! ");
@@ -509,7 +506,7 @@ namespace TrafficSimulation{
                 List<ResultsData> dataList = SaveFile.resultsDataList;
                 foreach(ResultsData data in dataList)
                 {
-                    saveFile.SaveToCSV(data.FilePath, data.Vehicle, data.Route, data.Origin, data.Destination, data.TotalTime, data.StopwathTimeList);
+                    saveFile.SaveToCSV(data.FilePath, data.Vehicle, data.Route, data.Origin, data.Destination, data.CompletionTime_alone, data.CompletionTime, data.StopwathTimeList);
                     UnityEngine.Debug.Log("Save " + data.FilePath + "  --> " + data.Vehicle + " data");
                 }
             }

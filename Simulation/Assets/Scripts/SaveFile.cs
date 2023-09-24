@@ -16,17 +16,16 @@ namespace TrafficSimulation{
         public static List<ResultsData> resultsDataList;
         private WholeProcess wholeProcess;
 
-
-        public void SaveToCSV(string _filePath, string _truckName, string _routeName, Vector3 _origin, Vector3 _destination, float _totalTime, List<float> _arrivalTimeList)
+        public void SaveToCSV(string _filePath, string _truckName, string _routeName, Vector3 _origin, Vector3 _destination, float _completionTime_alone, float _completionTime, List<float> _arrivalTimeList)
         {
             // Check if the CSV file exists
             if(!File.Exists(_filePath))
             {
                 // Create a new CSV file and write the data
                 using (StreamWriter sw = File.CreateText(_filePath))
-                {
-                    string header = "Truck_id,Route_id,Origin,Destination,Total Time,PickupSta AT,DropSta AT";
-
+                {   
+                    string header = "Truck_id,Route_id,Origin,Destination,Completion_Time_alone,Completion_Time,PickupSta_AT,DropSta_AT,Congestion_ratio";
+               
                     // Write the header and data to the CSV file
                     sw.WriteLine(header);
                 }
@@ -42,8 +41,11 @@ namespace TrafficSimulation{
             string originValue = _origin.ToString().Replace(",", string.Empty);
             string destinationValue = _destination.ToString().Replace(",", string.Empty);
 
+            float congestionRatio = ((_completionTime - 300) - (_completionTime_alone - 300)) / (_completionTime_alone - 300);
+            
             // Append the new data to the content
-            string newLine = string.Format("{0},{1},{2},{3},{4},{5}", _truckName, _routeName, originValue, destinationValue, _totalTime, arrivalTimeValues);
+            string newLine = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}", _truckName, _routeName, originValue, destinationValue, _completionTime_alone, _completionTime, arrivalTimeValues, congestionRatio);
+            
 
             // Append the new line to the CSV file
             File.AppendAllText(_filePath, newLine + "\n");
