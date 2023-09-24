@@ -22,7 +22,7 @@ def create_csv(activated_arcs, number_of_YT, grid, filename_Truck, filename_Rout
 
     # Trucks.csv : 각 YT들이 거치는 경로, pick, drop station정보를 저장
     tile_size = 25
-    Trucks = [['Truck_id', 'Route_id', 'Pick_station', 'Drop_station']]
+    Trucks = [['Truck_id', 'Route_id', 'Pick_station', 'Drop_station','Completion_Time_alone']]
 
     # Iterate over Traversing_info
     for key, value in Traversing_info.items():
@@ -45,15 +45,7 @@ def create_csv(activated_arcs, number_of_YT, grid, filename_Truck, filename_Rout
 
             Trucks.append(temp_list)
 
-    # Write the Trucks list to a CSV file
-    filename = filename_Truck
     
-    # if directory does not exist, create one
-    os.makedirs(os.path.dirname(filename), exist_ok=True)
-    
-    with open(filename, mode='w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerows(Trucks)
 
 
     # YT_traverse_path : 각 YT들이 거치는 경로의 좌표정보를 저장하는 dictionary
@@ -77,6 +69,21 @@ def create_csv(activated_arcs, number_of_YT, grid, filename_Truck, filename_Rout
             prev_node = arc.j
 
         YT_traverse_path[key] = path
+
+    # YT_traverse_path를 순회하면서 각 YT의 경로의 길이를 통해 Completion_Time_alone을 계산하여 Trucks에 추가
+    for i in range(number_of_YT):
+        Trucks[i + 1].append(len(YT_traverse_path[tuple(['YT', i])]) * 1.7921759583979195 + 14.381676327377548)
+
+    # Write the Trucks list to a CSV file
+    filename = filename_Truck
+    
+    # if directory does not exist, create one
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
+    
+    with open(filename, mode='w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerows(Trucks)
+
 
     # 2. RoutePoints.csv
     RoutePoints = {
@@ -102,4 +109,7 @@ def create_csv(activated_arcs, number_of_YT, grid, filename_Truck, filename_Rout
         writer.writerow(header)
         writer.writerows(zip(*RoutePoints.values()))
 
+
+    # print('YT_traverse_path')
+    # print(YT_traverse_path)
     return Traversing_info, YT_traverse_path, Trucks, RoutePoints

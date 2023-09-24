@@ -7,13 +7,13 @@ namespace TrafficSimulation {
     public class WholeProcess : MonoBehaviour
     {
         // parameters
-        private string prevFolderPath ="Assets/Data/Congestion/prev_30_now_30/prev_30";
-        // private string prevFolderPath ="";
+        // private string prevFolderPath ="Assets/Data/Test_prevcount_consideration/Penalty_all_Cost_min/prev_20_now_20/prev_20";
+        private string prevFolderPath ="";
 
-        private string nowFolderPath = "Assets/Data/Congestion/prev_30_now_30/now_30";
+        private string nowFolderPath = "Assets/Data/Test_prevcount_consideration/Penalty_all_Cost_min/prev_20_now_20/now_20";
         // private string nowFolderPath = "";
 
-        private bool _isOnebyOne = false;
+        private bool _isOnebyOne = true;
 
         // --------------------------------------------------------
 
@@ -155,12 +155,12 @@ namespace TrafficSimulation {
 
             if(CreateTruckAndStation.isOneByOne)
             {
-                saveFile.filePath = "Assets/Results/Congestion/prev_30_now_30/result-NoCongestions-" + saveFile.csvFileName;
+                saveFile.filePath = "Assets/Results/Test_prevcount_consideration/Penalty_all_Cost_min/prev_20_now_20/result-NoCongestions-" + saveFile.csvFileName;
             }
             
             else
             {
-                saveFile.filePath = "Assets/Results/Congestion/prev_30_now_30/result-" + saveFile.csvFileName;
+                saveFile.filePath = "Assets/Results/Test_prevcount_consideration/Penalty_all_Cost_min/prev_20_now_20/result-" + saveFile.csvFileName;
             }
         }
 

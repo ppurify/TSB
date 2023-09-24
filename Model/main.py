@@ -149,11 +149,11 @@ def main(_grid, _YT_locations, _Job_locations, number_of_YT, number_of_Job, case
 
 if __name__ == "__main__":
 
-  casename = 'Congestion'
-  Prev_number_of_YT = 30
-  Prev_number_of_Job = 30
-  Now_number_of_YT = 30
-  Now_number_of_Job = 30
+  casename = 'c_alone_test'
+  Prev_number_of_YT = 20
+  Prev_number_of_Job = 20
+  Now_number_of_YT = 20
+  Now_number_of_Job = 20
   
   case_folder_path = f'{casename}/prev_{Prev_number_of_YT}_now_{Now_number_of_YT}'
 
@@ -165,20 +165,30 @@ if __name__ == "__main__":
   grid_height = 9
   grid, YT_location_col_index, QC_locations, YC_locations = make_grid.Grid(grid_length, grid_height, block_length, block_height, block_num_in_row)
   
-  reps = 3
+  reps = 1
 
-  alphas = [[0, 10, 20, 30, 40, 50, 60, 70, 80],
-            [0, 80, 70, 60, 50, 40, 30, 20, 10],
-            [100, 10, 10, 10, 10, 10, 10, 10, 10]]
-    
+  # alphas = [[0, 10, 20, 30, 40, 50, 60, 70, 80],
+  #           [0, 80, 70, 60, 50, 40, 30, 20, 10],
+  #           [100, 10, 10, 10, 10, 10, 10, 10, 10]]
+  
+  alphas = [[0],
+            [0],
+            [100]]
+  
   for rep in range(reps):
     
     rep = rep + 1
-    
-    prev_YT_locations, prev_Job_locations = generate_locations(grid, Prev_number_of_YT, Prev_number_of_Job, YT_location_col_index, QC_locations, YC_locations)
+    prev_YT_locations = {0: (8, 27), 1: (0, 7), 2: (8, 17), 3: (6, 27), 4: (4, 7), 5: (0, 27), 6: (4, 27), 7: (2, 27), 8: (0, 17), 9: (8, 7), 10: (2, 7), 11: (2, 17), 12: (6, 7), 13: (4, 17), 14: (6, 17), 15: (0, 27), 16: (6, 27), 17: (2, 7), 18: (4, 17), 19: (0, 7)}
+    prev_Job_locations = {0: [(2, 25), (0, 5)], 1: [(6, 25), (0, 15)], 2: [(2, 5), (0, 25)], 3: [(0, 15), (6, 15)], 4: [(4, 15), (0, 5)], 5: [(4, 5), (0, 25)], 6: [(0, 25), (8, 25)], 7: [(2, 15), (0, 15)], 8: [(0, 5), (4, 25)], 9: [(0, 15), (8, 15)], 10: [(0, 25), (8, 5)], 11: [(0, 5), (6, 5)], 12: [(8, 15), (0, 25)], 13: [(2, 25), (0, 15)], 14: [(2, 15), (0, 5)], 15: [(8, 5), (0, 5)], 16: [(6, 5), (0, 15)], 17: [(0, 25), (4, 15)], 18: [(0, 15), (4, 25)], 19: [(0, 25), (8, 25)]}
+    now_YT_locations = {0: (0, 17), 1: (6, 27), 2: (0, 7), 3: (8, 27), 4: (6, 17), 5: (4, 27), 6: (4, 17), 7: (0, 27), 8: (6, 7), 9: (2, 27), 10: (4, 7), 11: (8, 17), 12: (8, 7), 13: (2, 17), 14: (2, 7), 15: (6, 7), 16: (2, 17), 17: (2, 7), 18: (6, 17), 19: (8, 27)}
+    now_Job_locations = {0: [(0, 5), (2, 5)], 1: [(0, 25), (6, 15)], 2: [(6, 5), (0, 15)], 3: [(0, 5), (4, 25)], 4: [(0, 25), (8, 25)], 5: [(4, 15), (0, 15)], 6: [(0, 25), (8, 15)], 7: [(2, 25), (0, 15)], 8: [(2, 15), (0, 5)], 9: [(0, 25), (6, 25)], 10: [(8, 5), (0, 5)], 11: [(0, 15), (4, 5)], 12: [(0, 5), (4, 5)], 13: [(4, 25), (0, 25)], 14: [(0, 15), (6, 15)], 15: [(0, 5), (6, 5)], 16: [(6, 25), (0, 25)], 17: [(0, 15), (8, 15)], 18: [(0, 15), (2, 15)], 19: [(2, 25), (0, 5)]}
 
-    now_YT_locations, now_Job_locations = generate_locations(grid, Now_number_of_YT, Now_number_of_Job, YT_location_col_index, QC_locations, YC_locations)
-
+    # prev_YT_locations, prev_Job_locations = generate_locations(grid, Prev_number_of_YT, Prev_number_of_Job, YT_location_col_index, QC_locations, YC_locations)
+    # print("prev_YT_locations : ", prev_YT_locations)
+    # print("prev_Job_locations : ", prev_Job_locations)
+    # now_YT_locations, now_Job_locations = generate_locations(grid, Now_number_of_YT, Now_number_of_Job, YT_location_col_index, QC_locations, YC_locations)
+    # print("now_YT_locations : ", now_YT_locations)
+    # print("now_Job_locations : ", now_Job_locations)
     
     for i in range(len(alphas[0])):
       
