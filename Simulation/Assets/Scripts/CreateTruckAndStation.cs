@@ -180,13 +180,14 @@ namespace TrafficSimulation{
                     int newRouteNum = int.Parse(values[1]) + _truckIndexPlus;
                     string truckRoute = newRouteNum.ToString();
 
-                    float truckCompletionTime_alone = float.Parse(values[4]);
+                    // Get the truck's completion time
+                    float truckCompletionTime_alone = float.Parse(values[values.Length - 1]);
 
                     CreateTruckData truckData = ScriptableObject.CreateInstance<CreateTruckData>();
                     
                     List<Vector3> workStations = new List<Vector3>();
 
-                    for(int i=2; i<values.Length; i+=3)
+                    for(int i=2; i<values.Length - 1; i+=3)
                     {   
                         if (values[i] != "" && values[i + 1] != "" && values[i + 2] != "")
                         {

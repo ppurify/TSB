@@ -504,11 +504,20 @@ namespace TrafficSimulation{
                 }
                 
                 List<ResultsData> dataList = SaveFile.resultsDataList;
-                foreach(ResultsData data in dataList)
+                if(dataList != null)
                 {
-                    saveFile.SaveToCSV(data.FilePath, data.Vehicle, data.Route, data.Origin, data.Destination, data.CompletionTime_alone, data.CompletionTime, data.StopwathTimeList);
-                    UnityEngine.Debug.Log("Save " + data.FilePath + "  --> " + data.Vehicle + " data");
+                    foreach(ResultsData data in dataList)
+                    {
+                        saveFile.SaveToCSV(data.FilePath, data.Vehicle, data.Route, data.Origin, data.Destination, data.CompletionTime_alone, data.CompletionTime, data.StopwathTimeList);
+                        UnityEngine.Debug.Log("Save " + data.FilePath + "  --> " + data.Vehicle + " data");
+                    }
                 }
+
+                else
+                {
+                    UnityEngine.Debug.LogError("SaveFile.resultsDataList is null !!!");
+                }
+                
             }
 
             UnityEngine.Debug.Log(vehicle.name + " is finished !!!");
