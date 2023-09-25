@@ -503,14 +503,9 @@ namespace TrafficSimulation{
                     wholeProcess.Process();
                 }
                 
-                List<ResultsData> dataList = SaveFile.resultsDataList;
-                if(dataList != null)
-                {
-                    foreach(ResultsData data in dataList)
-                    {
-                        saveFile.SaveToCSV(data.FilePath, data.Vehicle, data.Route, data.Origin, data.Destination, data.CompletionTime_alone, data.CompletionTime, data.StopwathTimeList);
-                        UnityEngine.Debug.Log("Save " + data.FilePath + "  --> " + data.Vehicle + " data");
-                    }
+                if(SaveFile.resultsDataList != null)
+                {   
+                    saveFile.SaveToCSV();
                 }
 
                 else
