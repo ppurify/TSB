@@ -11,6 +11,7 @@ namespace TrafficSimulation {
         // private string prevFolderPath ="";
 
         private string nowFolderPath = "Assets/Data/test/now_3";
+
         // private string nowFolderPath = "";
 
         private bool _isOnebyOne = false;
