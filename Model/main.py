@@ -149,11 +149,11 @@ def main(_grid, _YT_locations, _Job_locations, number_of_YT, number_of_Job, case
 
 if __name__ == "__main__":
 
-  casename = 'test'
+  casename = ''
   Prev_number_of_YT = 15
-  Prev_number_of_Job = 20
+  Prev_number_of_Job = 15
   Now_number_of_YT = 15
-  Now_number_of_Job = 20
+  Now_number_of_Job = 15
   
   case_folder_path = f'{casename}/prev_{Prev_number_of_YT}_now_{Now_number_of_YT}'
 
@@ -171,9 +171,6 @@ if __name__ == "__main__":
             [0, 80, 70, 60, 50, 40, 30, 20, 10],
             [100, 10, 10, 10, 10, 10, 10, 10, 10]]
   
-  alphas = [[0],
-            [0,],
-            [100]]
   for rep in range(reps):
     
     rep = rep + 1
