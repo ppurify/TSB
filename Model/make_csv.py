@@ -22,7 +22,7 @@ def create_csv(activated_arcs, number_of_YT, grid, filename_Truck, filename_Rout
 
     # Trucks.csv : 각 YT들이 거치는 경로, pick, drop station정보를 저장
     tile_size = 25
-    Trucks = [['Truck_id', 'Route_id', 'Pick_station', 'Drop_station','Completion_Time_alone']]
+    Trucks = [['Truck_id', 'Route_id', 'Pick_station', 'Drop_station','Completion_Time_alone','Path_length']]
 
     # Iterate over Traversing_info
     for key, value in Traversing_info.items():
@@ -73,6 +73,7 @@ def create_csv(activated_arcs, number_of_YT, grid, filename_Truck, filename_Rout
     # YT_traverse_path를 순회하면서 각 YT의 경로의 길이를 통해 Completion_Time_alone을 계산하여 Trucks에 추가
     for i in range(number_of_YT):
         Trucks[i + 1].append(len(YT_traverse_path[tuple(['YT', i])]) * 1.7921759583979195 + 14.381676327377548)
+        Trucks[i + 1].append(len(YT_traverse_path[tuple(['YT', i])]))
 
     # Write the Trucks list to a CSV file
     filename = filename_Truck
