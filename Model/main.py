@@ -149,11 +149,12 @@ def main(_grid, _YT_locations, _Job_locations, number_of_YT, number_of_Job, case
 
 if __name__ == "__main__":
 
-  casename = 'Prevcount_Penalty_all_Cost_all'
-  Prev_number_of_YT = 15
-  Prev_number_of_Job = 15
-  Now_number_of_YT = 15
-  Now_number_of_Job = 15
+  casename = 'Congestion'
+  Prev_number_of_YT = 25
+  Prev_number_of_Job = 25
+  Now_number_of_YT = 25
+  Now_number_of_Job = 25
+
   
   case_folder_path = f'{casename}/prev_{Prev_number_of_YT}_now_{Now_number_of_YT}'
 

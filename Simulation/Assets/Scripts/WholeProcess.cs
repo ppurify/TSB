@@ -7,10 +7,11 @@ namespace TrafficSimulation {
     public class WholeProcess : MonoBehaviour
     {
         // parameters
-        private string prevFolderPath ="Assets/Data/Prevcount_Penalty_all_Cost_all/prev_15_now_15/prev_15";
+        private string prevFolderPath ="Assets/Data/test/prev_3";
         // private string prevFolderPath ="";
 
-        private string nowFolderPath = "Assets/Data/Prevcount_Penalty_all_Cost_all/prev_15_now_15/now_15";
+        private string nowFolderPath = "Assets/Data/test/now_3";
+
         // private string nowFolderPath = "";
 
         private bool _isOnebyOne = false;
@@ -101,6 +102,7 @@ namespace TrafficSimulation {
         void Awake()
         {
             CreateTruckAndStation.isOneByOne = _isOnebyOne;
+
             CheckFolderCount();
             CreateTruckAndStation.fileCount = folderCount;
             createTruckAndStation = GetComponent<CreateTruckAndStation>();
