@@ -4,26 +4,21 @@ import matplotlib.pyplot as plt
 import re
 import pandas as pd
 
-def load_csv_file(file_path):
-    data = []
-
-    with open(file_path, 'r') as csv_file:
-        csv_reader = csv.reader(csv_file)
-
-        for row in csv_reader:
-            data.append(row)
-
-    return data
-
-
 def load_csv_files_in_folder(folder_path):
     csv_files = [file for file in os.listdir(folder_path) if file.endswith('.csv')]
     all_csv_data = []
 
     for csv_file in csv_files:
         csv_path = os.path.join(folder_path, csv_file)
-        csv_data = load_csv_file(csv_path)
-        all_csv_data.append((csv_file, csv_data))
+        data = []
+
+        with open(csv_path, 'r') as csv_file:
+            csv_reader = csv.reader(csv_file)
+
+            for row in csv_reader:
+                data.append(row)
+                
+        all_csv_data.append((csv_file, data))
 
     return all_csv_data
 

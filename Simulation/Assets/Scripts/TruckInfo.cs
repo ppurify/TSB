@@ -21,6 +21,7 @@ namespace TrafficSimulation{
         public int truckWorkStationsNum;
         public Vector3 truckOrigin;
         public Vector3 truckDestination;
+        public float truckPathLength;
         public float truckCompletionTime_alone;
         public string truckRouteName;
         public int truckStatus;
@@ -442,7 +443,7 @@ namespace TrafficSimulation{
             truckDestination = nowStationPos;
 
             ResultsData resultsData = ScriptableObject.CreateInstance<ResultsData>();
-            resultsData.CreateResultData(saveFile.filePath, vehicle.name, truckRouteName, truckOrigin, truckDestination, truckCompletionTime_alone, truckCompletionTime, truckStationWatchList);
+            resultsData.CreateResultData(saveFile.filePath, vehicle.name, truckRouteName, truckOrigin, truckDestination, truckPathLength, truckCompletionTime_alone, truckCompletionTime, truckStationWatchList);
             SaveFile.resultsDataList.Add(resultsData);
 
             // UnityEngine.Debug.Log(vehicle.name + " saved result data !!! ");

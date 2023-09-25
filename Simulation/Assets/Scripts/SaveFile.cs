@@ -72,14 +72,16 @@ namespace TrafficSimulation{
                 
                 foreach(ResultsData data in resultsDataList)
                 {   
-                    AddLine(data.FilePath, data.Vehicle, data.Route, data.Origin, data.Destination, data.CompletionTime_alone, data.CompletionTime, data.StopwathTimeList, isFirstLine);
+                    UnityEngine.Debug.Log("data.Vehicle : " + data.Vehicle + ", data.CompletionTime : " + data.CompletionTime+ ", data.Path_length : " + data.Path_length);
+                    float completionTime_byDistance = data.CompletionTime/data.Path_length;
+                    AddLine(data.FilePath, data.Vehicle, data.Route, data.Origin, data.Destination, data.CompletionTime_alone, data.CompletionTime, completionTime_byDistance, data.StopwathTimeList, isFirstLine);
                     isFirstLine = false;
                     UnityEngine.Debug.Log("Save " + data.FilePath + "  --> " + data.Vehicle + " data");
                 }
             }
         }
 
-        public void AddLine(string _filePath, string _truckName, string _routeName, Vector3 _origin, Vector3 _destination, float _completionTime_alone, float _completionTime, List<float> _arrivalTimeList, bool _isFirstLine)
+        public void AddLine(string _filePath, string _truckName, string _routeName, Vector3 _origin, Vector3 _destination, float _completionTime_alone, float _completionTime, float _completionTime_byDistance, List<float> _arrivalTimeList, bool _isFirstLine)
         {   
             // Check if the CSV file exists
             if(!File.Exists(_filePath))
@@ -87,7 +89,7 @@ namespace TrafficSimulation{
                 // Create a new CSV file and write the data
                 using (StreamWriter sw = File.CreateText(_filePath))
                 {   
-                    string header = "Truck_id,Route_id,Origin,Destination,Completion_Time_alone,Completion_Time,Congestion_ratio,PickupSta_AT,DropSta_AT,,,C_max_prev,C_max_now,C_max,Congestion_ratio_AVG_prev,Congestion_ratio_AVG_now,Congestion_ratio_AVG";
+                    string header = "Truck_id,Route_id,Origin,Destination,Completion_Time_alone,Completion_Time,Congestion_ratio,CompletionTime_by_Distance,PickupSta_AT,DropSta_AT,,,C_max_prev,C_max_now,C_max,Congestion_ratio_AVG_prev,Congestion_ratio_AVG_now,Congestion_ratio_AVG";
                
                     // Write the header and data to the CSV file
                     sw.WriteLine(header);
@@ -109,13 +111,13 @@ namespace TrafficSimulation{
             // Append the new data to the content
             if(_isFirstLine)
             {
-                newLine = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16}", _truckName, _routeName, originValue, destinationValue, _completionTime_alone, _completionTime, congestionRatio,
-                                                 _arrivalTimeList[0], _arrivalTimeList[1], string.Empty, string.Empty, cMax_prev, cMax_now, cMax, congestionRatio_avg_prev, congestionRatio_avg_now, congestionRatio_avg);
+                newLine = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17}", _truckName, _routeName, originValue, destinationValue, _completionTime_alone, _completionTime, congestionRatio,
+                                            _completionTime_byDistance, _arrivalTimeList[0], _arrivalTimeList[1], string.Empty, string.Empty, cMax_prev, cMax_now, cMax, congestionRatio_avg_prev, congestionRatio_avg_now, congestionRatio_avg);
             }
 
             else
             {
-                newLine = string.Format("{0},{1},{2},{3},{4},{5},{6},{7}", _truckName, _routeName, originValue, destinationValue, _completionTime_alone, _completionTime, congestionRatio, arrivalTimeValues);
+                newLine = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8}", _truckName, _routeName, originValue, destinationValue, _completionTime_alone, _completionTime, congestionRatio, _completionTime_byDistance, arrivalTimeValues);
             }
 
             // Append the new line to the CSV file
