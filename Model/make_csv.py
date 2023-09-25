@@ -20,9 +20,31 @@ def create_csv(activated_arcs, number_of_YT, grid, filename_Truck, filename_Rout
             else:
                 break
 
+    # YT_traverse_path : 각 YT들이 거치는 경로의 좌표정보를 저장하는 dictionary
+        YT_traverse_path = {}
+
+        for key, value in Traversing_info.items():
+            path = []
+            prev_node = None
+
+            for arc in value:
+                # sink로 가는 arc는 제외
+                if arc.j == ['Sink']:
+                    continue
+
+                if prev_node is None:
+                    path.extend(arc.path)
+                else:
+                    # path를 이어붙일때는 아크 간의 겹치는 좌표 한칸은 제거
+                    path.extend(arc.path[1:])
+
+                prev_node = arc.j
+
+            YT_traverse_path[key] = path
+
     # Trucks.csv : 각 YT들이 거치는 경로, pick, drop station정보를 저장
     tile_size = 25
-    Trucks = [['Truck_id', 'Route_id', 'Pick_station', 'Drop_station','Completion_Time_alone','Path_length']]
+    Trucks = [['Truck_id', 'Route_id', 'Path_length', 'Completion_Time_alone', 'Pick_station', 'Drop_station']]
 
     # Iterate over Traversing_info
     for key, value in Traversing_info.items():
@@ -32,6 +54,9 @@ def create_csv(activated_arcs, number_of_YT, grid, filename_Truck, filename_Rout
             for arc in value:
                 if arc.i[0] == 'YT':
                     temp_list.extend([arc.i[1], arc.i[1]])
+                    # Path_length, Completione_Time_alone 추가
+                    temp_list.append(len(YT_traverse_path[key]))
+                    temp_list.append(len(YT_traverse_path[key]) * 1.7921759583979195 + 14.381676327377548)                
 
                 if arc.i[0] == 'Pick':
                     x = arc.path[0][1] * tile_size
@@ -44,36 +69,6 @@ def create_csv(activated_arcs, number_of_YT, grid, filename_Truck, filename_Rout
                     temp_list.append((x, 0, z))
 
             Trucks.append(temp_list)
-
-    
-
-
-    # YT_traverse_path : 각 YT들이 거치는 경로의 좌표정보를 저장하는 dictionary
-    YT_traverse_path = {}
-
-    for key, value in Traversing_info.items():
-        path = []
-        prev_node = None
-
-        for arc in value:
-            # sink로 가는 arc는 제외
-            if arc.j == ['Sink']:
-                continue
-
-            if prev_node is None:
-                path.extend(arc.path)
-            else:
-                # path를 이어붙일때는 아크 간의 겹치는 좌표 한칸은 제거
-                path.extend(arc.path[1:])
-
-            prev_node = arc.j
-
-        YT_traverse_path[key] = path
-
-    # YT_traverse_path를 순회하면서 각 YT의 경로의 길이를 통해 Completion_Time_alone을 계산하여 Trucks에 추가
-    for i in range(number_of_YT):
-        Trucks[i + 1].append(len(YT_traverse_path[tuple(['YT', i])]) * 1.7921759583979195 + 14.381676327377548)
-        Trucks[i + 1].append(len(YT_traverse_path[tuple(['YT', i])]))
 
     # Write the Trucks list to a CSV file
     filename = filename_Truck
@@ -110,7 +105,4 @@ def create_csv(activated_arcs, number_of_YT, grid, filename_Truck, filename_Rout
         writer.writerow(header)
         writer.writerows(zip(*RoutePoints.values()))
 
-
-    # print('YT_traverse_path')
-    # print(YT_traverse_path)
     return Traversing_info, YT_traverse_path, Trucks, RoutePoints
