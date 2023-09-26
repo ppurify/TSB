@@ -9,13 +9,13 @@ namespace TrafficSimulation
     {
         // parameters
         // private string prevFolderPath ="Assets/Data/Congestion/prev_25_now_25_3/prev_25";
-        private string prevFolderPath = "";
+        private string prevFolderPath = "Assets/Data/Congestion/Completion_time_Congestion_ratio (2)/prev_10_now_10/prev_10";
 
 
-        private string nowFolderPath = "Assets/Data/Congestion/prev_15_now_20/now_20";
+        private string nowFolderPath = "Assets/Data/Congestion/Completion_time_Congestion_ratio (2)/prev_10_now_10/now_10";
         // private string nowFolderPath = "";
 
-        private bool _isOnebyOne = true;
+        private bool _isOnebyOne = false;
 
         // --------------------------------------------------------
 
@@ -103,6 +103,7 @@ namespace TrafficSimulation
         void Awake()
         {
             CreateTruckAndStation.isOneByOne = _isOnebyOne;
+
             CheckFolderCount();
             CreateTruckAndStation.fileCount = folderCount;
             createTruckAndStation = GetComponent<CreateTruckAndStation>();
@@ -129,20 +130,39 @@ namespace TrafficSimulation
 
         public void Process()
         {
-            CreateAllRoutes();
-            Debug.Log("currentFileCount : " + currentFileCount + ", totalFileCount : " + totalFileCount);
-            SetSaveFileName();
-            exitPlayMode.nowTruckCount = 0;
-            exitPlayMode._totalFileCount = totalFileCount;
+            currentPrevRouteFilePath = prevRouteFileList[currentFileCount];
+            currentPrevTruckFilePath = prevTruckFileList[currentFileCount];
 
-            Invoke("CreateTruck", createTruckDelay);
+            currentNowRouteFilePath = nowRouteFileList[currentFileCount];
+            currentNowTruckFilePath = nowTruckFileList[currentFileCount];
+
+            string currenFilePath = SetSaveFileName();
+
+            if (File.Exists(currenFilePath))
+            {
+                currentFileCount++;
+                Debug.Log("File already exists : " + saveFile.filePath);
+                Process();
+            }
+
+            else
+            {
+                Debug.Log("File does not exist : " + saveFile.filePath);
+                CreateAllRoutes();
+                Debug.Log("currentFileCount : " + currentFileCount + ", totalFileCount : " + totalFileCount);
+
+                exitPlayMode.nowTruckCount = 0;
+                exitPlayMode._totalFileCount = totalFileCount;
+
+                Invoke("CreateTruck", createTruckDelay);
+            }
         }
 
-        private void SetSaveFileName()
+        private string SetSaveFileName()
         {
             if (CreateTruckAndStation.isTwoFile)
             {
-                saveFile.csvFileName = Path.GetFileName(currentNowRouteFilePath);
+                saveFile.csvFileName = Path.GetFileName(currentPrevRouteFilePath) + "_with_" + Path.GetFileName(currentNowRouteFilePath);
             }
 
             else if (prevFolderPath != "")
@@ -157,13 +177,15 @@ namespace TrafficSimulation
 
             if (CreateTruckAndStation.isOneByOne)
             {
-                saveFile.filePath = "Assets/Results/result-NoCongestions-" + saveFile.csvFileName;
+                saveFile.filePath = "Assets/Results/result_NoCongestions_" + saveFile.csvFileName;
             }
 
             else
             {
-                saveFile.filePath = "Assets/Results/result-" + saveFile.csvFileName;
+                saveFile.filePath = "Assets/Results/result_" + saveFile.csvFileName;
             }
+
+            return saveFile.filePath;
         }
 
         private void CreateTruck()
@@ -271,12 +293,12 @@ namespace TrafficSimulation
             {
                 totalFileCount = prevFileCount;
 
-                currentPrevRouteFilePath = prevRouteFileList[currentFileCount];
-                currentPrevTruckFilePath = prevTruckFileList[currentFileCount];
+                // currentPrevRouteFilePath = prevRouteFileList[currentFileCount];
+                // currentPrevTruckFilePath = prevTruckFileList[currentFileCount];
                 prevRouteDictionary = CreateRouteList(currentPrevRouteFilePath);
 
-                currentNowRouteFilePath = nowRouteFileList[currentFileCount];
-                currentNowTruckFilePath = nowTruckFileList[currentFileCount];
+                // currentNowRouteFilePath = nowRouteFileList[currentFileCount];
+                // currentNowTruckFilePath = nowTruckFileList[currentFileCount];
                 nowRouteDictionary = CreateRouteList(currentNowRouteFilePath);
 
                 Debug.Log("Create prev Routes : " + currentPrevRouteFilePath + ", Create now Routes : " + currentNowRouteFilePath);

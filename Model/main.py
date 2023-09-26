@@ -150,11 +150,19 @@ def main(_grid, _YT_locations, _Job_locations, number_of_YT, number_of_Job, case
 if __name__ == "__main__":
 
   casename = 'Congestion'
+<<<<<<< HEAD
   i=15
   Prev_number_of_YT = i
   Prev_number_of_Job = i
   Now_number_of_YT = i+5
   Now_number_of_Job = i+5
+=======
+  Prev_number_of_YT = 25
+  Prev_number_of_Job = 25
+  Now_number_of_YT = 25
+  Now_number_of_Job = 25
+
+>>>>>>> 873b87c0b5f895aaaea49e4a30f851c11cdd685a
   
   case_folder_path = f'{casename}/prev_{Prev_number_of_YT}_now_{Now_number_of_YT}'
 
@@ -166,7 +174,7 @@ if __name__ == "__main__":
   grid_height = 9
   grid, YT_location_col_index, QC_locations, YC_locations = make_grid.Grid(grid_length, grid_height, block_length, block_height, block_num_in_row)
   
-  reps = 3
+  reps = 5
 
   alphas = [[0, 10, 20, 30, 40, 50, 60, 70, 80],
             [0, 80, 70, 60, 50, 40, 30, 20, 10],
