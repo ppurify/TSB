@@ -152,9 +152,8 @@ if __name__ == "__main__":
   casename = 'Congestion'
   Prev_number_of_YT = 25
   Prev_number_of_Job = 25
-  Now_number_of_YT = 25
-  Now_number_of_Job = 25
-
+  Now_number_of_YT = 30
+  Now_number_of_Job = 30
   
   case_folder_path = f'{casename}/prev_{Prev_number_of_YT}_now_{Now_number_of_YT}'
 
@@ -166,7 +165,7 @@ if __name__ == "__main__":
   grid_height = 9
   grid, YT_location_col_index, QC_locations, YC_locations = make_grid.Grid(grid_length, grid_height, block_length, block_height, block_num_in_row)
   
-  reps = 5
+  reps = 3
 
   alphas = [[0, 10, 20, 30, 40, 50, 60, 70, 80],
             [0, 80, 70, 60, 50, 40, 30, 20, 10],
@@ -175,12 +174,10 @@ if __name__ == "__main__":
   for rep in range(reps):
     
     rep = rep + 1
-    
-    prev_YT_locations, prev_Job_locations = generate_locations(grid, Prev_number_of_YT, Prev_number_of_Job, YT_location_col_index, QC_locations, YC_locations)
 
+    prev_YT_locations, prev_Job_locations = generate_locations(grid, Prev_number_of_YT, Prev_number_of_Job, YT_location_col_index, QC_locations, YC_locations)
     now_YT_locations, now_Job_locations = generate_locations(grid, Now_number_of_YT, Now_number_of_Job, YT_location_col_index, QC_locations, YC_locations)
 
-    
     for i in range(len(alphas[0])):
       
       alpha1 = alphas[0][i]
@@ -188,9 +185,7 @@ if __name__ == "__main__":
       alpha3 = alphas[2][i]
       
       # Prev
-      # prev_count = np.zeros((9, 31),dtype=np.int8)
       prev_count = np.zeros((len(grid), len(grid[0])))
 
       next_prev_count = main(grid, prev_YT_locations, prev_Job_locations, Prev_number_of_YT, Prev_number_of_Job, case_folder_path, 'prev', prev_count, alpha1, alpha2, alpha3, rep)
-      
       main(grid, now_YT_locations, now_Job_locations, Now_number_of_YT, Now_number_of_Job, case_folder_path, 'now', next_prev_count, alpha1, alpha2, alpha3, rep)

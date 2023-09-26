@@ -120,8 +120,7 @@ def sort_and_cost(YT_locations, Job_locations, arcs_YT_to_Pick, arcs_Pick_to_Dro
     '---'
     # A2_prev_count_for_cost : cost계산을 위한 A2의 prev count
     # A1내의 모든 아크의 path를 누적한 grid 생성
-    # print("A1내의 모든 아크의 path를 누적한 grid 생성")
-
+    print("A1내의 모든 아크의 path를 누적한 grid 생성")
     A2_prev_count_for_cost = np.zeros((len(prev_count), len(prev_count[0])))
     for i in range(len(arcs_YT_to_Pick)):
         for j in range(len(arcs_YT_to_Pick[i].path)):
@@ -247,6 +246,7 @@ def create_arcs(YT_locations, Job_locations, number_of_final_route, alpha1, alph
                 arcs_YT_to_Pick.append(arcname)
 
 
+
     # 2. Pick -> Drop 경로, 아크 생성
     for j in range(len(Job_locations)):
         Pick_location = Job_locations[j][0]
@@ -299,6 +299,7 @@ def create_arcs(YT_locations, Job_locations, number_of_final_route, alpha1, alph
             arcname = arc(i=['Pick', j], j=['Drop', j], k=k, path=final_route_Pick_to_Drop[k], cost=None, index=now_index)
             now_index += 1
             arcs_Pick_to_Drop.append(arcname)
+
 
 
     # 3. Drop -> 다른 Job의 Pick 경로, 아크 생성
@@ -358,7 +359,6 @@ def create_arcs(YT_locations, Job_locations, number_of_final_route, alpha1, alph
                     arcname = arc(i = ['Drop', i], j = ['Pick', j], k = k, path = final_route_Drop_to_Pick[k], cost = None, index=now_index)
                     now_index += 1
                     arcs_Drop_to_Pick.append(arcname)
-
 
     # 4. Drop -> Sink 아크 생성
     for i in range(len(Job_locations)):
