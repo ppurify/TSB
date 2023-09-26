@@ -18,6 +18,7 @@ namespace TrafficSimulation {
         // --------------------------------------------------------
         public static int truckHitCount = 0;
         private int limitHitCount = 3;
+        public static bool truckHitWall = false;
 
         private List<string> prevRouteFileList = new List<string>();
         private List<string> prevTruckFileList = new List<string>();
@@ -130,8 +131,10 @@ namespace TrafficSimulation {
 
         void Update()
         {
-            if(truckHitCount == limitHitCount)
+            if((truckHitCount == limitHitCount) | truckHitWall == true)
             {
+                truckHitWall = false;
+
                 truckHitCount = 0;
                 limitHitCount = 0;
 
