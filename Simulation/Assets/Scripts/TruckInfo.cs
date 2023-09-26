@@ -242,7 +242,8 @@ namespace TrafficSimulation{
 
             else if(_other.gameObject.tag == "AutonomousVehicle")
             {
-                UnityEngine.Debug.LogError(this.name + " is crashed with " + _other.gameObject.name);
+                WholeProcess.truckHitCount ++;
+                UnityEngine.Debug.LogError("now truckHitCount :  " + truckHitCount);
             }
 
         }
