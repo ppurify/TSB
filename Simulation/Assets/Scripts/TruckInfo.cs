@@ -167,7 +167,13 @@ namespace TrafficSimulation{
                 {
                     UnityEngine.Debug.LogError("You have to again check vehicle's rotationY");
                 }
+            }
 
+            float nowTruckTotalTime = truckTotalWatch.ElapsedMilliseconds / 1000f * Time.timeScale;
+            
+            if(nowTruckTotalTime >= wholeProcess.limitTotalTime)
+            {
+                wholeProcess.playAgain = true;
             }
         }
         
@@ -239,21 +245,7 @@ namespace TrafficSimulation{
                     }
                 }
             }
-
-            else if(_other.gameObject.tag == "AutonomousVehicle")
-            {
-                WholeProcess.truckHitCount ++;
-                UnityEngine.Debug.LogError("now truckHitCount :  " + WholeProcess.truckHitCount);
-            }
-
-            else if(_other.gameObject.tag == "Wall")
-            {
-                WholeProcess.truckHitWall = true;
-                UnityEngine.Debug.LogError("truck hit wall !!!");
-            }
-
         }
-     
 
          private IEnumerator WorkingProcess()
         {   

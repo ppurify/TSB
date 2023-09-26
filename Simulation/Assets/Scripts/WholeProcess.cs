@@ -16,9 +16,8 @@ namespace TrafficSimulation {
         private bool _isOnebyOne = false;
 
         // --------------------------------------------------------
-        public static int truckHitCount = 0;
-        private int limitHitCount = 3;
-        public static bool truckHitWall = false;
+        public float limitTotalTime = 500f;
+        public bool playAgain = false;
 
         private List<string> prevRouteFileList = new List<string>();
         private List<string> prevTruckFileList = new List<string>();
@@ -131,17 +130,13 @@ namespace TrafficSimulation {
 
         void Update()
         {
-            if((truckHitCount == limitHitCount) | truckHitWall == true)
+            if(playAgain == true)
             {
-                Debug.Log("Again Process");
+                playAgain = false;
+                Debug.Log("----------Again Process-----------");
                 // Remove objects by name prefix
                 DestroyObjects("Route");
                 DestroyObjects("Truck");
-
-                truckHitWall = false;
-
-                truckHitCount = 0;
-                limitHitCount = 0;
 
                 Process();
             }
@@ -153,7 +148,7 @@ namespace TrafficSimulation {
 
             foreach (GameObject obj in matchingObjects)
             {
-                if (obj != null && obj.name.StartsWith(prefix))
+                if (obj != null && obj.name.Contains(prefix))
                 {
                     // Use DestroyImmediate to remove the object immediately
                     Destroy(obj);
@@ -393,7 +388,6 @@ namespace TrafficSimulation {
                     {
                         Debug.LogError("nowRouteDictionary is null");
                     }
-                    // StartCoroutine(ReadCSV(nowFolderPath, nowRouteFileList, nowTruckFileList));
                 }
             }
 

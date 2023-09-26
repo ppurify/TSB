@@ -22,7 +22,7 @@ namespace TrafficSimulation{
         private float congestionRatio_avg_now;
         private float congestionRatio_avg;
         private float totalCraneProcessTime;
-        private bool isFirstLine = true;
+        private bool isFirstLine;
         private string newLine;
 
         void Start()
@@ -55,7 +55,7 @@ namespace TrafficSimulation{
 
                 else
                 {
-                    UnityEngine.Debug.Log("No prev trucks found in the dataList.");
+                    UnityEngine.Debug.LogError("No prev trucks found in the dataList.");
                 }
 
                 var nowTruckDatas = resultsDataList.Where(data => !isPrevTruck(data.Vehicle)).ToList();
@@ -67,16 +67,15 @@ namespace TrafficSimulation{
 
                 else
                 {
-                    UnityEngine.Debug.Log("No now trucks found in the dataList.");
+                    UnityEngine.Debug.LogError("No now trucks found in the dataList.");
                 }
                 
+                isFirstLine = true;
                 foreach(ResultsData data in resultsDataList)
                 {   
-                    UnityEngine.Debug.Log("data.Vehicle : " + data.Vehicle + ", data.CompletionTime : " + data.CompletionTime+ ", data.Path_length : " + data.Path_length);
                     float completionTime_byDistance = data.CompletionTime/data.Path_length;
                     AddLine(data.FilePath, data.Vehicle, data.Route, data.Origin, data.Destination, data.CompletionTime_alone, data.CompletionTime, completionTime_byDistance, data.StopwathTimeList, isFirstLine);
                     isFirstLine = false;
-                    UnityEngine.Debug.Log("Save " + data.FilePath + "  --> " + data.Vehicle + " data");
                 }
             }
         }

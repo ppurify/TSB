@@ -2930,6 +2930,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3aa0c3bdfa37414588fe4824b77cd36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  truckHitCount: 0
+  truckHitWall: 0
   currentPrevRouteFilePath: 
   currentNowRouteFilePath: 
   isPrevExist: 0
