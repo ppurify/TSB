@@ -46,7 +46,6 @@ namespace TrafficSimulation{
 
         void Update()
         {   
-            UnityEngine.Debug.Log("intersectionTimer : " + intersectionTimer.ElapsedMilliseconds / 1000f * Time.timeScale);
             if(intersectionTimer.ElapsedMilliseconds / 1000f * Time.timeScale > intersectionTimeLimit)
             {
                 UnityEngine.Debug.Log(this.name + " 's time limit reached");
