@@ -48,8 +48,6 @@ namespace TrafficSimulation{
             truckDataList_2 = new List<CreateTruckData>();
             SaveFile.resultsDataList = new List<ResultsData>();
 
-            Debug.Log("prevTruckFilePath: " + _prevTruckFilePath + ", nowTruckFilePath: " + _nowTruckFilePath);
-
             if(fileCount == 2)
             {   
                 isTwoFile = true;
@@ -59,7 +57,6 @@ namespace TrafficSimulation{
                 ReadFile(_nowTruckFilePath, truckIndexPlus_2);
                 CreateStations(truckDataList_2, stationTagName);
 
-                Debug.Log("truckDataList_1.Count : " + truckDataList_1.Count + ", truckDataList_2.Count : " + truckDataList_2.Count);
                 if(ExistRoute(truckDataList_1))
                 {   
                     IsDuplicateStartPosition(truckDataList_1, truckIndexPlus_1);

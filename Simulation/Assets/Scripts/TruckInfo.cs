@@ -173,7 +173,7 @@ namespace TrafficSimulation{
             
             if(nowTruckTotalTime >= wholeProcess.limitTotalTime)
             {
-                wholeProcess.playAgain = true;
+                WholeProcess.playAgain = true;
             }
         }
         
@@ -514,9 +514,7 @@ namespace TrafficSimulation{
                 }
                 
             }
-
-            UnityEngine.Debug.Log(vehicle.name + " is finished !!!");
-        
+            
             Destroy(vehicle);
         }
         

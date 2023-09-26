@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using UnityEngine.SceneManagement;
 
 namespace TrafficSimulation {    
     public class WholeProcess : MonoBehaviour
@@ -17,7 +18,7 @@ namespace TrafficSimulation {
 
         // --------------------------------------------------------
         public float limitTotalTime = 500f;
-        public bool playAgain = false;
+        public static bool playAgain = false;
 
         private List<string> prevRouteFileList = new List<string>();
         private List<string> prevTruckFileList = new List<string>();
@@ -102,8 +103,9 @@ namespace TrafficSimulation {
         // Start is called before the first frame update
         void Awake()
         {
-            CreateTruckAndStation.isOneByOne = _isOnebyOne;
+            folderCount = 0;
 
+            CreateTruckAndStation.isOneByOne = _isOnebyOne;
             CheckFolderCount();
             CreateTruckAndStation.fileCount = folderCount;
             createTruckAndStation = GetComponent<CreateTruckAndStation>();
@@ -134,26 +136,17 @@ namespace TrafficSimulation {
             {
                 playAgain = false;
                 Debug.Log("----------Again Process-----------");
-                // Remove objects by name prefix
-                DestroyObjects("Route");
-                DestroyObjects("Truck");
-
-                Process();
+                ReloadScene();
             }
         }
 
-        private void DestroyObjects(string prefix)
+        public void ReloadScene()
         {
-            GameObject[] matchingObjects = GameObject.FindObjectsOfType<GameObject>();
+            // Get the current scene's name
+            string currentSceneName = SceneManager.GetActiveScene().name;
 
-            foreach (GameObject obj in matchingObjects)
-            {
-                if (obj != null && obj.name.Contains(prefix))
-                {
-                    // Use DestroyImmediate to remove the object immediately
-                    Destroy(obj);
-                }
-            }
+            // Reload the current scene
+            SceneManager.LoadScene(currentSceneName);
         }
 
         public void Process()
@@ -177,7 +170,6 @@ namespace TrafficSimulation {
             {
                 Debug.Log("File does not exist : " + saveFile.filePath);
                 CreateAllRoutes();
-                Debug.Log("currentFileCount : " + currentFileCount + ", totalFileCount : " + totalFileCount);
 
                 exitPlayMode.nowTruckCount = 0;
                 exitPlayMode._totalFileCount = totalFileCount;

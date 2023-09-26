@@ -29,8 +29,6 @@ namespace TrafficSimulation{
 #if UNITY_EDITOR
                 AssetDatabase.Refresh();
 #endif
-            
-
         }
 
         public bool CompareCount(int _nowCount, int _totalCount)
