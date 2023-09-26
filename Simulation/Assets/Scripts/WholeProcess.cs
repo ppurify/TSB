@@ -133,6 +133,7 @@ namespace TrafficSimulation {
         {
             if((truckHitCount == limitHitCount) | truckHitWall == true)
             {
+                Debug.Log("Again Process");
                 // Remove objects by name prefix
                 DestroyObjects("Route");
                 DestroyObjects("Truck");
