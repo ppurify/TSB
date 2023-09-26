@@ -249,6 +249,7 @@ namespace TrafficSimulation{
             else if(_other.gameObject.tag == "Wall")
             {
                 WholeProcess.truckHitWall = true;
+                UnityEngine.Debug.LogError("truck hit wall !!!");
             }
 
         }

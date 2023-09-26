@@ -133,12 +133,30 @@ namespace TrafficSimulation {
         {
             if((truckHitCount == limitHitCount) | truckHitWall == true)
             {
+                // Remove objects by name prefix
+                DestroyObjects("Route");
+                DestroyObjects("Truck");
+
                 truckHitWall = false;
 
                 truckHitCount = 0;
                 limitHitCount = 0;
 
                 Process();
+            }
+        }
+
+        private void DestroyObjects(string prefix)
+        {
+            GameObject[] matchingObjects = GameObject.FindObjectsOfType<GameObject>();
+
+            foreach (GameObject obj in matchingObjects)
+            {
+                if (obj != null && obj.name.StartsWith(prefix))
+                {
+                    // Use DestroyImmediate to remove the object immediately
+                    DestroyImmediate(obj);
+                }
             }
         }
 
