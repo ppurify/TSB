@@ -149,11 +149,13 @@ def main(_grid, _YT_locations, _Job_locations, number_of_YT, number_of_Job, case
 
 if __name__ == "__main__":
 
-  casename = 'Completion_time_Congestion_ratio'
-
-  # 5_5, 5_10, 10_10, 10_15, 15_15, 15_20, 20_20, 20_25, 25_25, 25_30, 30_30 순회
-  Prev_numberlist = [5, 5, 10, 10, 15, 15, 20, 20, 25, 25, 30]
-  Now_numberlist = [5, 10, 10, 15, 15, 20, 20, 25, 25, 30, 30]
+  casename = 'Congestion'
+  Prev_number_of_YT = 25
+  Prev_number_of_Job = 25
+  Now_number_of_YT = 30
+  Now_number_of_Job = 30
+  
+  case_folder_path = f'{casename}/prev_{Prev_number_of_YT}_now_{Now_number_of_YT}'
 
   # 가로로 3개
   block_num_in_row = 3
@@ -163,21 +165,7 @@ if __name__ == "__main__":
   grid_height = 9
   grid, YT_location_col_index, QC_locations, YC_locations = make_grid.Grid(grid_length, grid_height, block_length, block_height, block_num_in_row)
   
-  
-  for _ in range(len(Prev_numberlist)):
-    Prev_number_of_Job = Prev_numberlist[_]
-    Prev_number_of_YT = Prev_numberlist[_]
-    Now_number_of_Job = Now_numberlist[_]
-    Now_number_of_YT = Now_numberlist[_]
-
-  # Prev_number_of_YT = 15
-  # Prev_number_of_Job = 15
-  # Now_number_of_YT = 15
-  # Now_number_of_Job = 15
-    
-    case_folder_path = f'{casename}/prev_{Prev_number_of_YT}_now_{Now_number_of_YT}'
-
-    reps = 10
+  reps = 3
 
     alphas = [[0, 10, 20, 30, 40, 50, 60, 70, 80],
               [0, 80, 70, 60, 50, 40, 30, 20, 10],
