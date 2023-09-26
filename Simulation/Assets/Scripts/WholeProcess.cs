@@ -155,7 +155,7 @@ namespace TrafficSimulation {
                 if (obj != null && obj.name.StartsWith(prefix))
                 {
                     // Use DestroyImmediate to remove the object immediately
-                    DestroyImmediate(obj);
+                    Destroy(obj);
                 }
             }
         }
