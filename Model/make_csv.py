@@ -56,7 +56,7 @@ def create_csv(activated_arcs, number_of_YT, grid, filename_Truck, filename_Rout
                     temp_list.extend([arc.i[1], arc.i[1]])
                     # Path_length, Completione_Time_alone 추가
                     temp_list.append(len(YT_traverse_path[key]))
-                    temp_list.append(len(YT_traverse_path[key]) * 1.7921759583979195 + 14.381676327377548)                
+                    temp_list.append(300 + len(YT_traverse_path[key]) * 1.7921759583979195 + 14.381676327377548)                
 
                 if arc.i[0] == 'Pick':
                     x = arc.path[0][1] * tile_size
