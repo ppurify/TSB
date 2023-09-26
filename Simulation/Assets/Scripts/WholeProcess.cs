@@ -4,14 +4,15 @@ using UnityEngine;
 using System.IO;
 using UnityEngine.SceneManagement;
 
-namespace TrafficSimulation {    
+namespace TrafficSimulation
+{
     public class WholeProcess : MonoBehaviour
     {
         // parameters
-        private string prevFolderPath ="Assets/Data/congestion/prev_30_now_30/prev_30";
+        private string prevFolderPath = "Assets/Data/prev_10_now_10/prev_10";
         // private string prevFolderPath ="";
 
-        private string nowFolderPath = "Assets/Data/congestion/prev_30_now_30/now_30";
+        private string nowFolderPath = "Assets/Data/prev_10_now_10/now_10";
         // private string nowFolderPath = "";
 
         private bool _isOnebyOne = false;
@@ -27,7 +28,7 @@ namespace TrafficSimulation {
 
         private int prevFileCount;
         private int nowFileCount;
-        
+
         public static int folderCount;
         public static int currentFileCount = 0;
         public static int totalFileCount;
@@ -43,7 +44,7 @@ namespace TrafficSimulation {
         private static float z3;
         private static float z4;
 
-        private static List<Vector3> cornerPositions = new List<Vector3>{new Vector3(0,0,0), new Vector3(750,0,0), new Vector3(750,0,200), new Vector3(0,0,200)};
+        private static List<Vector3> cornerPositions = new List<Vector3> { new Vector3(0, 0, 0), new Vector3(750, 0, 0), new Vector3(750, 0, 200), new Vector3(0, 0, 200) };
         private static List<Vector3> intersectionPositions = new List<Vector3>
                                                                 {
                                                                     new Vector3(250, 0, 0),
@@ -66,35 +67,35 @@ namespace TrafficSimulation {
 
         // Intersection Collider Parameters
         private static List<Vector3> intersections = new List<Vector3>();
-        private static Vector3 intersectionSize = new Vector3(50,10,28);
-        private static float intersectionPos_y = intersectionSize.y/2;
+        private static Vector3 intersectionSize = new Vector3(50, 10, 28);
+        private static float intersectionPos_y = intersectionSize.y / 2;
 
         // Corner Collider Parameters
-        private static Vector3 cornerSize = new Vector3(40,10,40);
+        private static Vector3 cornerSize = new Vector3(40, 10, 40);
 
         public string currentPrevRouteFilePath;
         private string currentPrevTruckFilePath;
         public string currentNowRouteFilePath;
         private string currentNowTruckFilePath;
 
-        
+
         // Route Parameters
         private static List<List<Vector3>> routes = new List<List<Vector3>>();
-        
+
         private static Dictionary<int, List<Vector3>> prevRouteDictionary = new Dictionary<int, List<Vector3>>();
         private static Dictionary<int, List<Vector3>> nowRouteDictionary = new Dictionary<int, List<Vector3>>();
-        
+
         private static float route_Pos_y = 1.5f;
         private static Vector3 newPoint;
-        
+
         private static int routePlusNum;
         private static float routeMoveScale = 5.5f;
-        private static bool isRotate;        
+        private static bool isRotate;
         private static Vector3 newRoPoint;
 
         private static TrafficSystem wps;
         private float createTruckDelay = 1f;
-        
+
         private CreateTruckAndStation createTruckAndStation;
         private ExitPlayMode exitPlayMode;
         private SaveFile saveFile;
@@ -111,7 +112,7 @@ namespace TrafficSimulation {
             createTruckAndStation = GetComponent<CreateTruckAndStation>();
             exitPlayMode = GetComponent<ExitPlayMode>();
 
-            if(prevFolderPath != "")
+            if (prevFolderPath != "")
             {
                 isPrevExist = true;
             }
@@ -132,7 +133,7 @@ namespace TrafficSimulation {
 
         void Update()
         {
-            if(playAgain == true)
+            if (playAgain == true)
             {
                 playAgain = false;
                 Debug.Log("----------Again Process-----------");
@@ -150,7 +151,7 @@ namespace TrafficSimulation {
         }
 
         public void Process()
-        {   
+        {
             currentPrevRouteFilePath = prevRouteFileList[currentFileCount];
             currentPrevTruckFilePath = prevTruckFileList[currentFileCount];
 
@@ -159,7 +160,7 @@ namespace TrafficSimulation {
 
             string currenFilePath = SetSaveFileName();
 
-            if(File.Exists(currenFilePath))
+            if (File.Exists(currenFilePath))
             {
                 currentFileCount++;
                 Debug.Log("File already exists : " + saveFile.filePath);
@@ -180,26 +181,26 @@ namespace TrafficSimulation {
 
         private string SetSaveFileName()
         {
-            if(CreateTruckAndStation.isTwoFile)
+            if (CreateTruckAndStation.isTwoFile)
             {
                 saveFile.csvFileName = Path.GetFileName(currentPrevRouteFilePath) + "_with_" + Path.GetFileName(currentNowRouteFilePath);
             }
 
-            else if(prevFolderPath != "")
+            else if (prevFolderPath != "")
             {
                 saveFile.csvFileName = Path.GetFileName(currentPrevRouteFilePath);
             }
-            
+
             else
             {
                 saveFile.csvFileName = Path.GetFileName(currentNowRouteFilePath);
             }
 
-            if(CreateTruckAndStation.isOneByOne)
+            if (CreateTruckAndStation.isOneByOne)
             {
                 saveFile.filePath = "Assets/Results/result_NoCongestions_" + saveFile.csvFileName;
             }
-            
+
             else
             {
                 saveFile.filePath = "Assets/Results/result_" + saveFile.csvFileName;
@@ -210,22 +211,22 @@ namespace TrafficSimulation {
 
         private void CreateTruck()
         {
-            if(createTruckAndStation != null)
+            if (createTruckAndStation != null)
             {
                 createTruckAndStation.CreatingTrucks(currentPrevTruckFilePath, currentNowTruckFilePath);
 
 
-                if(folderCount == 2)
+                if (folderCount == 2)
                 {
                     exitPlayMode.totalTruckCount = CreateTruckAndStation.truckDataList_1.Count + CreateTruckAndStation.truckDataList_2.Count;
                 }
-                
-                else if(prevFolderPath != "")
+
+                else if (prevFolderPath != "")
                 {
                     exitPlayMode.totalTruckCount = CreateTruckAndStation.truckDataList_1.Count;
                 }
 
-                else if(nowFolderPath != "")
+                else if (nowFolderPath != "")
                 {
                     exitPlayMode.totalTruckCount = CreateTruckAndStation.truckDataList_2.Count;
                 }
@@ -237,11 +238,11 @@ namespace TrafficSimulation {
         }
 
         private void CheckFolderCount()
-        {   
+        {
             List<string> routeFileList = new List<string>();
             List<string> truckFileList = new List<string>();
 
-            if(prevFolderPath != "")
+            if (prevFolderPath != "")
             {
                 (routeFileList, truckFileList) = GetFileList(prevFolderPath);
                 prevRouteFileList = routeFileList;
@@ -251,8 +252,8 @@ namespace TrafficSimulation {
                 folderCount++;
             }
 
-            if(nowFolderPath != "")
-            {   
+            if (nowFolderPath != "")
+            {
                 (routeFileList, truckFileList) = GetFileList(nowFolderPath);
                 nowRouteFileList = routeFileList;
                 nowTruckFileList = truckFileList;
@@ -261,12 +262,12 @@ namespace TrafficSimulation {
                 folderCount++;
             }
 
-            if(prevFolderPath == "" & nowFolderPath == "")
+            if (prevFolderPath == "" & nowFolderPath == "")
             {
                 Debug.LogError("Check Folder Path");
             }
 
-            if(folderCount == 2)
+            if (folderCount == 2)
             {
                 CreateTruckAndStation.isTwoFile = true;
             }
@@ -278,20 +279,20 @@ namespace TrafficSimulation {
         }
 
         private (List<string>, List<string>) GetFileList(string _folderPath)
-        {   
+        {
             List<string> routeFileList = new List<string>();
             List<string> truckFileList = new List<string>();
 
-            if(Directory.Exists(_folderPath))
+            if (Directory.Exists(_folderPath))
             {
                 // Get an array of all CSV files in the folder
                 string[] csvFiles = Directory.GetFiles(_folderPath, "*.csv");
 
-                foreach(string filePath in csvFiles)
+                foreach (string filePath in csvFiles)
                 {
                     string fileName = Path.GetFileName(filePath);
 
-                    if(fileName.Contains("RoutePoints"))
+                    if (fileName.Contains("RoutePoints"))
                     {
                         routeFileList.Add(filePath);
                     }
@@ -309,7 +310,7 @@ namespace TrafficSimulation {
         private void CreateAllRoutes()
         {
             // 2개 파일 돌릴 때
-            if(folderCount == 2)
+            if (folderCount == 2)
             {
                 totalFileCount = prevFileCount;
 
@@ -318,17 +319,17 @@ namespace TrafficSimulation {
 
                 Debug.Log("Create prev Routes : " + currentPrevRouteFilePath + ", Create now Routes : " + currentNowRouteFilePath);
 
-                if(prevRouteDictionary != null)
+                if (prevRouteDictionary != null)
                 {
                     CreateRoutes(currentPrevRouteFilePath, prevRouteDictionary, cornerPositions, intersectionPositions);
                 }
 
                 else
                 {
-                    Debug.LogError("prevRouteDictionary is null");    
+                    Debug.LogError("prevRouteDictionary is null");
                 }
 
-                if(nowRouteDictionary != null)
+                if (nowRouteDictionary != null)
                 {
                     CreateRoutes(currentNowRouteFilePath, nowRouteDictionary, cornerPositions, intersectionPositions);
                 }
@@ -339,10 +340,10 @@ namespace TrafficSimulation {
                 }
             }
 
-            else if(folderCount == 1)
+            else if (folderCount == 1)
             {
                 // 1개 파일 돌릴 때
-                if(prevFileCount != 0)
+                if (prevFileCount != 0)
                 {
                     totalFileCount = prevFileCount;
                     currentPrevRouteFilePath = prevRouteFileList[currentFileCount];
@@ -351,18 +352,19 @@ namespace TrafficSimulation {
 
                     Debug.Log("Create prev Routes : " + currentPrevRouteFilePath);
 
-                    if(prevRouteDictionary != null)
+                    if (prevRouteDictionary != null)
                     {
-                        CreateRoutes(currentPrevRouteFilePath, prevRouteDictionary, cornerPositions, intersectionPositions);                    }
+                        CreateRoutes(currentPrevRouteFilePath, prevRouteDictionary, cornerPositions, intersectionPositions);
+                    }
 
                     else
                     {
                         Debug.LogError("prevRouteDictionary is null");
                     }
-                    
+
                 }
 
-                else if(nowFileCount != 0)
+                else if (nowFileCount != 0)
                 {
                     totalFileCount = nowFileCount;
                     currentNowRouteFilePath = nowRouteFileList[currentFileCount];
@@ -371,7 +373,7 @@ namespace TrafficSimulation {
 
                     Debug.Log("Create now Routes : " + currentNowRouteFilePath);
 
-                    if(nowRouteDictionary != null)
+                    if (nowRouteDictionary != null)
                     {
                         CreateRoutes(currentNowRouteFilePath, nowRouteDictionary, cornerPositions, intersectionPositions);
                     }
@@ -390,7 +392,7 @@ namespace TrafficSimulation {
         }
 
         private static Dictionary<int, List<Vector3>> CreateRouteList(string _routefilePath)
-        {   
+        {
             Dictionary<int, List<Vector3>> _routeDictionary = new Dictionary<int, List<Vector3>>();
 
             if (!File.Exists(_routefilePath))
@@ -435,23 +437,23 @@ namespace TrafficSimulation {
                     }
                 }
             }
-            
+
 
             return _routeDictionary;
-        }                                               
+        }
 
         private static void CreateRoutes(string _routeFilePath, Dictionary<int, List<Vector3>> _routeDictionary, List<Vector3> _corners, List<Vector3> _intersections)
-        {   
+        {
             GetPlusNum(_routeFilePath);
-            
+
             List<Vector3> checkingRotateList = new List<Vector3>();
-            
-            if(_corners.Count > 0 && _intersections.Count > 0)
+
+            if (_corners.Count > 0 && _intersections.Count > 0)
             {
                 checkingRotateList.AddRange(_corners);
                 checkingRotateList.AddRange(_intersections);
             }
-            
+
             else
             {
                 Debug.LogError("There is no corners or intersections");
@@ -461,15 +463,15 @@ namespace TrafficSimulation {
             GameObject parentGO = new GameObject(parentGOName);
             parentGO.transform.position = Vector3.zero;
 
-            foreach(int dict_key in _routeDictionary.Keys)
-            {   
+            foreach (int dict_key in _routeDictionary.Keys)
+            {
                 List<Vector3> route = _routeDictionary[dict_key];
 
-                if(route == null) Debug.LogError("route is null");
+                if (route == null) Debug.LogError("route is null");
 
                 int newRouteNum = dict_key + routePlusNum;
                 string routeName = "Route-" + newRouteNum.ToString();
-                
+
                 GameObject mainGo = new GameObject(routeName);
                 mainGo.transform.position = Vector3.zero;
                 mainGo.transform.SetParent(parentGO.transform);
@@ -482,28 +484,28 @@ namespace TrafficSimulation {
 
 
                 AddSegment(route[0], routeName);
-                
-                for(int p=0; p <route.Count; p++)
-                {  
+
+                for (int p = 0; p < route.Count; p++)
+                {
                     List<Vector3> newRotationPoints = new List<Vector3>();
                     List<Vector3> paths = new List<Vector3>();
 
                     // Debug.Log("routeName : " + routeName + ", route[p] : " + route[p]);
-                    if(p > 0 && p+1 < route.Count)
-                    {   
+                    if (p > 0 && p + 1 < route.Count)
+                    {
                         // 회전하는 위치인 경우
-                        if(RotatePosition(route[p-1], route[p], route[p+1], checkingRotateList))
+                        if (RotatePosition(route[p - 1], route[p], route[p + 1], checkingRotateList))
                         {
-                            newRotationPoints = ChangeToRotate(route[p-1], route[p], route[p+1]);
+                            newRotationPoints = ChangeToRotate(route[p - 1], route[p], route[p + 1]);
 
                             // Debug.Log("routeName : " + routeName + ", route[p] : " + route[p] + " is rotate position");   
                             List<Vector3> rPoints = new List<Vector3>();
 
-                            for(int rPoint = 0; rPoint <newRotationPoints.Count; rPoint++)
-                            {   
-                                if(rPoint+1 < newRotationPoints.Count)
+                            for (int rPoint = 0; rPoint < newRotationPoints.Count; rPoint++)
+                            {
+                                if (rPoint + 1 < newRotationPoints.Count)
                                 {
-                                    rPoints = EditPathPoints(newRotationPoints[rPoint], newRotationPoints[rPoint+1], routeMoveScale);
+                                    rPoints = EditPathPoints(newRotationPoints[rPoint], newRotationPoints[rPoint + 1], routeMoveScale);
 
                                     newRoPoint = rPoints[0];
                                     newRoPoint.y = route_Pos_y;
@@ -521,42 +523,42 @@ namespace TrafficSimulation {
 
                         // 회전구간 아닌 경우
                         else
-                        {   
+                        {
                             // 다시 돌아가는 길인 경우
-                            if(p-1 >= 0 && route[p-1] == route[p+1])
-                            {   
+                            if (p - 1 >= 0 && route[p - 1] == route[p + 1])
+                            {
                                 // routeInfo.uTurnNum ++;
-                                paths = EditPathPoints(route[p-1], route[p], routeMoveScale);
+                                paths = EditPathPoints(route[p - 1], route[p], routeMoveScale);
                                 newPoint = paths[1];
                                 newPoint.y = route_Pos_y;
                                 AddWaypoint(newPoint);
                                 routeInfo.uTurnStations.Add(route[p]);
                             }
 
-                            paths = EditPathPoints(route[p], route[p+1], routeMoveScale);
+                            paths = EditPathPoints(route[p], route[p + 1], routeMoveScale);
                             newPoint = paths[0];
                             newPoint.y = route_Pos_y;
                             AddWaypoint(newPoint);
-                            
+
                         }
                     }
 
                     // p = 0 or p+1 = route.Count
                     else
-                    {   
-                        if(p == 0)
+                    {
+                        if (p == 0)
                         {
-                            paths = EditPathPoints(route[p], route[p+1], routeMoveScale);
+                            paths = EditPathPoints(route[p], route[p + 1], routeMoveScale);
 
                             newPoint = paths[0];
                             newPoint.y = route_Pos_y;
                             AddWaypoint(newPoint);
                         }
-                        
 
-                        if(p+1 == route.Count)
-                        {   
-                            paths = EditPathPoints(route[p-1], route[p], routeMoveScale);
+
+                        if (p + 1 == route.Count)
+                        {
+                            paths = EditPathPoints(route[p - 1], route[p], routeMoveScale);
 
                             newPoint = paths[1];
                             newPoint.y = route_Pos_y;
@@ -568,46 +570,46 @@ namespace TrafficSimulation {
         }
 
         private static void GetPlusNum(string _routefilePath)
-        {   
+        {
             string fileName = Path.GetFileName(_routefilePath);
-            
-            if(fileName.Contains("now"))
+
+            if (fileName.Contains("now"))
             {
                 routePlusNum = 100;
             }
 
-            else if(fileName.Contains("prev"))
+            else if (fileName.Contains("prev"))
             {
                 routePlusNum = 0;
             }
         }
 
         public static List<Vector3> EditPathPoints(Vector3 nowPoint, Vector3 nextPoint, float _routeMoveScale)
-        {   
+        {
             float axis_x_next_now = nextPoint.x - nowPoint.x;
             float axis_z_next_now = nextPoint.z - nowPoint.z;
 
             List<Vector3> EditPoints = new List<Vector3>();
 
-            if(axis_x_next_now < 0)
+            if (axis_x_next_now < 0)
             {
                 nowPoint.z += _routeMoveScale;
                 nextPoint.z += _routeMoveScale;
             }
 
-            else if(axis_x_next_now > 0)
+            else if (axis_x_next_now > 0)
             {
                 nowPoint.z -= _routeMoveScale;
                 nextPoint.z -= _routeMoveScale;
             }
 
-            if(axis_z_next_now < 0)
+            if (axis_z_next_now < 0)
             {
                 nowPoint.x -= _routeMoveScale;
                 nextPoint.x -= _routeMoveScale;
             }
 
-            else if(axis_z_next_now > 0)
+            else if (axis_z_next_now > 0)
             {
                 nowPoint.x += _routeMoveScale;
                 nextPoint.x += _routeMoveScale;
@@ -619,7 +621,7 @@ namespace TrafficSimulation {
             return EditPoints;
         }
 
-        private static void AddWaypoint(Vector3 position) 
+        private static void AddWaypoint(Vector3 position)
         {
             GameObject go = new GameObject("Waypoint-" + wps.curSegment.waypoints.Count);
             go.transform.SetParent(wps.curSegment.transform);
@@ -632,7 +634,7 @@ namespace TrafficSimulation {
             wps.curSegment.waypoints.Add(wp);
         }
 
-        private static void AddSegment(Vector3 position, string routeName) 
+        private static void AddSegment(Vector3 position, string routeName)
         {
             int segId = wps.segments.Count;
             GameObject segGo = new GameObject(routeName);
@@ -650,13 +652,13 @@ namespace TrafficSimulation {
         }
 
         private static bool RotatePosition(Vector3 prePosition, Vector3 nowPosition, Vector3 nextPosition, List<Vector3> coordinateList)
-        {   
+        {
             isRotate = CheckIfCoordinateExists(prePosition, nowPosition, nextPosition, coordinateList);
             return isRotate;
         }
-        
+
         private static List<Vector3> ChangeToRotate(Vector3 previousPoint, Vector3 nowPoint, Vector3 nextPoint)
-        {   
+        {
             float nowPoint_x = nowPoint.x;
             float nowPoint_z = nowPoint.z;
 
@@ -667,16 +669,16 @@ namespace TrafficSimulation {
             float axis_z_next_now = nextPoint.z - nowPoint_z;
 
             List<Vector3> rotatePoints = new List<Vector3>();
-            
-            if(axis_x_pre_now == 0 && axis_z_next_now == 0)
-            {   
-                if(axis_z_pre_now > 0)
+
+            if (axis_x_pre_now == 0 && axis_z_next_now == 0)
+            {
+                if (axis_z_pre_now > 0)
                 {
                     // Down Right (ㄴ 반대 모양)
-                    if(axis_x_next_now < 0)
+                    if (axis_x_next_now < 0)
                     {
                         // Debug.Log(_routeName + " --> Down Right (ㄴ 반대 모양)");
-                        x1 = nowPoint_x -1f;
+                        x1 = nowPoint_x - 1f;
                         z1 = nowPoint_z + 12.5f;
 
                         x2 = nowPoint_x - 4f;
@@ -690,8 +692,8 @@ namespace TrafficSimulation {
                     }
 
                     // Down Left (ㄴ 모양)
-                    else if(axis_x_next_now > 0)
-                    {                        
+                    else if (axis_x_next_now > 0)
+                    {
                         x1 = nowPoint_x + 2f;
                         z1 = nowPoint_z + 20f;
 
@@ -706,10 +708,10 @@ namespace TrafficSimulation {
                     }
                 }
 
-                else if(axis_z_pre_now < 0)
+                else if (axis_z_pre_now < 0)
                 {
                     // Up left 2 (ㄱ 모양)
-                    if(axis_x_next_now < 0)
+                    if (axis_x_next_now < 0)
                     {
                         x1 = nowPoint_x;
                         z1 = nowPoint_z - 25.5f;
@@ -725,7 +727,7 @@ namespace TrafficSimulation {
                     }
 
                     // Up right 2(ㄱ 반대모양)
-                    else if(axis_x_next_now > 0)
+                    else if (axis_x_next_now > 0)
                     {
                         x1 = nowPoint_x;
                         z1 = nowPoint_z - 12.5f;
@@ -740,18 +742,18 @@ namespace TrafficSimulation {
                         z4 = nowPoint_z;
 
                     }
-                    
+
                 }
-                
+
             }
 
-            else if(axis_z_pre_now == 0 && axis_x_next_now == 0)
+            else if (axis_z_pre_now == 0 && axis_x_next_now == 0)
             {
-                if(axis_z_next_now > 0)
+                if (axis_z_next_now > 0)
                 {
                     // Up left (ㄴ 반대 모양)
-                    if(axis_x_pre_now < 0)
-                    {   
+                    if (axis_x_pre_now < 0)
+                    {
                         // Debug.Log(_routeName + " --> Up left (ㄴ 반대 모양)");
                         x1 = nowPoint_x - 20f;
                         z1 = nowPoint_z;
@@ -767,12 +769,12 @@ namespace TrafficSimulation {
                     }
 
                     // Up right (ㄴ 모양)
-                    else if(axis_x_pre_now > 0)
+                    else if (axis_x_pre_now > 0)
                     {
                         // Debug.Log(_routeName + " --> Up right (ㄴ 모양)");
                         x1 = nowPoint_x + 15f;
                         z1 = nowPoint_z;
-            
+
                         x2 = nowPoint_x + 8f;
                         z2 = nowPoint_z + 2.5f;
 
@@ -784,10 +786,10 @@ namespace TrafficSimulation {
                     }
                 }
 
-                else if(axis_z_next_now < 0)
+                else if (axis_z_next_now < 0)
                 {
                     // Down right 2 (ㄱ 모양)
-                    if(axis_x_pre_now < 0)
+                    if (axis_x_pre_now < 0)
                     {
                         // Debug.Log(_routeName + " --> Down right 2 (ㄱ 모양)");
                         x1 = nowPoint_x - 15f;
@@ -804,7 +806,7 @@ namespace TrafficSimulation {
                     }
 
                     // Down left 2 (ㄱ 반대 모양)
-                    else if(axis_x_pre_now > 0)
+                    else if (axis_x_pre_now > 0)
                     {
                         // Debug.Log(_routeName + " --> Down left 2 (ㄱ 반대 모양)");
                         x1 = nowPoint_x + 20f;
@@ -820,11 +822,11 @@ namespace TrafficSimulation {
                         z4 = nowPoint_z - 22f;
                     }
 
-                    
+
                 }
-                
+
             }
-     
+
             rotatePoints.Add(new Vector3(x1, 0f, z1));
             rotatePoints.Add(new Vector3(x2, 0f, z2));
             rotatePoints.Add(new Vector3(x3, 0f, z3));
@@ -832,9 +834,9 @@ namespace TrafficSimulation {
 
             return rotatePoints;
         }
-        
+
         private static bool CheckIfCoordinateExists(Vector3 prePo, Vector3 nowPo, Vector3 nextPo, List<Vector3> coordinateList)
-        {   
+        {
             float pre_now_x = prePo.x - nowPo.x;
             float pre_now_z = prePo.z - nowPo.z;
             float now_next_x = nowPo.x - nextPo.x;
@@ -846,6 +848,6 @@ namespace TrafficSimulation {
             bool isExist = coordinateList.Contains(nowPo) && (case_1 || case_2);
             return isExist;
         }
-    
+
     }
 }
