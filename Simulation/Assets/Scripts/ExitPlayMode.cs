@@ -12,15 +12,17 @@ namespace TrafficSimulation{
     {
         public int nowTruckCount;
         public int totalTruckCount;
-        public int _currentFileCount;
-        public int _totalFileCount;
         private SaveFile saveFile;
         private WholeProcess wholeProcess;
         
+        void Start()
+        {
+            wholeProcess = GameObject.Find("Roads").GetComponent<WholeProcess>();
+        }
+
         // Update is called once per frame
         void Update()
         {   
-            // _currentFileCount = WholeProcess.currentFileCount;
             if(CompareCount(wholeProcess.folderCount, wholeProcess.currentFolderCount))
             {
                 Debug.Log("Exit Play Mode");

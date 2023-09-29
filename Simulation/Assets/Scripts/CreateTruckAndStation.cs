@@ -61,7 +61,6 @@ namespace TrafficSimulation{
                 {   
                     IsDuplicateStartPosition(truckDataList_1, truckIndexPlus_1);
                     CreateTrucks(startPositionDict_1, checkRange_1, checkRange_2, checkDelay);
-                    Debug.Log("Create prev trucks");
 
                     StartCoroutine(CreateNewTrucksDelay(createDelay));
                 }
@@ -99,7 +98,6 @@ namespace TrafficSimulation{
                         {   
                             IsDuplicateStartPosition(truckDataList_1, truckIndexPlus_1);
                             CreateTrucks(startPositionDict_1, checkRange_1, checkRange_2, checkDelay);
-                            Debug.Log("Create prev trucks");
                         }
 
                         else
@@ -135,7 +133,6 @@ namespace TrafficSimulation{
                             Debug.Log("truckDataList_2.Count : " + truckDataList_2.Count);
                             IsDuplicateStartPosition(truckDataList_2, truckIndexPlus_2);
                             CreateTrucks(startPositionDict_2, checkRange_1, checkRange_2, checkDelay);
-                            Debug.Log("Create now trucks");
                         }
                         
                         else
@@ -586,7 +583,6 @@ namespace TrafficSimulation{
         private IEnumerator CreateNewTrucksDelay(float _createDelay)
         {   
             yield return new WaitForSeconds(_createDelay);
-            Debug.Log("Create now trucks.");
 
             if(ExistRoute(truckDataList_2))
             {   

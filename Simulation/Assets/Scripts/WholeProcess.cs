@@ -30,14 +30,14 @@ namespace TrafficSimulation {
         
         private string[] folderList;
         public int folderCount;
-        public int currentFolderCount = 0;
+        public int currentFolderCount;
 
         private int prevFileCount;
         private int nowFileCount;
         
-        public static int subFolderCount;
-        public static int currentFileCount = 0;
-        public static int totalFileCount;
+        public int subFolderCount;
+        public int currentFileCount;
+        public int totalFileCount;
 
         // ChangeToRotate Parameters
         private static float x1;
@@ -133,6 +133,8 @@ namespace TrafficSimulation {
         {
             GameObject.Find("Roads").AddComponent<SaveFile>();
             saveFile = GetComponent<SaveFile>();
+            currentFileCount = 0;
+            currentFolderCount = 0;
             Process();
         }
 
@@ -199,7 +201,6 @@ namespace TrafficSimulation {
                 CreateAllRoutes();
 
                 exitPlayMode.nowTruckCount = 0;
-                exitPlayMode._totalFileCount = totalFileCount;
 
                 Invoke("CreateTruck", createTruckDelay);
             }

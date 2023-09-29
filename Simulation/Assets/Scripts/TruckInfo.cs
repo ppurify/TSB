@@ -468,9 +468,9 @@ namespace TrafficSimulation{
 
             if(exitPlayMode.nowTruckCount == exitPlayMode.totalTruckCount)
             {  
-                WholeProcess.currentFileCount++;
+                wholeProcess.currentFileCount++;
 
-                if(WholeProcess.subFolderCount == 2)
+                if(wholeProcess.subFolderCount == 2)
                 {
                     string prevRouteFilename = Path.GetFileName(wholeProcess.currentPrevRouteFilePath);
                     string nowRouteFilename = Path.GetFileName(wholeProcess.currentNowRouteFilePath);
@@ -498,10 +498,10 @@ namespace TrafficSimulation{
                     }
                 }
                 
-                if(WholeProcess.currentFileCount == WholeProcess.totalFileCount)
+                if(wholeProcess.currentFileCount == wholeProcess.totalFileCount)
                 {
                     wholeProcess.currentFolderCount ++;
-                    WholeProcess.currentFileCount = 0;
+                    wholeProcess.currentFileCount = 0;
                 }
 
                 wholeProcess.Process();
