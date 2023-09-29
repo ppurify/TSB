@@ -341,7 +341,6 @@ namespace TrafficSimulation {
 
             if(trafficSystem.collisionLayers != null)
             {
-                Debug.Log("trafficSystem.collisionLayers.Length : " + trafficSystem.collisionLayers.Length);
                 foreach(string layerName in trafficSystem.collisionLayers)
                 {
                     int id = 1 << LayerMask.NameToLayer(layerName);

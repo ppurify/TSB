@@ -2909,15 +2909,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 561152503}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 376a224f169aaeb408ded970c552e231, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   nowTruckCount: 0
   totalTruckCount: 0
-  _currentFileCount: 0
-  _totalFileCount: 9
 --- !u!114 &561152507
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2933,6 +2931,9 @@ MonoBehaviour:
   limitTotalTime: 500
   folderCount: 0
   currentFolderCount: 0
+  subFolderCount: 0
+  currentFileCount: 0
+  totalFileCount: 0
   currentPrevRouteFilePath: 
   currentNowRouteFilePath: 
   isPrevFolder: 1

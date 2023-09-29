@@ -192,6 +192,12 @@ namespace TrafficSimulation {
             {
                 currentFileCount++;
                 Debug.Log("File already exists : " + saveFile.filePath);
+                if(currentFileCount == totalFileCount)
+                {
+                    currentFolderCount ++;
+                    currentFileCount = 0;
+                }
+                
                 Process();
             }
 
