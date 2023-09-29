@@ -15,12 +15,13 @@ namespace TrafficSimulation{
         public int _currentFileCount;
         public int _totalFileCount;
         private SaveFile saveFile;
+        private WholeProcess wholeProcess;
         
         // Update is called once per frame
         void Update()
-        {
-            _currentFileCount = WholeProcess.currentFileCount;
-            if(CompareCount(_currentFileCount, WholeProcess.totalFileCount))
+        {   
+            // _currentFileCount = WholeProcess.currentFileCount;
+            if(CompareCount(wholeProcess.folderCount, wholeProcess.currentFolderCount))
             {
                 Debug.Log("Exit Play Mode");
                 EditorApplication.ExitPlaymode();

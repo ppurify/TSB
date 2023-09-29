@@ -450,7 +450,7 @@ namespace TrafficSimulation{
             // 한대씩 돌릴 때
             if(_isOneByOne)
             {   
-                if(wholeProcess.isPrevExist)
+                if(wholeProcess.isPrevFolder)
                 {
                     truckDataList = CreateTruckAndStation.truckDataList_1;
                 }
@@ -470,39 +470,42 @@ namespace TrafficSimulation{
             {  
                 WholeProcess.currentFileCount++;
 
-                if(WholeProcess.currentFileCount < WholeProcess.totalFileCount) 
+                if(WholeProcess.subFolderCount == 2)
                 {
-                    if(WholeProcess.folderCount == 2)
+                    string prevRouteFilename = Path.GetFileName(wholeProcess.currentPrevRouteFilePath);
+                    string nowRouteFilename = Path.GetFileName(wholeProcess.currentNowRouteFilePath);
+                    GameObject prevRouteGO = GameObject.Find(prevRouteFilename);
+                    GameObject nowRouteGO = GameObject.Find(nowRouteFilename);
+                    
+                    Destroy(prevRouteGO);
+                    Destroy(nowRouteGO);
+                }
+
+                else
+                {
+                    if(wholeProcess.isPrevFolder)
                     {
                         string prevRouteFilename = Path.GetFileName(wholeProcess.currentPrevRouteFilePath);
-                        string nowRouteFilename = Path.GetFileName(wholeProcess.currentNowRouteFilePath);
                         GameObject prevRouteGO = GameObject.Find(prevRouteFilename);
-                        GameObject nowRouteGO = GameObject.Find(nowRouteFilename);
-                        
-                        Destroy(prevRouteGO);
-                        Destroy(nowRouteGO);
+                        Destroy(prevRouteGO);       
                     }
 
                     else
                     {
-                        if(wholeProcess.isPrevExist)
-                        {
-                            string prevRouteFilename = Path.GetFileName(wholeProcess.currentPrevRouteFilePath);
-                            GameObject prevRouteGO = GameObject.Find(prevRouteFilename);
-                            Destroy(prevRouteGO);       
-                        }
-
-                        else
-                        {
-                            string nowRouteFilename = Path.GetFileName(wholeProcess.currentNowRouteFilePath);
-                            GameObject nowRouteGO = GameObject.Find(nowRouteFilename);
-                            Destroy(nowRouteGO);
-                        }
+                        string nowRouteFilename = Path.GetFileName(wholeProcess.currentNowRouteFilePath);
+                        GameObject nowRouteGO = GameObject.Find(nowRouteFilename);
+                        Destroy(nowRouteGO);
                     }
-
-                    wholeProcess.Process();
                 }
                 
+                if(WholeProcess.currentFileCount == WholeProcess.totalFileCount)
+                {
+                    wholeProcess.currentFolderCount ++;
+                    WholeProcess.currentFileCount = 0;
+                }
+
+                wholeProcess.Process();
+
                 if(SaveFile.resultsDataList != null)
                 {   
                     saveFile.SaveToCSV();

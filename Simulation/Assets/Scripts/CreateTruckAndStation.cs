@@ -40,7 +40,7 @@ namespace TrafficSimulation{
         private static float checkRange_2 = 3f;
         private static float checkDelay = 0.5f;
 
-        public static int fileCount;
+        public static int subFolderCount;
 
         public void CreatingTrucks(string _prevTruckFilePath, string _nowTruckFilePath)
         {   
@@ -48,7 +48,7 @@ namespace TrafficSimulation{
             truckDataList_2 = new List<CreateTruckData>();
             SaveFile.resultsDataList = new List<ResultsData>();
 
-            if(fileCount == 2)
+            if(subFolderCount == 2)
             {   
                 isTwoFile = true;
                 ReadFile(_prevTruckFilePath, truckIndexPlus_1);
@@ -73,7 +73,7 @@ namespace TrafficSimulation{
             }
 
 
-            else if(fileCount == 1)
+            else if(subFolderCount == 1)
             {   
                 if(_prevTruckFilePath != null)
                 {   

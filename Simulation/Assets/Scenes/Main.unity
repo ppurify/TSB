@@ -2909,7 +2909,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 561152503}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 376a224f169aaeb408ded970c552e231, type: 3}
   m_Name: 
@@ -2930,11 +2930,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3aa0c3bdfa37414588fe4824b77cd36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  truckHitCount: 0
-  truckHitWall: 0
+  limitTotalTime: 500
+  folderCount: 0
+  currentFolderCount: 0
   currentPrevRouteFilePath: 
   currentNowRouteFilePath: 
-  isPrevExist: 0
+  isPrevFolder: 1
 --- !u!1 &562974306
 GameObject:
   m_ObjectHideFlags: 0

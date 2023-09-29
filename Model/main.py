@@ -150,42 +150,47 @@ def main(_grid, _YT_locations, _Job_locations, number_of_YT, number_of_Job, case
 if __name__ == "__main__":
 
   casename = 'Congestion'
-  Prev_number_of_YT = 25
-  Prev_number_of_Job = 25
-  Now_number_of_YT = 30
-  Now_number_of_Job = 30
+ 
+  prev_YT_Num_list = [20, 20, 25, 25, 30]
+  now_YT_Num_list = [20, 25, 25, 30, 30]
   
-  case_folder_path = f'{casename}/prev_{Prev_number_of_YT}_now_{Now_number_of_YT}'
-
-  # 가로로 3개
-  block_num_in_row = 3
-  block_length = 9
-  block_height = 1
-  grid_length = 31
-  grid_height = 9
-  grid, YT_location_col_index, QC_locations, YC_locations = make_grid.Grid(grid_length, grid_height, block_length, block_height, block_num_in_row)
+  for _ in range(len(prev_YT_Num_list)):
+    Prev_number_of_YT = prev_YT_Num_list[_]
+    Prev_number_of_Job = prev_YT_Num_list[_]
+    Now_number_of_YT = now_YT_Num_list[_]
+    Now_number_of_Job = now_YT_Num_list[_]
   
-  reps = 3
+    case_folder_path = f'{casename}/prev_{Prev_number_of_YT}_now_{Now_number_of_YT}'
 
-  alphas = [[0, 10, 20, 30, 40, 50, 60, 70, 80],
-            [0, 80, 70, 60, 50, 40, 30, 20, 10],
-            [100, 10, 10, 10, 10, 10, 10, 10, 10]]
+    # 가로로 3개
+    block_num_in_row = 3
+    block_length = 9
+    block_height = 1
+    grid_length = 31
+    grid_height = 9
+    grid, YT_location_col_index, QC_locations, YC_locations = make_grid.Grid(grid_length, grid_height, block_length, block_height, block_num_in_row)
     
-  for rep in range(reps):
-    
-    rep = rep + 1
+    reps = 12
 
-    prev_YT_locations, prev_Job_locations = generate_locations(grid, Prev_number_of_YT, Prev_number_of_Job, YT_location_col_index, QC_locations, YC_locations)
-    now_YT_locations, now_Job_locations = generate_locations(grid, Now_number_of_YT, Now_number_of_Job, YT_location_col_index, QC_locations, YC_locations)
-
-    for i in range(len(alphas[0])):
+    alphas = [[0, 10, 20, 30, 40, 50, 60, 70, 80],
+              [0, 80, 70, 60, 50, 40, 30, 20, 10],
+              [100, 10, 10, 10, 10, 10, 10, 10, 10]]
       
-      alpha1 = alphas[0][i]
-      alpha2 = alphas[1][i]
-      alpha3 = alphas[2][i]
+    for rep in range(reps):
       
-      # Prev
-      prev_count = np.zeros((len(grid), len(grid[0])))
+      rep = rep + 1
 
-      next_prev_count = main(grid, prev_YT_locations, prev_Job_locations, Prev_number_of_YT, Prev_number_of_Job, case_folder_path, 'prev', prev_count, alpha1, alpha2, alpha3, rep)
-      main(grid, now_YT_locations, now_Job_locations, Now_number_of_YT, Now_number_of_Job, case_folder_path, 'now', next_prev_count, alpha1, alpha2, alpha3, rep)
+      prev_YT_locations, prev_Job_locations = generate_locations(grid, Prev_number_of_YT, Prev_number_of_Job, YT_location_col_index, QC_locations, YC_locations)
+      now_YT_locations, now_Job_locations = generate_locations(grid, Now_number_of_YT, Now_number_of_Job, YT_location_col_index, QC_locations, YC_locations)
+
+      for i in range(len(alphas[0])):
+        
+        alpha1 = alphas[0][i]
+        alpha2 = alphas[1][i]
+        alpha3 = alphas[2][i]
+        
+        # Prev
+        prev_count = np.zeros((len(grid), len(grid[0])))
+
+        next_prev_count = main(grid, prev_YT_locations, prev_Job_locations, Prev_number_of_YT, Prev_number_of_Job, case_folder_path, 'prev', prev_count, alpha1, alpha2, alpha3, rep)
+        main(grid, now_YT_locations, now_Job_locations, Now_number_of_YT, Now_number_of_Job, case_folder_path, 'now', next_prev_count, alpha1, alpha2, alpha3, rep)
