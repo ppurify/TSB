@@ -174,7 +174,6 @@ namespace TrafficSimulation {
         {   
             subFolderCount = 0;
             GetPrevNowFolderPath(folderList[currentFolderCount]);
-            Debug.Log("prevFolderPath : " + prevFolderPath + ", nowFolderPath : " + nowFolderPath);
             
             CheckFolderCount();
             CreateTruckAndStation.subFolderCount = subFolderCount;
@@ -194,16 +193,16 @@ namespace TrafficSimulation {
                 Debug.Log("File already exists : " + saveFile.filePath);
                 if(currentFileCount == totalFileCount)
                 {
+                    Debug.Log("----- Next Folder ------");
                     currentFolderCount ++;
                     currentFileCount = 0;
                 }
-                
+
                 Process();
             }
 
             else
             {
-                Debug.Log("File does not exist : " + saveFile.filePath);
                 CreateAllRoutes();
 
                 exitPlayMode.nowTruckCount = 0;
@@ -307,11 +306,21 @@ namespace TrafficSimulation {
             if(subFolderCount == 2)
             {
                 CreateTruckAndStation.isTwoFile = true;
+                totalFileCount = prevFileCount;
             }
 
             else
             {
                 CreateTruckAndStation.isTwoFile = false;
+                if(prevFileCount != 0)
+                {
+                    totalFileCount = prevFileCount;
+                }
+
+                else if(nowFileCount != 0)
+                {
+                    totalFileCount = nowFileCount;
+                }
             }
         }
 
@@ -354,8 +363,6 @@ namespace TrafficSimulation {
             // 2개 파일 돌릴 때
             if(subFolderCount == 2)
             {
-                totalFileCount = prevFileCount;
-
                 prevRouteDictionary = CreateRouteList(currentPrevRouteFilePath);
                 nowRouteDictionary = CreateRouteList(currentNowRouteFilePath);
 
@@ -387,7 +394,6 @@ namespace TrafficSimulation {
                 // 1개 파일 돌릴 때
                 if(prevFileCount != 0)
                 {
-                    totalFileCount = prevFileCount;
                     currentPrevRouteFilePath = prevRouteFileList[currentFileCount];
                     currentPrevTruckFilePath = prevTruckFileList[currentFileCount];
                     prevRouteDictionary = CreateRouteList(currentPrevRouteFilePath);
@@ -407,7 +413,6 @@ namespace TrafficSimulation {
 
                 else if(nowFileCount != 0)
                 {
-                    totalFileCount = nowFileCount;
                     currentNowRouteFilePath = nowRouteFileList[currentFileCount];
                     currentNowTruckFilePath = nowTruckFileList[currentFileCount];
                     nowRouteDictionary = CreateRouteList(currentNowRouteFilePath);
