@@ -504,7 +504,10 @@ namespace TrafficSimulation{
                     wholeProcess.currentFileCount = 0;
                 }
 
-                wholeProcess.Process();
+                if(wholeProcess.folderCount != wholeProcess.currentFolderCount)
+                {
+                    wholeProcess.Process();
+                }
 
                 if(SaveFile.resultsDataList != null)
                 {   
