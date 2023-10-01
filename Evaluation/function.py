@@ -153,7 +153,7 @@ def lineplot(_dfs, x_col, y_col, y_lim, _title):
         y_value = df[y_col]
         plt.axhline(y=y_value[0], color='gray', linestyle='--', alpha = 0.5)
 
-def scatterplot(_dfs, _x_value, x_label, y_col, y_lim, _title):
+def scatterplot(_dfs, _x_value, x_label, y_col, y_lim, _title, legend_loc):
 
     x_index = 0
     keys = []
@@ -171,6 +171,6 @@ def scatterplot(_dfs, _x_value, x_label, y_col, y_lim, _title):
     plt.title(_title)
     plt.xlabel(x_label, fontsize = 9)
     plt.ylabel(y_col, fontsize = 9)
-    plt.legend(keys, fontsize = 7, loc = 'upper right')
+    plt.legend(keys, fontsize = 7, loc = legend_loc)
 
     plt.show()
