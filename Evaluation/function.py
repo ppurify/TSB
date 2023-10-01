@@ -60,8 +60,10 @@ def get_dfs_by_folder(_directory_path, _y_value_col):
                     repeat_time = int(re.search(r'(\d+)rep', file_name).group(1))
                         
                     df = pd.DataFrame(file_data[1:], columns = file_data[0])
-                    result_df_data_row = [prev_truck_num , now_truck_num] + alphas + [repeat_time, df[_y_value_col].astype(float)[0]]
-                    data_list.append(result_df_data_row)
+                    y_col_value = df[df[_y_value_col].notna()][_y_value_col].astype(float).values.tolist()
+                    for y_value in y_col_value:
+                        result_df_data_row = [prev_truck_num , now_truck_num] + alphas + [repeat_time, y_value]
+                        data_list.append(result_df_data_row)
                 # 첫번째 열부터 5번째 열까지 기준으로 정렬
                 data_list.sort(key=lambda x: (x[0], x[1], x[2], x[3], x[4], x[5]))
                 dfs[folder_name] = pd.DataFrame(data_list, columns = df_col)
@@ -115,3 +117,25 @@ def lineplot(_dfs, x_col, y_col, y_lim, _title):
         df = value.groupby([x_col])[y_col].mean().reset_index()
         y_value = df[y_col]
         plt.axhline(y=y_value[0], color='gray', linestyle='--', alpha = 0.5)
+
+def scatterplot(_dfs, _x_value, x_label, y_col, y_lim, _title):
+
+    x_index = 0
+    keys = []
+    
+    for key, value in _dfs.items():
+        x_value = _x_value[x_index]
+        y_value = value[y_col]
+        keys.append(key)
+        plt.scatter([x_value] * len(y_value), y_value, label=key)
+        
+        x_index += 1
+        
+    # # set y limit
+    plt.ylim(y_lim)    
+    plt.title(_title)
+    plt.xlabel(x_label, fontsize = 9)
+    plt.ylabel(y_col, fontsize = 9)
+    plt.legend(keys, fontsize = 7, loc = 'upper right')
+
+    plt.show()
