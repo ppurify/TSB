@@ -23,7 +23,7 @@ def load_csv_files_in_folder(folder_path):
 
     return all_csv_data
 
-def get_dfs_by_folder(_directory_path, _y_value_col):
+def get_dfs_by_folder(_directory_path, _y_value_col, nooutlier = True):
     dfs = {}
     folder_names = []
 
@@ -66,14 +66,45 @@ def get_dfs_by_folder(_directory_path, _y_value_col):
                         data_list.append(result_df_data_row)
                 # 첫번째 열부터 5번째 열까지 기준으로 정렬
                 data_list.sort(key=lambda x: (x[0], x[1], x[2], x[3], x[4], x[5]))
-                dfs[folder_name] = pd.DataFrame(data_list, columns = df_col)
                 
+                # Create a DataFrame from the data_list
+                now_df = pd.DataFrame(data_list, columns=df_col)
+                
+                if nooutlier:
+                    
+                    # Remove outliers from the 'y_value_col' column
+                    df_no_outliers = remove_outliers(df, _y_value_col)
+                    
+                    # Sort the DataFrame by the specified columns
+                    df_no_outliers.sort_values(by=df_col[:-1], inplace=True)
+                    
+                    dfs[folder_name] = df_no_outliers
+                    
+                else:
+                    dfs[folder_name] = now_df
+    
     # Sort the dfs dictionary by keys
     dfs = sorted(dfs.items(), key=lambda x: (int(re.search(r'prev_(\d+)', x[0]).group(1)), int(re.search(r'now_(\d+)', x[0]).group(1))))
-
+    
     return dfs
+                
+def remove_outliers(df, col):
+    # Calculate the IQR for the specified column
+    Q1 = df[col].quantile(0.25)
+    Q3 = df[col].quantile(0.75)
+    IQR = Q3 - Q1
+    
+    # Define the lower and upper bounds for outliers
+    lower_bound = Q1 - 1.5 * IQR
+    upper_bound = Q3 + 1.5 * IQR
+    
+    # Filter out rows with values outside the bounds
+    df_no_outliers = df[(df[col] >= lower_bound) & (df[col] <= upper_bound)]
+    
+    return df_no_outliers
 
-def boxplot(_dfs, x_col, y_col, col_num, y_lim, title, fig_size):
+
+def boxsubplot(_dfs, x_col, y_col, col_num, y_lim, title, fig_size):
     folder_num = len(_dfs)
 
     if folder_num % col_num == 0:
