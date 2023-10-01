@@ -127,7 +127,7 @@ def scatterplot(_dfs, _x_value, x_label, y_col, y_lim, _title):
         x_value = _x_value[x_index]
         y_value = value[y_col]
         keys.append(key)
-        plt.scatter([x_value] * len(y_value), y_value, label=key)
+        plt.scatter([x_value] * len(y_value), y_value, label=key, alpha = 0.5)
         
         x_index += 1
         
