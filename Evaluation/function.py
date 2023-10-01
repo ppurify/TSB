@@ -23,7 +23,26 @@ def load_csv_files_in_folder(folder_path):
 
     return all_csv_data
 
-def get_dfs_by_folder(_directory_path, _y_value_col, nooutlier = True):
+def remove_outliers(df, col):
+    # Calculate the IQR for the specified column
+    # Group by alpha_1 and get col
+    grouped_df = df.groupby('alpha_1')[col]
+    
+    # Calculate the IQR for each group
+    Q1 = grouped_df.quantile(0.25)
+    Q3 = grouped_df.quantile(0.75)
+    IQR = Q3 - Q1
+    
+    # Define the lower and upper bounds for outliers for each group
+    lower_bound = Q1 - 1.5 * IQR
+    upper_bound = Q3 + 1.5 * IQR
+    
+    # Apply the outlier filter for each group
+    df_no_outliers = df.groupby('alpha_1').apply(lambda group: group[(group[col] >= lower_bound[group.name]) & (group[col] <= upper_bound[group.name])]).reset_index(drop=True)
+    
+    return df_no_outliers
+
+def get_dfs_by_folder(_directory_path, _y_col, nooutlier = True):
     dfs = {}
     folder_names = []
 
@@ -33,7 +52,6 @@ def get_dfs_by_folder(_directory_path, _y_value_col, nooutlier = True):
         
         # .csv 파일만 가져오기
         if extension != '.meta':
-            folder_names.append(folder_name)
 
             folder_path = os.path.join(_directory_path, folder_name)
             
@@ -41,9 +59,13 @@ def get_dfs_by_folder(_directory_path, _y_value_col, nooutlier = True):
                 all_csv_data = load_csv_files_in_folder(folder_path)
                 prev_truck_num = re.findall(r'prev_(\d+)', folder_name)[0]
                 now_truck_num = re.findall(r'now_(\d+)', folder_name)[0]
-                df_col = ["Prev Truck Number", "Now Truck Number", "alpha_1", "alpha_2", "alpha_3", "repeat_num", _y_value_col]
+    
+                df_col = ["Prev Truck Number", "Now Truck Number", "alpha_1", "alpha_2", "alpha_3", "repeat_num", _y_col]
                 data_list = []
-
+                
+                new_folder_name = 'prev_' + prev_truck_num + '_' + 'now_' + now_truck_num
+                folder_names.append(new_folder_name)
+                
                 for file, file_data in all_csv_data:
                     file_name = file.name
                         
@@ -60,48 +82,30 @@ def get_dfs_by_folder(_directory_path, _y_value_col, nooutlier = True):
                     repeat_time = int(re.search(r'(\d+)rep', file_name).group(1))
                         
                     df = pd.DataFrame(file_data[1:], columns = file_data[0])
-                    y_col_value = df[df[_y_value_col].notna()][_y_value_col].astype(float).values.tolist()
+                    y_col_value = df[df[_y_col].notna()][_y_col].astype(float).values.tolist()
                     for y_value in y_col_value:
                         result_df_data_row = [prev_truck_num , now_truck_num] + alphas + [repeat_time, y_value]
                         data_list.append(result_df_data_row)
-                # 첫번째 열부터 5번째 열까지 기준으로 정렬
-                data_list.sort(key=lambda x: (x[0], x[1], x[2], x[3], x[4], x[5]))
                 
                 # Create a DataFrame from the data_list
-                now_df = pd.DataFrame(data_list, columns=df_col)
-                
-                if nooutlier:
-                    
-                    # Remove outliers from the 'y_value_col' column
-                    df_no_outliers = remove_outliers(df, _y_value_col)
-                    
-                    # Sort the DataFrame by the specified columns
-                    df_no_outliers.sort_values(by=df_col[:-1], inplace=True)
-                    
-                    dfs[folder_name] = df_no_outliers
-                    
+                now_df = pd.DataFrame(data_list, columns=df_col).sort_values(by=df_col[:-1]).reset_index(drop=True)
+
+                if new_folder_name in dfs:
+                    dfs[new_folder_name] = pd.concat([dfs[new_folder_name], now_df]).reset_index(drop=True)
                 else:
-                    dfs[folder_name] = now_df
+                    dfs[new_folder_name] = now_df
     
+      
+    if nooutlier:
+        for key, value in dfs.items():
+            # Remove outliers from the 'y_value_col' column
+            df_no_outliers = remove_outliers(value, _y_col)
+            dfs[key] = df_no_outliers
+                    
     # Sort the dfs dictionary by keys
     dfs = sorted(dfs.items(), key=lambda x: (int(re.search(r'prev_(\d+)', x[0]).group(1)), int(re.search(r'now_(\d+)', x[0]).group(1))))
     
     return dfs
-                
-def remove_outliers(df, col):
-    # Calculate the IQR for the specified column
-    Q1 = df[col].quantile(0.25)
-    Q3 = df[col].quantile(0.75)
-    IQR = Q3 - Q1
-    
-    # Define the lower and upper bounds for outliers
-    lower_bound = Q1 - 1.5 * IQR
-    upper_bound = Q3 + 1.5 * IQR
-    
-    # Filter out rows with values outside the bounds
-    df_no_outliers = df[(df[col] >= lower_bound) & (df[col] <= upper_bound)]
-    
-    return df_no_outliers
 
 
 def boxsubplot(_dfs, x_col, y_col, col_num, y_lim, title, fig_size):
