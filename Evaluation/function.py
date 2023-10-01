@@ -2,6 +2,8 @@ import os
 import re
 import csv
 import pandas as pd
+import seaborn as sns 
+import matplotlib.pyplot as plt
 
 def load_csv_files_in_folder(folder_path):
     csv_files = [file for file in os.listdir(folder_path) if file.endswith('.csv')]
@@ -68,3 +70,48 @@ def get_dfs_by_folder(_directory_path, _y_value_col):
     dfs = sorted(dfs.items(), key=lambda x: (int(re.search(r'prev_(\d+)', x[0]).group(1)), int(re.search(r'now_(\d+)', x[0]).group(1))))
 
     return dfs
+
+def boxplot(_dfs, x_col, y_col, col_num, y_lim, title, fig_size):
+    folder_num = len(_dfs)
+
+    if folder_num % col_num == 0:
+        row_num = folder_num // col_num
+    else:
+        row_num = folder_num // col_num + 1
+        
+    fig, axes = plt.subplots(nrows=row_num, ncols=col_num, figsize=fig_size)
+
+    for (key, value), ax in zip(_dfs, axes.ravel()):
+        subplot_title = title + '(' + key + ')'
+        sns.boxplot(data=value, x=x_col, y=y_col, ax=ax, color='white')
+        ax.set_title(subplot_title)
+        ax.set_ylim(y_lim)
+        
+    # Display the plot
+    plt.show()
+
+def lineplot(_dfs, x_col, y_col, y_lim, _title):
+    keys = []
+    for key, value in _dfs:
+
+        keys.append(key)
+        # get average of group by alpha_1, alpha_2, alpha_3
+        df = value.groupby([x_col])[y_col].mean().reset_index()
+        
+        x_value = df[x_col]
+        y_value = df[y_col]
+        
+        # draw line plot
+        plt.plot(x_value, y_value, marker='o')    
+        # set y limit
+        plt.ylim(y_lim)
+        
+    plt.title(_title)
+    plt.xlabel(x_col, fontsize = 9)
+    plt.ylabel(y_col, fontsize = 9)
+    plt.legend(keys, fontsize = 7, loc = 'upper right')
+
+    for key, value in _dfs:
+        df = value.groupby([x_col])[y_col].mean().reset_index()
+        y_value = df[y_col]
+        plt.axhline(y=y_value[0], color='gray', linestyle='--', alpha = 0.5)
