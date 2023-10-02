@@ -40,7 +40,7 @@ namespace TrafficSimulation{
         private static float checkRange_2 = 3f;
         private static float checkDelay = 0.5f;
 
-        public static int fileCount;
+        public static int subFolderCount;
 
         public void CreatingTrucks(string _prevTruckFilePath, string _nowTruckFilePath)
         {   
@@ -48,7 +48,7 @@ namespace TrafficSimulation{
             truckDataList_2 = new List<CreateTruckData>();
             SaveFile.resultsDataList = new List<ResultsData>();
 
-            if(fileCount == 2)
+            if(subFolderCount == 2)
             {   
                 isTwoFile = true;
                 ReadFile(_prevTruckFilePath, truckIndexPlus_1);
@@ -61,7 +61,6 @@ namespace TrafficSimulation{
                 {   
                     IsDuplicateStartPosition(truckDataList_1, truckIndexPlus_1);
                     CreateTrucks(startPositionDict_1, checkRange_1, checkRange_2, checkDelay);
-                    Debug.Log("Create prev trucks");
 
                     StartCoroutine(CreateNewTrucksDelay(createDelay));
                 }
@@ -73,7 +72,7 @@ namespace TrafficSimulation{
             }
 
 
-            else if(fileCount == 1)
+            else if(subFolderCount == 1)
             {   
                 if(_prevTruckFilePath != null)
                 {   
@@ -99,7 +98,6 @@ namespace TrafficSimulation{
                         {   
                             IsDuplicateStartPosition(truckDataList_1, truckIndexPlus_1);
                             CreateTrucks(startPositionDict_1, checkRange_1, checkRange_2, checkDelay);
-                            Debug.Log("Create prev trucks");
                         }
 
                         else
@@ -135,7 +133,6 @@ namespace TrafficSimulation{
                             Debug.Log("truckDataList_2.Count : " + truckDataList_2.Count);
                             IsDuplicateStartPosition(truckDataList_2, truckIndexPlus_2);
                             CreateTrucks(startPositionDict_2, checkRange_1, checkRange_2, checkDelay);
-                            Debug.Log("Create now trucks");
                         }
                         
                         else
@@ -586,7 +583,6 @@ namespace TrafficSimulation{
         private IEnumerator CreateNewTrucksDelay(float _createDelay)
         {   
             yield return new WaitForSeconds(_createDelay);
-            Debug.Log("Create now trucks.");
 
             if(ExistRoute(truckDataList_2))
             {   

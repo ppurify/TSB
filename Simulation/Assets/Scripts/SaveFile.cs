@@ -39,7 +39,6 @@ namespace TrafficSimulation{
 
             else
             {
-                UnityEngine.Debug.Log("resultsDataList.Count : " + resultsDataList);
                 cMax = resultsDataList.Max(data => data.CompletionTime);
                 congestionRatio_avg = congestionRatio_AVG(resultsDataList);
 

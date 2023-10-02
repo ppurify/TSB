@@ -2916,8 +2916,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nowTruckCount: 0
   totalTruckCount: 0
-  _currentFileCount: 0
-  _totalFileCount: 9
 --- !u!114 &561152507
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2930,11 +2928,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3aa0c3bdfa37414588fe4824b77cd36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  truckHitCount: 0
-  truckHitWall: 0
+  limitTotalTime: 500
+  folderCount: 0
+  currentFolderCount: 0
+  subFolderCount: 0
+  currentFileCount: 0
+  totalFileCount: 0
   currentPrevRouteFilePath: 
   currentNowRouteFilePath: 
-  isPrevExist: 0
+  isPrevFolder: 1
 --- !u!1 &562974306
 GameObject:
   m_ObjectHideFlags: 0

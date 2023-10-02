@@ -3,34 +3,41 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using UnityEngine.SceneManagement;
+using System.Text.RegularExpressions;
 
 namespace TrafficSimulation {    
     public class WholeProcess : MonoBehaviour
     {
+        // private static string caseName = "Congestion/prev_20_now_20";
+        private static string caseName = "Congestion";
+        private string caseFolderPath = "Assets/Data/" + caseName;
+        
         // parameters
-        private string prevFolderPath ="Assets/Data/congestion/prev_30_now_30/prev_30";
-        // private string prevFolderPath ="";
-
-        private string nowFolderPath = "Assets/Data/congestion/prev_30_now_30/now_30";
-        // private string nowFolderPath = "";
-
+        private string prevFolderPath;
+        private string nowFolderPath;
         private bool _isOnebyOne = false;
 
         // --------------------------------------------------------
         public float limitTotalTime = 500f;
         public static bool playAgain = false;
 
+
         private List<string> prevRouteFileList = new List<string>();
         private List<string> prevTruckFileList = new List<string>();
         private List<string> nowRouteFileList = new List<string>();
         private List<string> nowTruckFileList = new List<string>();
 
+        
+        private string[] folderList;
+        public int folderCount;
+        public int currentFolderCount;
+
         private int prevFileCount;
         private int nowFileCount;
         
-        public static int folderCount;
-        public static int currentFileCount = 0;
-        public static int totalFileCount;
+        public int subFolderCount;
+        public int currentFileCount;
+        public int totalFileCount;
 
         // ChangeToRotate Parameters
         private static float x1;
@@ -98,27 +105,27 @@ namespace TrafficSimulation {
         private CreateTruckAndStation createTruckAndStation;
         private ExitPlayMode exitPlayMode;
         private SaveFile saveFile;
-        public bool isPrevExist;
+        public bool isPrevFolder = true;
 
         // Start is called before the first frame update
         void Awake()
         {
-            folderCount = 0;
-
-            CreateTruckAndStation.isOneByOne = _isOnebyOne;
-            CheckFolderCount();
-            CreateTruckAndStation.fileCount = folderCount;
-            createTruckAndStation = GetComponent<CreateTruckAndStation>();
-            exitPlayMode = GetComponent<ExitPlayMode>();
-
-            if(prevFolderPath != "")
+            if (Directory.Exists(caseFolderPath))
             {
-                isPrevExist = true;
-            }
+                // 폴더 내의 하위 폴더 목록을 가져옵니다.
+                folderList = Directory.GetDirectories(caseFolderPath);
+                folderCount = folderList.Length;
+                if (folderCount > 0)
+                {
+                    CreateTruckAndStation.isOneByOne = _isOnebyOne;
+                    createTruckAndStation = GetComponent<CreateTruckAndStation>();
+                    exitPlayMode = GetComponent<ExitPlayMode>();
+                }
 
-            else
-            {
-                isPrevExist = false;
+                else
+                {
+                    Debug.LogError("There is no folderList");
+                }
             }
         }
 
@@ -126,7 +133,8 @@ namespace TrafficSimulation {
         {
             GameObject.Find("Roads").AddComponent<SaveFile>();
             saveFile = GetComponent<SaveFile>();
-
+            currentFileCount = 0;
+            currentFolderCount = 0;
             Process();
         }
 
@@ -137,6 +145,19 @@ namespace TrafficSimulation {
                 playAgain = false;
                 Debug.Log("----------Again Process-----------");
                 ReloadScene();
+            }
+        }
+
+        private void GetPrevNowFolderPath(string _folderName)
+        {
+            // Use regular expressions to match "prev_" and "now_" followed by numbers
+            Match prevMatch = Regex.Match(_folderName, @"prev_\d+");
+            Match nowMatch = Regex.Match(_folderName, @"now_\d+");
+
+            if (prevMatch.Success && nowMatch.Success)
+            {
+                prevFolderPath = Path.Combine(_folderName, prevMatch.Value);
+                nowFolderPath = Path.Combine(_folderName, nowMatch.Value);
             }
         }
 
@@ -151,9 +172,16 @@ namespace TrafficSimulation {
 
         public void Process()
         {   
+            subFolderCount = 0;
+            GetPrevNowFolderPath(folderList[currentFolderCount]);
+            
+            CheckFolderCount();
+            CreateTruckAndStation.subFolderCount = subFolderCount;
+
+            
             currentPrevRouteFilePath = prevRouteFileList[currentFileCount];
             currentPrevTruckFilePath = prevTruckFileList[currentFileCount];
-
+            
             currentNowRouteFilePath = nowRouteFileList[currentFileCount];
             currentNowTruckFilePath = nowTruckFileList[currentFileCount];
 
@@ -163,16 +191,21 @@ namespace TrafficSimulation {
             {
                 currentFileCount++;
                 Debug.Log("File already exists : " + saveFile.filePath);
+                if(currentFileCount == totalFileCount)
+                {
+                    Debug.Log("----- Next Folder ------");
+                    currentFolderCount ++;
+                    currentFileCount = 0;
+                }
+
                 Process();
             }
 
             else
             {
-                Debug.Log("File does not exist : " + saveFile.filePath);
                 CreateAllRoutes();
 
                 exitPlayMode.nowTruckCount = 0;
-                exitPlayMode._totalFileCount = totalFileCount;
 
                 Invoke("CreateTruck", createTruckDelay);
             }
@@ -195,14 +228,22 @@ namespace TrafficSimulation {
                 saveFile.csvFileName = Path.GetFileName(currentNowRouteFilePath);
             }
 
+            string resultFolder = "Assets/Results/" + caseName +"/"+ Path.GetFileName(folderList[currentFolderCount]);
+
+            if (!Directory.Exists(resultFolder))
+            {
+             
+                Directory.CreateDirectory(resultFolder);
+            }
+
             if(CreateTruckAndStation.isOneByOne)
             {
-                saveFile.filePath = "Assets/Results/result_NoCongestions_" + saveFile.csvFileName;
+                saveFile.filePath = resultFolder + "/result_NoCongestions_" + saveFile.csvFileName;
             }
             
             else
             {
-                saveFile.filePath = "Assets/Results/result_" + saveFile.csvFileName;
+                saveFile.filePath = resultFolder + "/result_" + saveFile.csvFileName;
             }
 
             return saveFile.filePath;
@@ -214,8 +255,7 @@ namespace TrafficSimulation {
             {
                 createTruckAndStation.CreatingTrucks(currentPrevTruckFilePath, currentNowTruckFilePath);
 
-
-                if(folderCount == 2)
+                if(subFolderCount == 2)
                 {
                     exitPlayMode.totalTruckCount = CreateTruckAndStation.truckDataList_1.Count + CreateTruckAndStation.truckDataList_2.Count;
                 }
@@ -241,24 +281,21 @@ namespace TrafficSimulation {
             List<string> routeFileList = new List<string>();
             List<string> truckFileList = new List<string>();
 
-            if(prevFolderPath != "")
+            if(!_isOnebyOne)
             {
                 (routeFileList, truckFileList) = GetFileList(prevFolderPath);
                 prevRouteFileList = routeFileList;
                 prevTruckFileList = truckFileList;
                 prevFileCount = prevRouteFileList.Count;
 
-                folderCount++;
-            }
+                subFolderCount++;
 
-            if(nowFolderPath != "")
-            {   
                 (routeFileList, truckFileList) = GetFileList(nowFolderPath);
                 nowRouteFileList = routeFileList;
                 nowTruckFileList = truckFileList;
                 nowFileCount = nowRouteFileList.Count;
 
-                folderCount++;
+                subFolderCount++;
             }
 
             if(prevFolderPath == "" & nowFolderPath == "")
@@ -266,14 +303,24 @@ namespace TrafficSimulation {
                 Debug.LogError("Check Folder Path");
             }
 
-            if(folderCount == 2)
+            if(subFolderCount == 2)
             {
                 CreateTruckAndStation.isTwoFile = true;
+                totalFileCount = prevFileCount;
             }
 
             else
             {
                 CreateTruckAndStation.isTwoFile = false;
+                if(prevFileCount != 0)
+                {
+                    totalFileCount = prevFileCount;
+                }
+
+                else if(nowFileCount != 0)
+                {
+                    totalFileCount = nowFileCount;
+                }
             }
         }
 
@@ -303,16 +350,19 @@ namespace TrafficSimulation {
                 }
             }
 
+            else
+            {
+                Debug.LogError("Directory does not exist: " + _folderPath);
+            }
+
             return (routeFileList, truckFileList);
         }
 
         private void CreateAllRoutes()
         {
             // 2개 파일 돌릴 때
-            if(folderCount == 2)
+            if(subFolderCount == 2)
             {
-                totalFileCount = prevFileCount;
-
                 prevRouteDictionary = CreateRouteList(currentPrevRouteFilePath);
                 nowRouteDictionary = CreateRouteList(currentNowRouteFilePath);
 
@@ -339,12 +389,11 @@ namespace TrafficSimulation {
                 }
             }
 
-            else if(folderCount == 1)
+            else if(subFolderCount == 1)
             {
                 // 1개 파일 돌릴 때
                 if(prevFileCount != 0)
                 {
-                    totalFileCount = prevFileCount;
                     currentPrevRouteFilePath = prevRouteFileList[currentFileCount];
                     currentPrevTruckFilePath = prevTruckFileList[currentFileCount];
                     prevRouteDictionary = CreateRouteList(currentPrevRouteFilePath);
@@ -364,7 +413,6 @@ namespace TrafficSimulation {
 
                 else if(nowFileCount != 0)
                 {
-                    totalFileCount = nowFileCount;
                     currentNowRouteFilePath = nowRouteFileList[currentFileCount];
                     currentNowTruckFilePath = nowTruckFileList[currentFileCount];
                     nowRouteDictionary = CreateRouteList(currentNowRouteFilePath);
