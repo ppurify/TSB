@@ -8,10 +8,10 @@ namespace TrafficSimulation {
     public class WholeProcess : MonoBehaviour
     {
         // parameters
-        private string prevFolderPath ="Assets/Data/Completiontime_Congestionratio/prev_5_now_5/prev_5";
+        private string prevFolderPath ="Assets/Data/Completiontime_Congestionratio/prev_15_now_15_hg/prev_15";
         // private string prevFolderPath ="";
 
-        private string nowFolderPath = "Assets/Data/Completiontime_Congestionratio/prev_5_now_5/now_5";
+        private string nowFolderPath = "Assets/Data/Completiontime_Congestionratio/prev_15_now_15_hg/now_15";
         // private string nowFolderPath = "";
 
         private bool _isOnebyOne = false;
