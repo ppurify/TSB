@@ -26,6 +26,9 @@ def load_csv_files_in_folder(folder_path):
 def remove_outliers(df, col):
     # Calculate the IQR for the specified column
     # Group by alpha_1 and get col
+    if df[col].dtypes == 'object':
+        df[col] = pd.to_numeric(df[col], errors='coerce')
+    
     grouped_df = df.groupby('alpha_1')[col]
     
     # Calculate the IQR for each group
@@ -86,13 +89,16 @@ def get_dfs_by_folder(_directory_path, _y_col, nooutlier = True, standard_outlie
                     
                     if len(_y_col) == 1:    
                         y_col_name =_y_col[0]
-                        y_values = df[df[y_col_name].notna()][y_col_name].astype(float).values.tolist()
+                        # y_values = df[df[y_col_name].notna()][y_col_name].astype(float).values.tolist()
+                        y_values = df[df[y_col_name].notna()][y_col_name].values.tolist()
                         
                         for y_value in y_values:
                             result_df_data_row = [prev_truck_num , now_truck_num] + alphas + repeat_time + [y_value]
                             data_list.append(result_df_data_row)
                     else:
-                        y_values = df[_y_col].astype(float).values.tolist()
+                        # y_values = df[_y_col].astype(float).values.tolist()
+                        y_values = df[_y_col].values.tolist()
+                        
                         for y_value in y_values:
                             result_df_data_row = [prev_truck_num , now_truck_num] + alphas + repeat_time + y_value
                             data_list.append(result_df_data_row)
@@ -186,3 +192,10 @@ def scatterplot(_dfs, _x_value, x_label, y_col, y_lim, _title, legend_loc):
     plt.legend(keys, fontsize = 7, loc = legend_loc)
 
     plt.show()
+    
+
+def to_numeric(dfs, col):
+    for folder_name, df in dfs:
+        # Convert only non-empty values to float
+        df[col] = pd.to_numeric(df[col], errors='coerce')
+    return dfs
