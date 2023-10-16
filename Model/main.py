@@ -128,7 +128,7 @@ def main(_grid, _YT_locations, _Job_locations, number_of_YT, number_of_Job, case
               _next_prev_count[arc.path[i][0]][arc.path[i][1]] += 1
 
   # Create csv file for Unity simulation
-  make_csv.create_csv(activated_arcs, number_of_YT, _grid, filename_Truck, filename_RoutePoints)
+  # make_csv.create_csv(activated_arcs, number_of_YT, _grid, filename_Truck, filename_RoutePoints)
 
 
   # Save Log file
@@ -150,8 +150,10 @@ def main(_grid, _YT_locations, _Job_locations, number_of_YT, number_of_Job, case
 if __name__ == "__main__":
   casename = 'Completiontime_Congestionratio'
 
-  Prev_number_list = [5,5,10,10,15,15,20,20,25,25,30]
-  Now_number_list = [5,10,10,15,15,20,20,25,25,30,30]
+  # Prev_number_list = [5,5,10,10,15,15,20,20,25,25,30]
+  # Now_number_list = [5,10,10,15,15,20,20,25,25,30,30]
+  Prev_number_list = [5]
+  Now_number_list = [5]
 
   block_num_in_row = 3
   block_length = 9
@@ -160,10 +162,10 @@ if __name__ == "__main__":
   grid_height = 9
   grid, YT_location_col_index, QC_locations, YC_locations = make_grid.Grid(grid_length, grid_height, block_length, block_height, block_num_in_row)
   
-  # Prev_number_of_YT = 25
-  # Prev_number_of_Job = 25
-  # Now_number_of_YT = 30
-  # Now_number_of_Job = 30
+  # Prev_number_of_YT = 10
+  # Prev_number_of_Job = 10
+  # Now_number_of_YT = 10
+  # Now_number_of_Job = 10
   
   for _ in range(len(Prev_number_list)):
     Prev_number_of_YT = Prev_number_list[_]
@@ -173,12 +175,16 @@ if __name__ == "__main__":
 
     case_folder_path = f'{casename}/prev_{Prev_number_of_YT}_now_{Now_number_of_YT}'
 
-    reps = 18
+    reps = 1
 
-    alphas = [[0, 10, 20, 30, 40, 50, 60, 70, 80],
-              [0, 80, 70, 60, 50, 40, 30, 20, 10],
-              [100, 10, 10, 10, 10, 10, 10, 10, 10]]
+    # alphas = [[0, 10, 20, 30, 40, 50, 60, 70, 80],
+    #           [0, 80, 70, 60, 50, 40, 30, 20, 10],
+    #           [100, 10, 10, 10, 10, 10, 10, 10, 10]]
       
+    alphas = [[20],
+              [70],
+              [10]]
+              
     for rep in range(reps):
       
       rep = rep + 25
