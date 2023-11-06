@@ -175,19 +175,19 @@ if __name__ == "__main__":
 
     case_folder_path = f'{casename}/prev_{Prev_number_of_YT}_now_{Now_number_of_YT}'
 
-    reps = 7
+    reps = 8
 
     # alphas = [[0, 10, 20, 30, 40, 50, 60, 70, 80],
     #           [0, 80, 70, 60, 50, 40, 30, 20, 10],
     #           [100, 10, 10, 10, 10, 10, 10, 10, 10]]
       
-    alphas = [[40, 20, 10, 10],
-              [30, 20, 10, 0],
-              [30, 60, 80, 90]]
+    alphas = [[40, 30, 20, 20, 10, 10],
+              [30, 30, 30, 20, 20, 10],
+              [30, 40, 50, 60, 70, 80]]
               
     for rep in range(reps):
       
-      rep = rep + 1
+      rep = rep + 28
 
       prev_YT_locations, prev_Job_locations = generate_locations(grid, Prev_number_of_YT, Prev_number_of_Job, YT_location_col_index, QC_locations, YC_locations)
       now_YT_locations, now_Job_locations = generate_locations(grid, Now_number_of_YT, Now_number_of_Job, YT_location_col_index, QC_locations, YC_locations)
