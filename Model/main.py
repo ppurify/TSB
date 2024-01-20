@@ -149,10 +149,13 @@ def main(_grid, _YT_locations, _Job_locations, number_of_YT, number_of_Job, case
 
 if __name__ == "__main__":
 
-  casename = 'Congestion_dh'
+  casename = 'test_congestion'
  
-  prev_YT_Num_list = [5,5,10,10,15,15,20,20,25,25,30]
-  now_YT_Num_list = [5,10,10,15,15,20,20,25,25,30,30]
+  # prev_YT_Num_list = [5,5,10,10,15,15,20,20,25,25,30]
+  # now_YT_Num_list = [5,10,10,15,15,20,20,25,25,30,30]
+  
+  prev_YT_Num_list = [10,15,15]
+  now_YT_Num_list = [15,15,20]
   
   for _ in range(len(prev_YT_Num_list)):
     Prev_number_of_YT = prev_YT_Num_list[_]
@@ -170,7 +173,10 @@ if __name__ == "__main__":
     grid_height = 9
     grid, YT_location_col_index, QC_locations, YC_locations = make_grid.Grid(grid_length, grid_height, block_length, block_height, block_num_in_row)
     
-    reps = 18
+    # 랜덤 반복 횟수
+    # reps = 18
+    reps = 3
+    
 
     alphas = [[0, 10, 20, 30, 40, 50, 60, 70, 80],
               [0, 80, 70, 60, 50, 40, 30, 20, 10],
@@ -178,7 +184,7 @@ if __name__ == "__main__":
       
     for rep in range(reps):
       
-      rep = rep + 43
+      # rep = rep + 43
 
       prev_YT_locations, prev_Job_locations = generate_locations(grid, Prev_number_of_YT, Prev_number_of_Job, YT_location_col_index, QC_locations, YC_locations)
       now_YT_locations, now_Job_locations = generate_locations(grid, Now_number_of_YT, Now_number_of_Job, YT_location_col_index, QC_locations, YC_locations)
