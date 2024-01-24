@@ -8,8 +8,7 @@ using System.Text.RegularExpressions;
 namespace TrafficSimulation {    
     public class WholeProcess : MonoBehaviour
     {
-        // private static string caseName = "Congestion/prev_20_now_20";
-        private static string caseName = "test_congestion";
+        private static string caseName = "interval_10";
         private string caseFolderPath = "Assets/Data/" + caseName;
         
         // parameters
