@@ -161,12 +161,15 @@ def main(_grid, _YT_locations, _Job_locations, number_of_YT, number_of_Job, case
 
 
 if __name__ == "__main__":
-  casename = 'interval_10'
+  casename = 'interval_10_input_data'
 
   # Prev_number_list = [5,5,10,10,15,15,20,20,25,25,30]
   # Now_number_list = [5,10,10,15,15,20,20,25,25,30,30]
-  Prev_number_list = [20]
-  Now_number_list = [20]
+
+  Prev_number_list = [5,5,10,10,15,15,20,25,25,30]
+  Now_number_list = [5,10,10,15,15,20,25,25,30,30]
+  # Prev_number_list = [20]
+  # Now_number_list = [20]
 
   block_num_in_row = 3
   block_length = 9
@@ -186,17 +189,17 @@ if __name__ == "__main__":
 
     reps = 20
 
-    # alphas = [[0, 10, 20, 30, 40, 50, 60, 70, 80],
-    #           [0, 80, 70, 60, 50, 40, 30, 20, 10],
-    #           [100, 10, 10, 10, 10, 10, 10, 10, 10]]
+    alphas = [[0, 10, 20, 30, 40, 50, 60, 70, 80],
+              [0, 80, 70, 60, 50, 40, 30, 20, 10],
+              [100, 10, 10, 10, 10, 10, 10, 10, 10]]
       
     # alphas = [[0, 10, 40, 80],
     #           [0, 80, 50, 10],
     #           [100, 10, 10, 10]]
     
-    alphas = [[20, 30, 50, 60, 70],
-              [70, 60, 40, 30, 20],
-              [10, 10, 10, 10, 10]]
+    # alphas = [[20, 30, 50, 60, 70],
+    #           [70, 60, 40, 30, 20],
+    #           [10, 10, 10, 10, 10]]
   
               
     for rep in range(reps):
