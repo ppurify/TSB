@@ -9,7 +9,7 @@ namespace TrafficSimulation {
     public class WholeProcess : MonoBehaviour
     {
         // private static string caseName = "Congestion/prev_20_now_20";
-        private static string caseName = "Correlation_cost_completiontime_modidied_A_ver";
+        private static string caseName = "Correlation_cost_completiontime_modidied_A_ver/Middle";
         private string caseFolderPath = "Assets/Data/" + caseName;
         
         // parameters

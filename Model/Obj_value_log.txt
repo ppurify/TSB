@@ -350,3 +350,400 @@ objective_value:  24444.0
 Middle :  prev_Truck_20_LP_0_0_100_14rep.csv
 objective_value:  92400.0
 Middle :  now_Truck_20_LP_0_0_100_14rep.csv
+objective_value:  98600.0
+Middle :  prev_Truck_20_LP_40_50_10_14rep.csv
+objective_value:  36675.0
+Middle :  now_Truck_20_LP_40_50_10_14rep.csv
+objective_value:  36281.0
+Max :  prev_Truck_20_LP_0_0_100_14rep.csv
+objective_value:  110400.0
+Max :  now_Truck_20_LP_0_0_100_14rep.csv
+objective_value:  110000.0
+Max :  prev_Truck_20_LP_40_50_10_14rep.csv
+objective_value:  43528.0
+Max :  now_Truck_20_LP_40_50_10_14rep.csv
+objective_value:  43636.0
+Min :  prev_Truck_20_LP_0_0_100_15rep.csv
+objective_value:  54600.0
+Min :  now_Truck_20_LP_0_0_100_15rep.csv
+objective_value:  62200.0
+Min :  prev_Truck_20_LP_40_50_10_15rep.csv
+objective_value:  21513.0
+Min :  now_Truck_20_LP_40_50_10_15rep.csv
+objective_value:  24033.0
+Middle :  prev_Truck_20_LP_0_0_100_15rep.csv
+objective_value:  89800.0
+Middle :  now_Truck_20_LP_0_0_100_15rep.csv
+objective_value:  99600.0
+Middle :  prev_Truck_20_LP_40_50_10_15rep.csv
+objective_value:  35944.0
+Middle :  now_Truck_20_LP_40_50_10_15rep.csv
+objective_value:  36604.0
+Max :  prev_Truck_20_LP_0_0_100_15rep.csv
+objective_value:  104000.0
+Max :  now_Truck_20_LP_0_0_100_15rep.csv
+objective_value:  115000.0
+Max :  prev_Truck_20_LP_40_50_10_15rep.csv
+objective_value:  42531.0
+Max :  now_Truck_20_LP_40_50_10_15rep.csv
+objective_value:  42878.0
+Min :  prev_Truck_20_LP_0_0_100_16rep.csv
+objective_value:  64200.0
+Min :  now_Truck_20_LP_0_0_100_16rep.csv
+objective_value:  54600.0
+Min :  prev_Truck_20_LP_40_50_10_16rep.csv
+objective_value:  25497.0
+Min :  now_Truck_20_LP_40_50_10_16rep.csv
+objective_value:  20244.0
+Middle :  prev_Truck_20_LP_0_0_100_16rep.csv
+objective_value:  102800.0
+Middle :  now_Truck_20_LP_0_0_100_16rep.csv
+objective_value:  89200.0
+Middle :  prev_Truck_20_LP_40_50_10_16rep.csv
+objective_value:  40761.0
+Middle :  now_Truck_20_LP_40_50_10_16rep.csv
+objective_value:  34495.0
+Max :  prev_Truck_20_LP_0_0_100_16rep.csv
+objective_value:  120200.0
+Max :  now_Truck_20_LP_0_0_100_16rep.csv
+objective_value:  102400.0
+Max :  prev_Truck_20_LP_40_50_10_16rep.csv
+objective_value:  48486.0
+Max :  now_Truck_20_LP_40_50_10_16rep.csv
+objective_value:  40205.0
+Min :  prev_Truck_20_LP_0_0_100_17rep.csv
+objective_value:  61600.0
+Min :  now_Truck_20_LP_0_0_100_17rep.csv
+objective_value:  73400.0
+Min :  prev_Truck_20_LP_40_50_10_17rep.csv
+objective_value:  23787.0
+Min :  now_Truck_20_LP_40_50_10_17rep.csv
+objective_value:  29012.0
+Middle :  prev_Truck_20_LP_0_0_100_17rep.csv
+objective_value:  90000.0
+Middle :  now_Truck_20_LP_0_0_100_17rep.csv
+objective_value:  102000.0
+Middle :  prev_Truck_20_LP_40_50_10_17rep.csv
+objective_value:  35403.0
+Middle :  now_Truck_20_LP_40_50_10_17rep.csv
+objective_value:  36429.0
+Max :  prev_Truck_20_LP_0_0_100_17rep.csv
+objective_value:  103000.0
+Max :  now_Truck_20_LP_0_0_100_17rep.csv
+objective_value:  114400.0
+Max :  prev_Truck_20_LP_40_50_10_17rep.csv
+objective_value:  40938.0
+Max :  now_Truck_20_LP_40_50_10_17rep.csv
+objective_value:  43328.0
+Min :  prev_Truck_20_LP_0_0_100_18rep.csv
+objective_value:  52800.0
+Min :  now_Truck_20_LP_0_0_100_18rep.csv
+objective_value:  56800.0
+Min :  prev_Truck_20_LP_40_50_10_18rep.csv
+objective_value:  20399.0
+Min :  now_Truck_20_LP_40_50_10_18rep.csv
+objective_value:  20467.0
+Middle :  prev_Truck_20_LP_0_0_100_18rep.csv
+objective_value:  90600.0
+Middle :  now_Truck_20_LP_0_0_100_18rep.csv
+objective_value:  92800.0
+Middle :  prev_Truck_20_LP_40_50_10_18rep.csv
+objective_value:  35542.0
+Middle :  now_Truck_20_LP_40_50_10_18rep.csv
+objective_value:  35341.0
+Max :  prev_Truck_20_LP_0_0_100_18rep.csv
+objective_value:  105000.0
+Max :  now_Truck_20_LP_0_0_100_18rep.csv
+objective_value:  110600.0
+Max :  prev_Truck_20_LP_40_50_10_18rep.csv
+objective_value:  42305.0
+Max :  now_Truck_20_LP_40_50_10_18rep.csv
+objective_value:  42107.0
+Min :  prev_Truck_20_LP_0_0_100_19rep.csv
+objective_value:  67400.0
+Min :  now_Truck_20_LP_0_0_100_19rep.csv
+objective_value:  55200.0
+Min :  prev_Truck_20_LP_40_50_10_19rep.csv
+objective_value:  27551.0
+Min :  now_Truck_20_LP_40_50_10_19rep.csv
+objective_value:  21445.0
+Middle :  prev_Truck_20_LP_0_0_100_19rep.csv
+objective_value:  96000.0
+Middle :  now_Truck_20_LP_0_0_100_19rep.csv
+objective_value:  92000.0
+Middle :  prev_Truck_20_LP_40_50_10_19rep.csv
+objective_value:  38146.0
+Middle :  now_Truck_20_LP_40_50_10_19rep.csv
+objective_value:  34301.0
+Max :  prev_Truck_20_LP_0_0_100_19rep.csv
+objective_value:  109000.0
+Max :  now_Truck_20_LP_0_0_100_19rep.csv
+objective_value:  105600.0
+Max :  prev_Truck_20_LP_40_50_10_19rep.csv
+objective_value:  43867.0
+Max :  now_Truck_20_LP_40_50_10_19rep.csv
+objective_value:  40780.0
+Min :  prev_Truck_20_LP_0_0_100_20rep.csv
+objective_value:  55000.0
+Min :  now_Truck_20_LP_0_0_100_20rep.csv
+objective_value:  60600.0
+Min :  prev_Truck_20_LP_40_50_10_20rep.csv
+objective_value:  22993.0
+Min :  now_Truck_20_LP_40_50_10_20rep.csv
+objective_value:  22666.0
+Middle :  prev_Truck_20_LP_0_0_100_20rep.csv
+objective_value:  96800.0
+Middle :  now_Truck_20_LP_0_0_100_20rep.csv
+objective_value:  96000.0
+Middle :  prev_Truck_20_LP_40_50_10_20rep.csv
+objective_value:  39561.0
+Middle :  now_Truck_20_LP_40_50_10_20rep.csv
+objective_value:  39527.0
+Max :  prev_Truck_20_LP_0_0_100_20rep.csv
+objective_value:  113600.0
+Max :  now_Truck_20_LP_0_0_100_20rep.csv
+objective_value:  112400.0
+Max :  prev_Truck_20_LP_40_50_10_20rep.csv
+objective_value:  46745.0
+Max :  now_Truck_20_LP_40_50_10_20rep.csv
+objective_value:  44960.0
+Min :  prev_Truck_20_LP_0_0_100_21rep.csv
+objective_value:  60000.0
+Min :  now_Truck_20_LP_0_0_100_21rep.csv
+objective_value:  62200.0
+Min :  prev_Truck_20_LP_40_50_10_21rep.csv
+objective_value:  24461.0
+Min :  now_Truck_20_LP_40_50_10_21rep.csv
+objective_value:  23995.0
+Middle :  prev_Truck_20_LP_0_0_100_21rep.csv
+objective_value:  98000.0
+Middle :  now_Truck_20_LP_0_0_100_21rep.csv
+objective_value:  93400.0
+Middle :  prev_Truck_20_LP_40_50_10_21rep.csv
+objective_value:  38286.0
+Middle :  now_Truck_20_LP_40_50_10_21rep.csv
+objective_value:  34572.0
+Max :  prev_Truck_20_LP_0_0_100_21rep.csv
+objective_value:  110800.0
+Max :  now_Truck_20_LP_0_0_100_21rep.csv
+objective_value:  106400.0
+Max :  prev_Truck_20_LP_40_50_10_21rep.csv
+objective_value:  45602.0
+Max :  now_Truck_20_LP_40_50_10_21rep.csv
+objective_value:  39732.0
+Min :  prev_Truck_20_LP_0_0_100_22rep.csv
+objective_value:  61000.0
+Min :  now_Truck_20_LP_0_0_100_22rep.csv
+objective_value:  53200.0
+Min :  prev_Truck_20_LP_40_50_10_22rep.csv
+objective_value:  24826.0
+Min :  now_Truck_20_LP_40_50_10_22rep.csv
+objective_value:  19650.0
+Middle :  prev_Truck_20_LP_0_0_100_22rep.csv
+objective_value:  94000.0
+Middle :  now_Truck_20_LP_0_0_100_22rep.csv
+objective_value:  94200.0
+Middle :  prev_Truck_20_LP_40_50_10_22rep.csv
+objective_value:  35707.0
+Middle :  now_Truck_20_LP_40_50_10_22rep.csv
+objective_value:  36622.0
+Max :  prev_Truck_20_LP_0_0_100_22rep.csv
+objective_value:  105400.0
+Max :  now_Truck_20_LP_0_0_100_22rep.csv
+objective_value:  107600.0
+Max :  prev_Truck_20_LP_40_50_10_22rep.csv
+objective_value:  41680.0
+Max :  now_Truck_20_LP_40_50_10_22rep.csv
+objective_value:  41389.0
+Min :  prev_Truck_20_LP_0_0_100_23rep.csv
+objective_value:  56200.0
+Min :  now_Truck_20_LP_0_0_100_23rep.csv
+objective_value:  60000.0
+Min :  prev_Truck_20_LP_40_50_10_23rep.csv
+objective_value:  22906.0
+Min :  now_Truck_20_LP_40_50_10_23rep.csv
+objective_value:  22025.0
+Middle :  prev_Truck_20_LP_0_0_100_23rep.csv
+objective_value:  88400.0
+Middle :  now_Truck_20_LP_0_0_100_23rep.csv
+objective_value:  95600.0
+Middle :  prev_Truck_20_LP_40_50_10_23rep.csv
+objective_value:  37910.0
+Middle :  now_Truck_20_LP_40_50_10_23rep.csv
+objective_value:  35693.0
+Max :  prev_Truck_20_LP_0_0_100_23rep.csv
+objective_value:  107600.0
+Max :  now_Truck_20_LP_0_0_100_23rep.csv
+objective_value:  109400.0
+Max :  prev_Truck_20_LP_40_50_10_23rep.csv
+objective_value:  45303.0
+Max :  now_Truck_20_LP_40_50_10_23rep.csv
+objective_value:  41396.0
+Min :  prev_Truck_20_LP_0_0_100_24rep.csv
+objective_value:  70000.0
+Min :  now_Truck_20_LP_0_0_100_24rep.csv
+objective_value:  51200.0
+Min :  prev_Truck_20_LP_40_50_10_24rep.csv
+objective_value:  28249.0
+Min :  now_Truck_20_LP_40_50_10_24rep.csv
+objective_value:  19602.0
+Middle :  prev_Truck_20_LP_0_0_100_24rep.csv
+objective_value:  107600.0
+Middle :  now_Truck_20_LP_0_0_100_24rep.csv
+objective_value:  88600.0
+Middle :  prev_Truck_20_LP_40_50_10_24rep.csv
+objective_value:  43639.0
+Middle :  now_Truck_20_LP_40_50_10_24rep.csv
+objective_value:  33017.0
+Max :  prev_Truck_20_LP_0_0_100_24rep.csv
+objective_value:  123200.0
+Max :  now_Truck_20_LP_0_0_100_24rep.csv
+objective_value:  104800.0
+Max :  prev_Truck_20_LP_40_50_10_24rep.csv
+objective_value:  51453.0
+Max :  now_Truck_20_LP_40_50_10_24rep.csv
+objective_value:  41402.0
+Min :  prev_Truck_20_LP_0_0_100_25rep.csv
+objective_value:  56200.0
+Min :  now_Truck_20_LP_0_0_100_25rep.csv
+objective_value:  53400.0
+Min :  prev_Truck_20_LP_40_50_10_25rep.csv
+objective_value:  22196.0
+Min :  now_Truck_20_LP_40_50_10_25rep.csv
+objective_value:  19854.0
+Middle :  prev_Truck_20_LP_0_0_100_25rep.csv
+objective_value:  94000.0
+Middle :  now_Truck_20_LP_0_0_100_25rep.csv
+objective_value:  88000.0
+Middle :  prev_Truck_20_LP_40_50_10_25rep.csv
+objective_value:  37127.0
+Middle :  now_Truck_20_LP_40_50_10_25rep.csv
+objective_value:  33084.0
+Max :  prev_Truck_20_LP_0_0_100_25rep.csv
+objective_value:  105200.0
+Max :  now_Truck_20_LP_0_0_100_25rep.csv
+objective_value:  104800.0
+Max :  prev_Truck_20_LP_40_50_10_25rep.csv
+objective_value:  42540.0
+Max :  now_Truck_20_LP_40_50_10_25rep.csv
+objective_value:  38750.0
+Min :  prev_Truck_20_LP_0_0_100_26rep.csv
+objective_value:  64400.0
+Min :  now_Truck_20_LP_0_0_100_26rep.csv
+objective_value:  53600.0
+Min :  prev_Truck_20_LP_40_50_10_26rep.csv
+objective_value:  27209.0
+Min :  now_Truck_20_LP_40_50_10_26rep.csv
+objective_value:  21421.0
+Middle :  prev_Truck_20_LP_0_0_100_26rep.csv
+objective_value:  96200.0
+Middle :  now_Truck_20_LP_0_0_100_26rep.csv
+objective_value:  90800.0
+Middle :  prev_Truck_20_LP_40_50_10_26rep.csv
+objective_value:  40616.0
+Middle :  now_Truck_20_LP_40_50_10_26rep.csv
+objective_value:  39535.0
+Max :  prev_Truck_20_LP_0_0_100_26rep.csv
+objective_value:  109800.0
+Max :  now_Truck_20_LP_0_0_100_26rep.csv
+objective_value:  112600.0
+Max :  prev_Truck_20_LP_40_50_10_26rep.csv
+objective_value:  47258.0
+Max :  now_Truck_20_LP_40_50_10_26rep.csv
+objective_value:  46668.0
+Min :  prev_Truck_20_LP_0_0_100_27rep.csv
+objective_value:  58400.0
+Min :  now_Truck_20_LP_0_0_100_27rep.csv
+objective_value:  56600.0
+Min :  prev_Truck_20_LP_40_50_10_27rep.csv
+objective_value:  22504.0
+Min :  now_Truck_20_LP_40_50_10_27rep.csv
+objective_value:  22243.0
+Middle :  prev_Truck_20_LP_0_0_100_27rep.csv
+objective_value:  93800.0
+Middle :  now_Truck_20_LP_0_0_100_27rep.csv
+objective_value:  100000.0
+Middle :  prev_Truck_20_LP_40_50_10_27rep.csv
+objective_value:  36268.0
+Middle :  now_Truck_20_LP_40_50_10_27rep.csv
+objective_value:  37954.0
+Max :  prev_Truck_20_LP_0_0_100_27rep.csv
+objective_value:  108000.0
+Max :  now_Truck_20_LP_0_0_100_27rep.csv
+objective_value:  114600.0
+Max :  prev_Truck_20_LP_40_50_10_27rep.csv
+objective_value:  42599.0
+Max :  now_Truck_20_LP_40_50_10_27rep.csv
+objective_value:  44367.0
+Min :  prev_Truck_20_LP_0_0_100_28rep.csv
+objective_value:  63200.0
+Min :  now_Truck_20_LP_0_0_100_28rep.csv
+objective_value:  64200.0
+Min :  prev_Truck_20_LP_40_50_10_28rep.csv
+objective_value:  25845.0
+Min :  now_Truck_20_LP_40_50_10_28rep.csv
+objective_value:  25606.0
+Middle :  prev_Truck_20_LP_0_0_100_28rep.csv
+objective_value:  96400.0
+Middle :  now_Truck_20_LP_0_0_100_28rep.csv
+objective_value:  106200.0
+Middle :  prev_Truck_20_LP_40_50_10_28rep.csv
+objective_value:  37783.0
+Middle :  now_Truck_20_LP_40_50_10_28rep.csv
+objective_value:  42708.0
+Max :  prev_Truck_20_LP_0_0_100_28rep.csv
+objective_value:  107000.0
+Max :  now_Truck_20_LP_0_0_100_28rep.csv
+objective_value:  124800.0
+Max :  prev_Truck_20_LP_40_50_10_28rep.csv
+objective_value:  43287.0
+Max :  now_Truck_20_LP_40_50_10_28rep.csv
+objective_value:  50227.0
+Min :  prev_Truck_20_LP_0_0_100_29rep.csv
+objective_value:  52200.0
+Min :  now_Truck_20_LP_0_0_100_29rep.csv
+objective_value:  57200.0
+Min :  prev_Truck_20_LP_40_50_10_29rep.csv
+objective_value:  21588.0
+Min :  now_Truck_20_LP_40_50_10_29rep.csv
+objective_value:  22156.0
+Middle :  prev_Truck_20_LP_0_0_100_29rep.csv
+objective_value:  95800.0
+Middle :  now_Truck_20_LP_0_0_100_29rep.csv
+objective_value:  101200.0
+Middle :  prev_Truck_20_LP_40_50_10_29rep.csv
+objective_value:  39880.0
+Middle :  now_Truck_20_LP_40_50_10_29rep.csv
+objective_value:  37679.0
+Max :  prev_Truck_20_LP_0_0_100_29rep.csv
+objective_value:  114000.0
+Max :  now_Truck_20_LP_0_0_100_29rep.csv
+objective_value:  119600.0
+Max :  prev_Truck_20_LP_40_50_10_29rep.csv
+objective_value:  46563.0
+Max :  now_Truck_20_LP_40_50_10_29rep.csv
+objective_value:  46815.0
+Min :  prev_Truck_20_LP_0_0_100_30rep.csv
+objective_value:  54800.0
+Min :  now_Truck_20_LP_0_0_100_30rep.csv
+objective_value:  61200.0
+Min :  prev_Truck_20_LP_40_50_10_30rep.csv
+objective_value:  21282.0
+Min :  now_Truck_20_LP_40_50_10_30rep.csv
+objective_value:  24060.0
+Middle :  prev_Truck_20_LP_0_0_100_30rep.csv
+objective_value:  89200.0
+Middle :  now_Truck_20_LP_0_0_100_30rep.csv
+objective_value:  105600.0
+Middle :  prev_Truck_20_LP_40_50_10_30rep.csv
+objective_value:  35036.0
+Middle :  now_Truck_20_LP_40_50_10_30rep.csv
+objective_value:  40292.0
+Max :  prev_Truck_20_LP_0_0_100_30rep.csv
+objective_value:  104800.0
+Max :  now_Truck_20_LP_0_0_100_30rep.csv
+objective_value:  118600.0
+Max :  prev_Truck_20_LP_40_50_10_30rep.csv
+objective_value:  41300.0
+Max :  now_Truck_20_LP_40_50_10_30rep.csv
+objective_value:  49152.0
