@@ -197,7 +197,15 @@ namespace TrafficSimulation {
                     currentFileCount = 0;
                 }
 
-                Process();
+                if(currentFolderCount == folderCount)
+                {
+                    Debug.Log("----- End Process ------");
+                }
+
+                else
+                {
+                    Process();
+                }
             }
 
             else
