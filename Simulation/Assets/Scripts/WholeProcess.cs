@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 namespace TrafficSimulation {    
     public class WholeProcess : MonoBehaviour
     {
-        private static string caseName = "interval_10";
+        private static string caseName = "interval_10_input_data";
         private string caseFolderPath = "Assets/Data/" + caseName;
         
         // parameters
