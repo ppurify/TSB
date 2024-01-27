@@ -169,10 +169,14 @@ def main(_grid, _YT_locations, _Job_locations, number_of_YT, number_of_Job, case
 if __name__ == "__main__":
   casename = 'Modify_prior_congestion'
 
-  Prev_number_list = [5,5,10,10,15,15,20,20,25,25,30]
-  Now_number_list = [5,10,10,15,15,20,20,25,25,30,30]
-  # Prev_number_list = [30]
-  # Now_number_list = [30]
+
+
+  # Prev_number_list = [5,5,10,10,15,15,20,20,25,25,30]
+  # Now_number_list = [5,10,10,15,15,20,20,25,25,30,30]
+
+  # 중간에 짤려서 이번만 이렇게. 다으뭅터는 전체 YT수로
+  Prev_number_list = [10,15,15,20,20,25,25,30]
+  Now_number_list = [15,15,20,20,25,25,30,30]
 
   block_num_in_row = 3
   block_length = 9
