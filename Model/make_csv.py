@@ -2,6 +2,7 @@ import csv
 import os
 
 def create_csv(activated_arcs, number_of_YT, grid, filename_Truck, filename_RoutePoints):
+    """Create csv file for Unity simulation"""
     # Traversing_info : 각 YT들이 어떤 노드를 거치는지 저장하는 dictionary
     Traversing_info = {tuple(['YT', i]): [] for i in range(number_of_YT)}
 

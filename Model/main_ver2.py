@@ -1,15 +1,17 @@
 import numpy as np
+import os
+import random
 
+import make_grid
 import make_arc_ver2 as make_arc
 import network_LP
 import route_algorithm as ra
 import make_csv
-import os
 
-import make_grid
-import random
 
 def generate_locations(grid, number_of_YT, number_of_Job, _YT_location_col_index, QC_locations, YC_locations):
+    """Generate locations for YT and Jobs"""
+
     # Assuming you have YC_locations and QC_locations defined
     YT_locations = {}
     Job_locations = {}
@@ -79,6 +81,7 @@ def generate_locations(grid, number_of_YT, number_of_Job, _YT_location_col_index
 
 
 def main(_grid, _YT_locations, _Job_locations, number_of_YT, number_of_Job, casefolder_path, time, _prev_count, alpha1, alpha2, alpha3, rep):
+  """Main function for the  modified MCFP formulation and create csv file for Unity"""
   
   if time == 'prev':
     folder_name = f'prev_{number_of_YT}'
@@ -90,14 +93,16 @@ def main(_grid, _YT_locations, _Job_locations, number_of_YT, number_of_Job, case
 
   os.makedirs(folder_path, exist_ok=True)
   
+  # filename_Truck : Truck의 경로를 담은 csv 파일
+  # filename_RoutePoints : Truck의 경로를 담은 csv 파일을 읽어서 RoutePoints를 생성한 csv 파일 
   filename_Truck = f'{folder_path}/{time}_Truck_{number_of_YT}_LP_{alpha1}_{alpha2}_{alpha3}_{rep}rep.csv'
   filename_RoutePoints = f'{folder_path}/{time}_RoutePoints_{number_of_YT}_LP_{alpha1}_{alpha2}_{alpha3}_{rep}rep.csv'
 
   print("\n Loading --- ", os.path.basename(filename_Truck))
   
+  # Set parameters
   number_of_final_route = 3
   now_count = np.zeros((len(_grid), len(_grid[0])))
-
   processing_time = 150
   time_consumed_per_grid = 1
 
@@ -111,11 +116,11 @@ def main(_grid, _YT_locations, _Job_locations, number_of_YT, number_of_Job, case
 
   all_arcs = arcs_YT_to_Pick + arcs_Pick_to_Drop + arcs_Drop_to_Pick + arcs_Drop_to_Sink + arcs_YT_to_Sink
 
-
+  # Solve the modified MCFP formulation based on network LP
   objective_value, activated_arcs = network_LP.solve(all_arcs, number_of_YT, number_of_Job)
   print('objective_value: ', objective_value)
 
-  # 다음번 스케줄링을 위한 next_prev_count : A2의 누적 path정보
+  # next_prev_count : 다음번 스케줄링을 위한 A2의 누적 path정보
   _next_prev_count = np.zeros((len(grid), len(grid[0])))
   for arc in activated_arcs:
       # A2이면
@@ -123,29 +128,6 @@ def main(_grid, _YT_locations, _Job_locations, number_of_YT, number_of_Job, case
           # arc.path에 있는 모든 좌표에 1씩 더해줌
           for i in range(len(arc.path)):
               _next_prev_count[arc.path[i][0]][arc.path[i][1]] += 1
-      # elif arc.i[0] == 'Drop' and arc.j[0] == 'Pick':
-      #     for i in range(len(arc.path)):
-      #         _next_prev_count[arc.path[i][0]][arc.path[i][1]] += 1
-
-  # # 다음번 스케줄링을 위한 A2만 담긴 next_prev_count
-  # _next_prev_count_A2 = np.zeros((len(grid), len(grid[0])))
-  # for arc in activated_arcs:
-  #     # A2이면
-  #     if arc.i[0] == 'Pick':
-  #         # arc.path에 있는 모든 좌표에 1씩 더해줌
-  #         for i in range(len(arc.path)):
-  #             _next_prev_count_A2[arc.path[i][0]][arc.path[i][1]] += 1
-
-  # # 다음번 스케줄링을 위한 A3만 담긴 next_prev_count
-  # _next_prev_count_A3 = np.zeros((len(grid), len(grid[0])))
-  # for arc in activated_arcs:
-  #     # A3이면
-  #     if arc.i[0] == 'Drop' and arc.j[0] == 'Pick':
-  #         # arc.path에 있는 모든 좌표에 1씩 더해줌
-  #         for i in range(len(arc.path)):
-  #             _next_prev_count_A3[arc.path[i][0]][arc.path[i][1]] += 1
-
-      
 
   # Create csv file for Unity simulation
   make_csv.create_csv(activated_arcs, number_of_YT, _grid, filename_Truck, filename_RoutePoints)
@@ -167,16 +149,12 @@ def main(_grid, _YT_locations, _Job_locations, number_of_YT, number_of_Job, case
 
 
 if __name__ == "__main__":
+  
+  # 실험환경 설정
   casename = 'Modify_prior_congestion'
 
-
-
-  # Prev_number_list = [5,5,10,10,15,15,20,20,25,25,30]
-  # Now_number_list = [5,10,10,15,15,20,20,25,25,30,30]
-
-  # 중간에 짤려서 이번만 이렇게. 다으뭅터는 전체 YT수로
-  Prev_number_list = [10,15,15,20,20,25,25,30]
-  Now_number_list = [15,15,20,20,25,25,30,30]
+  Prev_number_list = [5,5,10,10,15,15,20,20,25,25,30]
+  Now_number_list = [5,10,10,15,15,20,20,25,25,30,30]
 
   block_num_in_row = 3
   block_length = 9
@@ -185,11 +163,8 @@ if __name__ == "__main__":
   grid_height = 9
   grid, YT_location_col_index, QC_locations, YC_locations = make_grid.Grid(grid_length, grid_height, block_length, block_height, block_num_in_row)
   
-  # Prev_number_of_YT = 10
-  # Prev_number_of_Job = 10
-  # Now_number_of_YT = 10
-  # Now_number_of_Job = 10
   
+  # 반복실험 수행
   for _ in range(len(Prev_number_list)):
     Prev_number_of_YT = Prev_number_list[_]
     Prev_number_of_Job = Prev_number_list[_]
@@ -198,29 +173,19 @@ if __name__ == "__main__":
 
     case_folder_path = f'{casename}/prev_{Prev_number_of_YT}_now_{Now_number_of_YT}'
 
-    reps = 60
+    reps = 30
 
     # alphas = [[0, 10, 20, 30, 40, 50, 60, 70, 80],
     #           [0, 80, 70, 60, 50, 40, 30, 20, 10],
     #           [100, 10, 10, 10, 10, 10, 10, 10, 10]]
     
-    # 아래 알파조합으로는 60번 다 함
-
-    alphas = [[20, 30, 50, 60, 70],
-              [70, 60, 40, 30, 20],
-              [10, 10, 10, 10, 10]]
-
-
-    # 아래 알파조합으로는 30번밖에 안했음
-    
-    # 따라서 아래 알파조합으로 30번 더 하면 끝. rep 31번부터 하면됨
-    # alphas = [[0, 10, 40, 80],
-    #           [0, 80, 50, 10],
-    #           [100, 10, 10, 10]]
+    alphas = [[0, 10, 40, 80],
+              [0, 80, 50, 10],
+              [100, 10, 10, 10]]
               
     for rep in range(reps):
       
-      rep = rep + 1
+      rep = rep + 31
 
       prev_YT_locations, prev_Job_locations = generate_locations(grid, Prev_number_of_YT, Prev_number_of_Job, YT_location_col_index, QC_locations, YC_locations)
       now_YT_locations, now_Job_locations = generate_locations(grid, Now_number_of_YT, Now_number_of_Job, YT_location_col_index, QC_locations, YC_locations)
@@ -230,7 +195,7 @@ if __name__ == "__main__":
         alpha1 = alphas[0][i]
         alpha2 = alphas[1][i]
         alpha3 = alphas[2][i]
-        
+
         # Prev
         prev_count = np.zeros((len(grid), len(grid[0])))
 
