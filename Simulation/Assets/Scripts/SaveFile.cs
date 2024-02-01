@@ -9,10 +9,12 @@ using System.Linq;
 namespace TrafficSimulation{
     public class SaveFile : MonoBehaviour
     {
-        // 파일 저장 위치
+        // 파일 저장 이름
         public string csvFileName;
+        // 파일 저장 경로
         public string filePath;
 
+        // 결과 저장용 리스트
         public static List<ResultsData> resultsDataList;
         private WholeProcess wholeProcess;
         private float cMax_prev;
@@ -21,6 +23,8 @@ namespace TrafficSimulation{
         private float congestionRatio_avg_prev;
         private float congestionRatio_avg_now;
         private float congestionRatio_avg;
+
+        // YC, QC에서 걸리는 총 시간
         private float totalCraneProcessTime;
         private bool isFirstLine;
         private string newLine;
@@ -30,6 +34,7 @@ namespace TrafficSimulation{
             totalCraneProcessTime = CranesInfo.quayCraneProcessTime + CranesInfo.yardCraneProcessTime;
         }
 
+        //  csv 파일로 저장
         public void SaveToCSV()
         {
             if(resultsDataList == null)
@@ -87,6 +92,7 @@ namespace TrafficSimulation{
                 // Create a new CSV file and write the data
                 using (StreamWriter sw = File.CreateText(_filePath))
                 {   
+                    // csv column name
                     string header = "Truck_id,Route_id,Origin,Destination,Completion_Time_alone,Completion_Time,Congestion_ratio,TravelTime_by_Distance,PickupSta_AT,DropSta_AT,,,C_max_prev,C_max_now,C_max,Congestion_ratio_AVG_prev,Congestion_ratio_AVG_now,Congestion_ratio_AVG";
                
                     // Write the header and data to the CSV file
@@ -122,7 +128,7 @@ namespace TrafficSimulation{
             File.AppendAllText(_filePath, newLine + "\n");
         }
 
-
+        // 이전에 스케줄링 된 트럭인지 인덱스로 확인
         private bool isPrevTruck(string _vehicleName)
         {   
             bool _isPrevTruck = true;

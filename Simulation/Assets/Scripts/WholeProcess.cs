@@ -8,15 +8,20 @@ using System.Text.RegularExpressions;
 namespace TrafficSimulation {    
     public class WholeProcess : MonoBehaviour
     {
+        // 상위 폴더 이름
         private static string caseName = "interval_10_input_data";
+        // 상위 폴더 경로
         private string caseFolderPath = "Assets/Data/" + caseName;
         
         // parameters
         private string prevFolderPath;
         private string nowFolderPath;
+
+        // 차량 한대씩 돌리는 지 여부
         private bool _isOnebyOne = false;
 
         // --------------------------------------------------------
+        // YT 최대 작업 완료 시간
         public float limitTotalTime = 500f;
         public static bool playAgain = false;
 
@@ -49,6 +54,7 @@ namespace TrafficSimulation {
         private static float z3;
         private static float z4;
 
+        //  corner, intersection Positions
         private static List<Vector3> cornerPositions = new List<Vector3>{new Vector3(0,0,0), new Vector3(750,0,0), new Vector3(750,0,200), new Vector3(0,0,200)};
         private static List<Vector3> intersectionPositions = new List<Vector3>
                                                                 {
@@ -94,17 +100,20 @@ namespace TrafficSimulation {
         private static Vector3 newPoint;
         
         private static int routePlusNum;
+        
+        // 이차선 도로를 위해 route를 이동시키는 scale
         private static float routeMoveScale = 5.5f;
         private static bool isRotate;        
         private static Vector3 newRoPoint;
 
         private static TrafficSystem wps;
+        
+        // 차량 생성 딜레이
         private float createTruckDelay = 1f;
         
         private CreateTruckAndStation createTruckAndStation;
         private ExitPlayMode exitPlayMode;
         private SaveFile saveFile;
-        public bool isPrevFolder = true;
 
         // Start is called before the first frame update
         void Awake()
@@ -177,7 +186,6 @@ namespace TrafficSimulation {
             CheckFolderCount();
             CreateTruckAndStation.subFolderCount = subFolderCount;
 
-            
             currentPrevRouteFilePath = prevRouteFileList[currentFileCount];
             currentPrevTruckFilePath = prevTruckFileList[currentFileCount];
             
@@ -186,10 +194,13 @@ namespace TrafficSimulation {
 
             string currenFilePath = SetSaveFileName();
 
+            //  이미 결과 파일이 존재하는 경우
             if(File.Exists(currenFilePath))
             {
                 currentFileCount++;
                 Debug.Log("File already exists : " + saveFile.filePath);
+
+                //  현재 폴더의 모든 파일을 돌았을 때
                 if(currentFileCount == totalFileCount)
                 {
                     Debug.Log("----- Next Folder ------");
@@ -197,27 +208,33 @@ namespace TrafficSimulation {
                     currentFileCount = 0;
                 }
 
+                //  모든 폴더를 돌았을 때
                 if(currentFolderCount == folderCount)
                 {
                     Debug.Log("----- End Process ------");
                 }
 
+                // 폴더가 남아있는 경우
                 else
                 {
                     Process();
                 }
             }
 
+            //  결과 파일이 존재하지 않는 경우
             else
             {
+                // 경로 생성
                 CreateAllRoutes();
 
                 exitPlayMode.nowTruckCount = 0;
 
+                //  createTruckDelay 후에 차량 생성
                 Invoke("CreateTruck", createTruckDelay);
             }
         }
 
+        //  result 파일 이름 설정
         private string SetSaveFileName()
         {
             if(CreateTruckAndStation.isTwoFile)
@@ -235,8 +252,10 @@ namespace TrafficSimulation {
                 saveFile.csvFileName = Path.GetFileName(currentNowRouteFilePath);
             }
 
+            //  result file 저장 경로 설정
             string resultFolder = "Assets/Results/" + caseName +"/"+ Path.GetFileName(folderList[currentFolderCount]);
 
+            //  result 폴더가 없는 경우 생성
             if (!Directory.Exists(resultFolder))
             {
              
@@ -287,7 +306,8 @@ namespace TrafficSimulation {
         {   
             List<string> routeFileList = new List<string>();
             List<string> truckFileList = new List<string>();
-
+            
+            //  차량 한대씩 돌리지 않고 다같이 돌리는 경우
             if(!_isOnebyOne)
             {
                 (routeFileList, truckFileList) = GetFileList(prevFolderPath);
@@ -365,6 +385,7 @@ namespace TrafficSimulation {
             return (routeFileList, truckFileList);
         }
 
+        // 모든 Route 생성
         private void CreateAllRoutes()
         {
             // 2개 파일 돌릴 때
@@ -443,7 +464,8 @@ namespace TrafficSimulation {
                 Debug.LogError("Check Folder Count");
             }
         }
-
+        
+        //  Route의 각 포인트를 리스트로 만들어 딕셔너리에 저장
         private static Dictionary<int, List<Vector3>> CreateRouteList(string _routefilePath)
         {   
             Dictionary<int, List<Vector3>> _routeDictionary = new Dictionary<int, List<Vector3>>();
@@ -516,6 +538,7 @@ namespace TrafficSimulation {
             GameObject parentGO = new GameObject(parentGOName);
             parentGO.transform.position = Vector3.zero;
 
+            //  각 경로(segment) 생성
             foreach(int dict_key in _routeDictionary.Keys)
             {   
                 List<Vector3> route = _routeDictionary[dict_key];
@@ -622,6 +645,7 @@ namespace TrafficSimulation {
             }
         }
 
+        // now, prev 구분하기 위해 YT, route index에 routePlusNum 만큼 더하기
         private static void GetPlusNum(string _routefilePath)
         {   
             string fileName = Path.GetFileName(_routefilePath);
@@ -637,6 +661,7 @@ namespace TrafficSimulation {
             }
         }
 
+        //  route를 _routeMovesacle만큼 이동시키기
         public static List<Vector3> EditPathPoints(Vector3 nowPoint, Vector3 nextPoint, float _routeMoveScale)
         {   
             float axis_x_next_now = nextPoint.x - nowPoint.x;
@@ -674,6 +699,7 @@ namespace TrafficSimulation {
             return EditPoints;
         }
 
+        // route의 각 포인트를 waypoint로 만들어 segment에 추가
         private static void AddWaypoint(Vector3 position) 
         {
             GameObject go = new GameObject("Waypoint-" + wps.curSegment.waypoints.Count);
@@ -687,6 +713,7 @@ namespace TrafficSimulation {
             wps.curSegment.waypoints.Add(wp);
         }
 
+        // 각 경로 생성
         private static void AddSegment(Vector3 position, string routeName) 
         {
             int segId = wps.segments.Count;
@@ -704,12 +731,14 @@ namespace TrafficSimulation {
             wps.segments.Add(wps.curSegment);
         }
 
+        // 회전하는 위치(corner, intersection)인지 확인
         private static bool RotatePosition(Vector3 prePosition, Vector3 nowPosition, Vector3 nextPosition, List<Vector3> coordinateList)
         {   
             isRotate = CheckIfCoordinateExists(prePosition, nowPosition, nextPosition, coordinateList);
             return isRotate;
         }
         
+        //  회전구간에서 회전할 포인트들의 위치를 변경
         private static List<Vector3> ChangeToRotate(Vector3 previousPoint, Vector3 nowPoint, Vector3 nextPoint)
         {   
             float nowPoint_x = nowPoint.x;
@@ -879,7 +908,8 @@ namespace TrafficSimulation {
                 }
                 
             }
-     
+
+            // 자연스럽게 회전하기 위해 회전 포인트 추가
             rotatePoints.Add(new Vector3(x1, 0f, z1));
             rotatePoints.Add(new Vector3(x2, 0f, z2));
             rotatePoints.Add(new Vector3(x3, 0f, z3));
@@ -888,6 +918,7 @@ namespace TrafficSimulation {
             return rotatePoints;
         }
         
+        // corner, intersection에서 회전을 해야하는 지 확인
         private static bool CheckIfCoordinateExists(Vector3 prePo, Vector3 nowPo, Vector3 nextPo, List<Vector3> coordinateList)
         {   
             float pre_now_x = prePo.x - nowPo.x;
