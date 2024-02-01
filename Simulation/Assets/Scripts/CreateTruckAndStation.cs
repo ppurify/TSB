@@ -8,6 +8,7 @@ using System;
 namespace TrafficSimulation{
     public class CreateTruckAndStation : MonoBehaviour
     {
+        // 2개 파일 돌리는지 유무
         public static bool isTwoFile;
         // 1대씩 돌릴 때
         public static bool isOneByOne;
@@ -78,6 +79,8 @@ namespace TrafficSimulation{
                 if(_prevTruckFilePath != null)
                 {   
                     ReadFile(_prevTruckFilePath, truckIndexPlus_1);
+                    
+                    // 이전 스케줄링 대상 트럭들의 Station 생성
                     CreateStations(truckDataList_1, stationTagName);
                     
                     if(isOneByOne)
@@ -111,6 +114,8 @@ namespace TrafficSimulation{
                 else
                 {
                     ReadFile(_nowTruckFilePath, truckIndexPlus_2);
+                    
+                    // 다음 스케줄링 대상 트럭들의 Station 생성
                     CreateStations(truckDataList_2, stationTagName);
 
                     if(isOneByOne)
@@ -145,7 +150,7 @@ namespace TrafficSimulation{
             }
         }
 
-        // 경로 유무 확인 함수
+        // 트럭 데이터 저장 함수
         public static void ReadFile(string filePath, int _truckIndexPlus)
         {
             if (!File.Exists(filePath))
@@ -290,7 +295,7 @@ namespace TrafficSimulation{
                 stationsOB = new GameObject("Stations");
                 stationsOB.transform.position = Vector3.zero;
             }
-
+            
             foreach(CreateTruckData data in dataList)
             {
                 if(data.WorkStations.Count > 0)
@@ -619,7 +624,7 @@ namespace TrafficSimulation{
             CreateTruck(_truckName, _routeName, _pathLength, _completionTime_alone, _truckWorkStations);
         }
             
-
+        // 트럭 한대씩 생성하는 함수
         public static void CreateTruckOneByOne(CreateTruckData _value)
         {   
             string _truckName = _value.Name;
