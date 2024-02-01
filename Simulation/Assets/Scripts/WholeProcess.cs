@@ -8,21 +8,28 @@ using System.Text.RegularExpressions;
 namespace TrafficSimulation {    
     public class WholeProcess : MonoBehaviour
     {
+        // parameters
+
         // 상위 폴더 이름
         private static string caseName = "interval_10_input_data";
         // 상위 폴더 경로
         private string caseFolderPath = "Assets/Data/" + caseName;
-        
-        // parameters
-        private string prevFolderPath;
-        private string nowFolderPath;
+
+        // YT 최대 작업 완료 시간
+        public float limitTotalTime = 500f;
 
         // 차량 한대씩 돌리는 지 여부
         private bool _isOnebyOne = false;
 
+        // 한대씩 돌릴 때 이전 스케줄링 대상 폴더를 실행할 지 여부
+        public bool isPrevFolder = true;
+
         // --------------------------------------------------------
-        // YT 최대 작업 완료 시간
-        public float limitTotalTime = 500f;
+        
+        private string prevFolderPath;
+        private string nowFolderPath;
+
+        
         public static bool playAgain = false;
 
 
@@ -76,14 +83,6 @@ namespace TrafficSimulation {
                                                                     new Vector3(500, 0, 200)
                                                                 };
 
-        // Intersection Collider Parameters
-        private static List<Vector3> intersections = new List<Vector3>();
-        private static Vector3 intersectionSize = new Vector3(50,10,28);
-        private static float intersectionPos_y = intersectionSize.y/2;
-
-        // Corner Collider Parameters
-        private static Vector3 cornerSize = new Vector3(40,10,40);
-
         public string currentPrevRouteFilePath;
         private string currentPrevTruckFilePath;
         public string currentNowRouteFilePath;
@@ -91,7 +90,7 @@ namespace TrafficSimulation {
 
         
         // Route Parameters
-        private static List<List<Vector3>> routes = new List<List<Vector3>>();
+        // private static List<List<Vector3>> routes = new List<List<Vector3>>();
         
         private static Dictionary<int, List<Vector3>> prevRouteDictionary = new Dictionary<int, List<Vector3>>();
         private static Dictionary<int, List<Vector3>> nowRouteDictionary = new Dictionary<int, List<Vector3>>();
@@ -114,6 +113,7 @@ namespace TrafficSimulation {
         private CreateTruckAndStation createTruckAndStation;
         private ExitPlayMode exitPlayMode;
         private SaveFile saveFile;
+
 
         // Start is called before the first frame update
         void Awake()
