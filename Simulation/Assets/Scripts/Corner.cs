@@ -5,7 +5,6 @@ using UnityEngine;
 namespace TrafficSimulation{
     public class Corner : MonoBehaviour
     {
-        // Start is called before the first frame update
         void OnTriggerEnter(Collider other)
         {
             VehicleAI vehicleAI = other.GetComponent<VehicleAI>();
