@@ -162,9 +162,13 @@ namespace TrafficSimulation {
             Match prevMatch = Regex.Match(_folderName, @"prev_\d+");
             Match nowMatch = Regex.Match(_folderName, @"now_\d+");
 
-            if (prevMatch.Success && nowMatch.Success)
+            if (prevMatch.Success)
             {
                 prevFolderPath = Path.Combine(_folderName, prevMatch.Value);
+            }
+
+            if(nowMatch.Success)
+            {
                 nowFolderPath = Path.Combine(_folderName, nowMatch.Value);
             }
         }
@@ -237,7 +241,8 @@ namespace TrafficSimulation {
         //  result 파일 이름 설정
         private string SetSaveFileName()
         {
-            if(CreateTruckAndStation.isTwoFile)
+            // if(CreateTruckAndStation.isTwoFile)
+            if(!_isOnebyOne)
             {
                 saveFile.csvFileName = Path.GetFileName(currentPrevRouteFilePath) + "_with_" + Path.GetFileName(currentNowRouteFilePath);
             }
@@ -308,7 +313,8 @@ namespace TrafficSimulation {
             List<string> truckFileList = new List<string>();
             
             //  차량 한대씩 돌리지 않고 다같이 돌리는 경우
-            if(!_isOnebyOne)
+            // if(!_isOnebyOne)
+            if(prevFolderPath != "")
             {
                 (routeFileList, truckFileList) = GetFileList(prevFolderPath);
                 prevRouteFileList = routeFileList;
@@ -316,7 +322,10 @@ namespace TrafficSimulation {
                 prevFileCount = prevRouteFileList.Count;
 
                 subFolderCount++;
+            }
 
+            if(nowFolderPath != "")
+            {
                 (routeFileList, truckFileList) = GetFileList(nowFolderPath);
                 nowRouteFileList = routeFileList;
                 nowTruckFileList = truckFileList;
@@ -324,7 +333,7 @@ namespace TrafficSimulation {
 
                 subFolderCount++;
             }
-
+            
             if(prevFolderPath == "" & nowFolderPath == "")
             {
                 Debug.LogError("Check Folder Path");
