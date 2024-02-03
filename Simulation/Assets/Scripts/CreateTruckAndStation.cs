@@ -362,7 +362,7 @@ namespace TrafficSimulation{
         }
         
         
-        // 딕셔너리 생성 함수
+        // 모든 차량의 출발 위치를 딕셔너리에 저장하는 함수
         private static void IsDuplicateStartPosition(List<CreateTruckData> dataList, float _truckIndexPlus)
         {
             // Debug.Log("dataList.Count: " + dataList.Count + " , _truckIndexPlus: " + _truckIndexPlus);
@@ -571,6 +571,7 @@ namespace TrafficSimulation{
             return false;
         }
 
+        // 해당 좌표에 트럭이 존재하는 지 확인하는 함수
         private static bool ExistAnyTruck(Vector3 _position, float _checkRange_1, float _checkRange_2)
         {
             Collider[] colliders = Physics.OverlapSphere(_position, Mathf.Max(_checkRange_1, _checkRange_2));
@@ -585,7 +586,8 @@ namespace TrafficSimulation{
             
             return false;
         }
-    
+
+        // 다음 스케줄링 대상 트럭 생성 함수
         private IEnumerator CreateNewTrucksDelay(float _createDelay)
         {   
             yield return new WaitForSeconds(_createDelay);
@@ -602,7 +604,7 @@ namespace TrafficSimulation{
             }
         }
 
-
+        // 출발 위치가 동일한 트럭이 없는 경우 트럭 생성 함수
         private IEnumerator CreateOneTruck(Tuple<string, string, float, float, List<Vector3>> _value, float _checkRange_1, float _checkRange_2, float _checkDelay)
         {
             string _truckName = _value.Item1;
@@ -624,7 +626,7 @@ namespace TrafficSimulation{
             CreateTruck(_truckName, _routeName, _pathLength, _completionTime_alone, _truckWorkStations);
         }
             
-        // 트럭 한대씩 생성하는 함수
+        // isOneByOne이 true일 때 트럭 한대씩 생성하는 함수
         public static void CreateTruckOneByOne(CreateTruckData _value)
         {   
             string _truckName = _value.Name;

@@ -41,6 +41,7 @@ public class CranesInfo : MonoBehaviour
         finishedQueueList_toRight = new List<GameObject>();
     }
 
+    // QC, YC의 작업 시간을 할당
     private void AssignProcessTime(float quayCranePos_z, float _quayCraneProcessTime, float _yardCraneProcessTime)
     {
         // Assign process time to each crane
@@ -55,6 +56,7 @@ public class CranesInfo : MonoBehaviour
         }
     }
     
+    // QC, YC의 한번에 작업 가능한 트럭 수를 할당
     private void AssignCraneCapacity(float quayCranePos_z, int _quayCraneCapacity, int _yardCraneCapacity)
     {
         // Quay crane capacity

@@ -16,58 +16,89 @@ namespace TrafficSimulation{
 
     public class TruckInfo : MonoBehaviour
     {
-
+        
+        // Truck's Information
+        // pickup, drop station's position
         public List<Vector3> truckWorkStations;
+        // the number of stations of pickup, drop
         public int truckWorkStationsNum;
+        // position of truck's origin
         public Vector3 truckOrigin;
+        // position of truck's destination
         public Vector3 truckDestination;
+        // the length of truck's path
         public float truckPathLength;
+        // completion time of truck without other trucks
         public float truckCompletionTime_alone;
+        // Route name of truck
         public string truckRouteName;
+        // the status of truck
         public int truckStatus;
 
-        
+        // Entity of truck
         private GameObject vehicle;
+        // Vehicle system of truck
         private VehicleAI thisVehicleAI;
 
+        // time to stop
         private float short_slowingTime = 1f;
-
         private float long_slowingTime = 5f;
 
+        // time to process
         private float processTime;
 
-
+        // position of truck to record
         private Vector3 originalPos;
 
+        //  move to station's position
         // 1. tile 75        
         // private float toStationNum = 25f;
         // 2. tile 25
         private float toStationNum = 20f;
 
+        // check range to find any truck
         private float checkRange_1 = 5f;
- 
         private float checkRange_2 = 13f;
 
+        // turn station's position of truck
         public List<Vector3> turnStations;
 
-
+        // Entity of now work station
         private GameObject nowStation;
+        // position of now work station
         private Vector3 nowStationPos;
+        // Information of now work station
         private CranesInfo nowStationInfo;
+
+        // the number of finished vehicle to move to left side or right side
         private int nowStation_FinishedVehicle_toLeft;
         private int nowStation_FinishedVehicle_toRight;
 
         // To check Station's Status
         private float checkDelay = 1f; 
 
+        //  save result data
         private SaveFile saveFile;
+        
+        // stopwatch to record truck's total time
         private Stopwatch truckTotalWatch;
+        
+        // stopwatch to record truck's travel time
         private Stopwatch truckStationWatch;
+        
+        // stopwatch to record time if you stop for no reason
         private Stopwatch noReasonStopWatch;
+
+        // list to record truck's travel time
         [SerializeField]private List<float> truckStationWatchList = new List<float>();
 
+        // to exit play mode
         private ExitPlayMode exitPlayMode;
+        
+        // check start position
         private Vector3 startPos;
+
+        // check first station's position
         private Vector3 firstStationPos;
 
         private Rigidbody rb;
@@ -109,6 +140,7 @@ namespace TrafficSimulation{
             wholeProcess = GameObject.Find("Roads").GetComponent<WholeProcess>();
         }
         
+        // 아무이유 없이 멈췄을 때 시간 체크 후 움직이도록 살짝 이동해주기
         void Update()
         {
             if((thisVehicleAI.vehicleStatus == Status.GO || thisVehicleAI.vehicleStatus == Status.SLOW_DOWN) && rb.velocity.magnitude < 0.05f && nowStatus == NowStatus.NONE)
@@ -177,6 +209,7 @@ namespace TrafficSimulation{
             }
         }
         
+        // 차량이 작업 장소에 도착했을 때
         void OnTriggerEnter(Collider _other)
         {   
             if(_other.gameObject.tag == "Station")
@@ -247,7 +280,8 @@ namespace TrafficSimulation{
             }
         }
 
-         private IEnumerator WorkingProcess()
+        // 작업 처리를 위한 함수 
+        private IEnumerator WorkingProcess()
         {   
             nowStatus = NowStatus.PROCESSING;
             // 시작 위치와 첫번째 작업장이 같은 경우 or 이전의 작업장과 현재 작업장이 같은 경우 
@@ -294,6 +328,7 @@ namespace TrafficSimulation{
             truckStationWatch.Reset();
         }
         
+        // 작업 장소로 이동
         private void MoveToProcess()
         {
             nowStatus = NowStatus.WAITING;
@@ -307,6 +342,7 @@ namespace TrafficSimulation{
             InvokeRepeating("checkStationStatus", 1f, 1f);
         }
 
+        // 작업 처리
         private void Processing()
         {   
             // UnityEngine.Debug.Log(this.name + " processing ---> station : " + nowStationPos);
@@ -324,6 +360,7 @@ namespace TrafficSimulation{
             Invoke("FinishProcess", processTime);
         }
 
+        // 작업 처리 완료
         private void FinishProcess()
         {
             nowStation.GetComponent<CranesInfo>().craneStatus -= 1;
@@ -336,6 +373,7 @@ namespace TrafficSimulation{
             InvokeRepeating("CheckRoad", 3f, 3f);
         }
 
+        // 현재 작업장의 상태를 확인
         private void checkStationStatus()
         {
             if(IsStationAvailable(nowStation))
@@ -357,6 +395,7 @@ namespace TrafficSimulation{
             }
         }
         
+        // 작업이 끝난 후 원래 위치로 이동하기 위해 도로 상황을 확인
         private void CheckRoad()
         {   
             // UnityEngine.Debug.Log(originalPos +" CheckRoad ");
@@ -365,13 +404,9 @@ namespace TrafficSimulation{
                 CancelInvoke("CheckRoad");
                 MoveToOriginalPos();
             }
-
-            else
-            {
-                // UnityEngine.Debug.Log(originalPos + " ExistAnyTruck");
-            }
         }
 
+        // 원래 위치로 이동
         private void MoveToOriginalPos()
         {   
             // UnityEngine.Debug.Log(vehicle.name + " move from " + nowStationPos + " to Original Pos ---> CheckRotation_IsToRight(vehicle) : " + CheckRotation_IsToRight(vehicle));
@@ -398,6 +433,7 @@ namespace TrafficSimulation{
             nowStatus = NowStatus.NONE;
         }
 
+        // 마지막 작업 처리
         private void LastProcessing()
         {   
             // UnityEngine.Debug.Log(this.name + " Last Processing at " + nowStationPos + " station ");
@@ -412,6 +448,7 @@ namespace TrafficSimulation{
             Invoke("FinishLastProcess", processTime);
         }
 
+        // 마지막 작업 처리 완료 시 결과 저장
         private void FinishLastProcess()
         {
             truckTotalWatch.Stop();
@@ -524,7 +561,7 @@ namespace TrafficSimulation{
             Destroy(vehicle);
         }
         
-
+        // 차량의 회전 방향을 확인 (오른쪽으로 가는지 확인)
         private bool CheckRotation_IsToRight(GameObject _vehicle)
         {
             if (_vehicle == null)
@@ -546,6 +583,7 @@ namespace TrafficSimulation{
             }
         }
 
+        // 작업장이 사용 가능한지 확인
         private bool IsStationAvailable(GameObject _station)
         {
             bool isAvailable = false;
@@ -563,7 +601,7 @@ namespace TrafficSimulation{
             return isAvailable;
         }
 
-
+        // 작업장에 도착하기 전에 감속
         public IEnumerator ReduceSpeed(GameObject _vehicle, float _slowingTime)
         {   
             Rigidbody rb = _vehicle.GetComponent<Rigidbody>();
@@ -581,6 +619,7 @@ namespace TrafficSimulation{
             rb.velocity = Vector3.zero; // Ensure velocity is set to zero
         }
 
+        // 작업장에 작업이 완료된 차량이 있는지 확인
         private IEnumerator CheckFinishedQueue(float _checkDelay, int _nowStationFinshedQueueCount)
         {
             while(_nowStationFinshedQueueCount > 0)
@@ -602,6 +641,7 @@ namespace TrafficSimulation{
             nowStatus = NowStatus.NONE;
         }
 
+        // 특정 좌표를 기준으로 해당 범위 내에 차량이 존재하는지 확인
         private bool ExistAnyTruck(Vector3 _position, float _checkRange_1, float _checkRange_2)
         {
             Collider[] colliders = Physics.OverlapSphere(_position, Mathf.Max(_checkRange_1, _checkRange_2));
@@ -617,7 +657,7 @@ namespace TrafficSimulation{
             return false;
         }
 
-
+        // 작업을 완료했을 때, 완료 리스트에 차량 추가
         private void PlusFinishedVehicle(CranesInfo _stationInfo, GameObject _vehicle)
         {   
             if(CheckRotation_IsToRight(vehicle))
@@ -631,7 +671,7 @@ namespace TrafficSimulation{
             }
         }
 
-
+        // 차량이 작업 완료 후 작업장을 빠져나간 경우 완료 리스트에서 차량 제거 
         private void MinusFinishedVehicle(CranesInfo _stationInfo, GameObject _vehicle)
         {   
             if(CheckRotation_IsToRight(_vehicle))
@@ -645,12 +685,13 @@ namespace TrafficSimulation{
             }
         }
 
-
+        // 차량이 작업장에 도착했을 때, 목적지인지 확인
         private bool IsDestination(Vector3 _nowStationPos, List<Vector3> _truckWorkStations, int _truckStatus, int _truckWorkStationsNum)
         {
             return _nowStationPos == _truckWorkStations[_truckWorkStationsNum-1] && _truckStatus == _truckWorkStationsNum - 1;
         }
 
+        // 출발지와 현재 작업장이 같은지 확인
         private bool IsStartPosEqualNowStation(Vector3 _startPos, Vector3 _nowStaitonPos, int _truckStatus)
         {
             return _startPos == _nowStaitonPos && _truckStatus == 0;

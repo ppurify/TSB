@@ -21,11 +21,10 @@ namespace TrafficSimulation {
         // 차량 한대씩 돌리는 지 여부
         private bool _isOnebyOne = false;
 
-        // 한대씩 돌릴 때 이전 스케줄링 대상 폴더를 실행할 지 여부
-        public bool isPrevFolder = true;
-
         // --------------------------------------------------------
         
+        // 한대씩 돌릴 때 이전 스케줄링 대상 폴더를 실행할 지 여부
+        public bool isPrevFolder = true;
         private string prevFolderPath;
         private string nowFolderPath;
 
