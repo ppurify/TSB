@@ -153,8 +153,12 @@ if __name__ == "__main__":
   # 실험환경 설정
   casename = 'Modify_prior_congestion'
 
-  Prev_number_list = [5,5,10,10,15,15,20,20,25,25,30]
-  Now_number_list = [5,10,10,15,15,20,20,25,25,30,30]
+  # Prev_number_list = [5,5,10,10,15,15,20,20,25,25,30]
+  # Now_number_list = [5,10,10,15,15,20,20,25,25,30,30]
+
+
+  Prev_number_list = [5,5,20,25,25,30]
+  Now_number_list = [5,10,25,25,30,30]
 
   block_num_in_row = 3
   block_length = 9
@@ -182,6 +186,11 @@ if __name__ == "__main__":
     alphas = [[0, 10, 40, 80],
               [0, 80, 50, 10],
               [100, 10, 10, 10]]
+    
+    # # 그 외 알파들
+    # alphas = [[20, 30, 50, 60, 70],
+    #           [70, 60, 50, 30, 20],
+    #           [10, 10, 10, 10, 10]] 
               
     for rep in range(reps):
       
