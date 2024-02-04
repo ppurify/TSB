@@ -45,7 +45,7 @@ namespace TrafficSimulation{
         public float brakeTorque = 10000f;
         // public float brakeTorque = 30000f;
 
-
+        // Unit type of the speed
         [Tooltip("Unit Type")]
         public UnitType unitType;
 
@@ -68,9 +68,14 @@ namespace TrafficSimulation{
         [Tooltip("The vehicle's drive type: rear-wheels drive, front-wheels drive or all-wheels drive.")]
         public DriveType driveType;
 
+        // Find all the WheelColliders down in the hierarchy.
         private WheelCollider[] wheels;
+
+        // Current steering angle
         private float currentSteering = 0f;
 
+        // OnEnable is called when the script is enabled
+        // Assign the wheels and create the wheel shapes
         void OnEnable(){
             wheels = GetComponentsInChildren<WheelCollider>();
 
@@ -108,6 +113,9 @@ namespace TrafficSimulation{
             }
         }
 
+        // Control the vehicle based on driving inputs and update the driving state.
+        // Calculate and apply steering angle, driving torque, and brake torque to wheels based on given acceleration, steering, and brake values.
+        // Limit the speed of the vehicle and apply downforce.
         public void Move(float _acceleration, float _steering, float _brake)
         {
 
@@ -155,6 +163,7 @@ namespace TrafficSimulation{
             rb.AddForce(-transform.up * downForce * rb.velocity.magnitude);
         }
 
+        // Get the speed in m/s or km/h
         public float GetSpeedMS(float _s){
             return unitType == UnitType.KMH ? _s / 3.6f : _s / 2.237f;
         }
