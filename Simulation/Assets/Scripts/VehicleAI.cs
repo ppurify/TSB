@@ -90,6 +90,7 @@ namespace TrafficSimulation {
             
         }
 
+        // Coroutine for gradually increasing speed of the vehicle
         private System.Collections.IEnumerator SpeedUp(GameObject _vehicle, float _speedUpTime)
         {
             Rigidbody rb = _vehicle.GetComponent<Rigidbody>();
@@ -107,6 +108,7 @@ namespace TrafficSimulation {
             rb.velocity = initialVelocity.normalized * 20f; // Ensure velocity is set to the target speed
         }
         
+        // Checks and updates the current waypoint based on the vehicle's position
         void WaypointChecker(){
             GameObject waypoint = trafficSystem.segments[currentTarget.segment].waypoints[currentTarget.waypoint].gameObject;
             //Position of next waypoint relative to the car
@@ -132,6 +134,7 @@ namespace TrafficSimulation {
             }
         }
 
+        // Controls the movement of the vehicle based on its status and surroundings
         void MoveVehicle(){
 
             //Default, full acceleration, no break and no steering
@@ -303,7 +306,7 @@ namespace TrafficSimulation {
             wheelDrive.Move(acc, steering, brake);
         }
 
-
+        // checking the surrounding environment through obstacle detection and distance measurement, and controlling the vehicle's behavior in various situations.
         GameObject GetDetectedObstacles(out float _hitDist){
             GameObject detectedObstacle = null;
             float minDist = 1000f;
@@ -327,7 +330,7 @@ namespace TrafficSimulation {
             return detectedObstacle;
         }
 
-        
+        // Use raycast to detect colliding objects by shooting rays at a given angle and direction
         void CastRay(Vector3 _anchor, float _angle, Vector3 _dir, float _length, out GameObject _outObstacle, out float _outHitDistance){
             _outObstacle = null;
             _outHitDistance = -1f;
@@ -356,6 +359,7 @@ namespace TrafficSimulation {
             }
         }
 
+        // Randomly return the ID of the next segment to be taken
         int GetNextSegmentId(){
             if(trafficSystem.segments[currentTarget.segment].nextSegments.Count == 0)
                 return 0;
@@ -363,6 +367,7 @@ namespace TrafficSimulation {
             return trafficSystem.segments[currentTarget.segment].nextSegments[c].id;
         }
 
+        // Set the segment and waypoint where the vehicle is currently located
         void SetWaypointVehicleIsOn(){
             //Find current target
             foreach(Segment segment in trafficSystem.segments){
@@ -395,6 +400,7 @@ namespace TrafficSimulation {
             }
         }
 
+        // Return the segment in which the vehicle is currently located
         public int GetSegmentVehicleIsIn(){
             int vehicleSegment = currentTarget.segment;
 

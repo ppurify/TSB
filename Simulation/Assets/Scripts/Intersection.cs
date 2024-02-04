@@ -3,30 +3,41 @@ using System.Diagnostics;
 using UnityEngine;
 
 namespace TrafficSimulation{
+    // Enum defining types of intersections (STOP or TRAFFIC_LIGHT)
     public enum IntersectionType{
         STOP,
         TRAFFIC_LIGHT
     }
-
+    // a road intersection in the traffic simulation.
     public class Intersection : MonoBehaviour
     {   
+        // Type of intersection
         public IntersectionType intersectionType;
+        // Unique identifier for the intersection
         public int id;  
 
         //For stop only
         public List<Segment> prioritySegments;
 
         //For traffic lights only
+        // Duration of green lights
         public float lightsDuration = 8;
+        // Duration of orange lights
         public float orangeLightDuration = 2;
+        // Segments controlled by the first group of lights
         public List<Segment> lightsNbr1;
+        // Segments controlled by the second group of lights
         public List<Segment> lightsNbr2;
 
+        // List of vehicles waiting at the intersection
         private List<GameObject> vehiclesQueue;
+
+        // List of vehicles currently in the intersection
         private List<GameObject> vehiclesInIntersection;
 
         private TrafficSystem trafficSystem;
-        
+
+        // Current active group of red lights
         [HideInInspector] public int currentRedLightsGroup = 1;
 
         private Target currentTarget;
@@ -35,7 +46,10 @@ namespace TrafficSimulation{
         public float slowingTime = 1f; 
         private float invokeTime = 5f;
 
+        // Stopwatch for measuring intersection time
         private Stopwatch intersectionTimer;
+
+        // Time limit for vehicles in the intersection
         private float intersectionTimeLimit = 25f;
         
         void Start(){
@@ -53,6 +67,7 @@ namespace TrafficSimulation{
             }
         }
 
+        // Switches the traffic lights between two groups and triggers the movement of vehicles in the queue during the orange light phase.
         void SwitchLights(){
 
             if(currentRedLightsGroup == 1) currentRedLightsGroup = 2;
@@ -62,6 +77,7 @@ namespace TrafficSimulation{
             Invoke("MoveVehiclesQueue", orangeLightDuration);
         }
 
+        // Called when a vehicle enters the intersection collider.
         void OnTriggerEnter(Collider _other) {
             //Check if vehicle is already in the list if yes abort
             //Also abort if we just started the scene (if vehicles inside colliders at start)
@@ -73,6 +89,7 @@ namespace TrafficSimulation{
             }
         }
 
+        // Called when a vehicle exits the intersection collider.
         void OnTriggerExit(Collider _other) {
             if(_other.tag == "AutonomousVehicle" && intersectionType == IntersectionType.STOP)
                 ExitStop(_other.gameObject);
@@ -80,6 +97,7 @@ namespace TrafficSimulation{
                 ExitLight(_other.gameObject);
         }
 
+        // Triggers the stop behavior for a vehicle when it enters a stop intersection.
         void TriggerStop(GameObject _vehicle){
             VehicleAI vehicleAI = _vehicle.GetComponent<VehicleAI>();
             string vehicleAIRouteName = vehicleAI.trafficSystem.name;
@@ -119,6 +137,7 @@ namespace TrafficSimulation{
             }
         }
 
+        // Checks the intersection to determine if waiting vehicles can proceed.
         private void CheckIntersection()
         {   
             if(vehiclesQueue.Count > 0)
@@ -145,6 +164,7 @@ namespace TrafficSimulation{
             }
         }
 
+        // Reduces the speed of a vehicle to zero over a specified time.
         private System.Collections.IEnumerator ReduceSpeed(GameObject _vehicle)
         {
             Rigidbody rb = _vehicle.GetComponent<Rigidbody>();
@@ -162,6 +182,7 @@ namespace TrafficSimulation{
             rb.velocity = Vector3.zero; // Ensure velocity is set to zero
         }
 
+        // Exits the stop behavior for a vehicle when it leaves a stop intersection.
         void ExitStop(GameObject _vehicle){
             
             intersectionTimer.Stop();
@@ -179,24 +200,34 @@ namespace TrafficSimulation{
             }
         }
 
+        // Triggers the red light status for a vehicle when it enters a traffic light intersection.
         void TriggerLight(GameObject _vehicle){
             VehicleAI vehicleAI = _vehicle.GetComponent<VehicleAI>();
             int vehicleSegment = vehicleAI.GetSegmentVehicleIsIn();
 
-            if(IsRedLightSegment(vehicleSegment)){
+            // If the vehicle is in a red light segment, set its status to STOP and add it to the queue.
+            if(IsRedLightSegment(vehicleSegment))
+            {
                 vehicleAI.vehicleStatus = Status.STOP;
                 vehiclesQueue.Add(_vehicle);
             }
-            else{
+            // If not in a red light segment, set the vehicle status to GO.
+            else
+            {
                 vehicleAI.vehicleStatus = Status.GO;
             }
         }
 
-        void ExitLight(GameObject _vehicle){
+        // Exits the traffic light status for a vehicle when it leaves a traffic light intersection.
+        void ExitLight(GameObject _vehicle)
+        {
             _vehicle.GetComponent<VehicleAI>().vehicleStatus = Status.GO;
         }
 
-        bool IsRedLightSegment(int _vehicleSegment){
+        // Checks if a given segment is currently under a red light in the traffic light intersection.
+        bool IsRedLightSegment(int _vehicleSegment)
+        {
+            // Check the current group of red lights and see if the vehicle's segment is included.
             if(currentRedLightsGroup == 1){
                 foreach(Segment segment in lightsNbr1){
                     if(segment.id == _vehicleSegment)
@@ -212,12 +243,16 @@ namespace TrafficSimulation{
             return false;
         }
 
+        // Moves vehicles in the queue when the traffic light changes to green for their segment.
         void MoveVehiclesQueue(){
             //Move all vehicles in queue
             List<GameObject> nVehiclesQueue = new List<GameObject>(vehiclesQueue);
-            foreach(GameObject vehicle in vehiclesQueue){
+            foreach(GameObject vehicle in vehiclesQueue)
+            {
                 int vehicleSegment = vehicle.GetComponent<VehicleAI>().GetSegmentVehicleIsIn();
-                if(!IsRedLightSegment(vehicleSegment)){
+                // If the vehicle's segment is not under a red light, set its status to GO and remove it from the queue.
+                if(!IsRedLightSegment(vehicleSegment))
+                {
                     vehicle.GetComponent<VehicleAI>().vehicleStatus = Status.GO;
                     nVehiclesQueue.Remove(vehicle);
                 }
@@ -225,6 +260,7 @@ namespace TrafficSimulation{
             vehiclesQueue = nVehiclesQueue;
         }
 
+        // Checks if a vehicle's route is a priority segment.
         bool IsPrioritySegment(string vehicleRouteName){
             foreach(Segment s in prioritySegments){
                 if(vehicleRouteName == s.name)
@@ -233,6 +269,7 @@ namespace TrafficSimulation{
             return false;
         }
 
+        // Checks if a vehicle is already in the intersection.
         bool IsAlreadyInIntersection(GameObject _target){
             foreach(GameObject vehicle in vehiclesInIntersection){
                 if(vehicle.GetInstanceID() == _target.GetInstanceID()) return true;
@@ -244,15 +281,17 @@ namespace TrafficSimulation{
             return false;
         } 
 
-
+        // Stores the current state of the intersection for later resumption.
         private List<GameObject> memVehiclesQueue = new List<GameObject>();
         private List<GameObject> memVehiclesInIntersection = new List<GameObject>();
-
+        
+        // Saves the current state of the intersection queue and vehicles in the intersection.
         public void SaveIntersectionStatus(){
             memVehiclesQueue = vehiclesQueue;
             memVehiclesInIntersection = vehiclesInIntersection;
         }
 
+        // Resumes the intersection state to the saved state.
         public void ResumeIntersectionStatus(){
             foreach(GameObject v in vehiclesInIntersection){
                 foreach(GameObject v2 in memVehiclesInIntersection){
