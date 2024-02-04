@@ -17,11 +17,17 @@ namespace TrafficSimulation{
         // 결과 저장용 리스트
         public static List<ResultsData> resultsDataList;
         private WholeProcess wholeProcess;
+        // Max of Completion time of less than Truck-100
         private float cMax_prev;
+        // Max of Completion time of more than Truck-100
         private float cMax_now;
+        // Max of Completion time
         private float cMax;
+        // Average of Congestion ratio of less than Truck-100
         private float congestionRatio_avg_prev;
+        // Average of Congestion ratio of more than Truck-100
         private float congestionRatio_avg_now;
+        // Average of Congestion ratio of all trucks
         private float congestionRatio_avg;
 
         // YC, QC에서 걸리는 총 시간
@@ -34,6 +40,7 @@ namespace TrafficSimulation{
             totalCraneProcessTime = CranesInfo.quayCraneProcessTime + CranesInfo.yardCraneProcessTime;
         }
 
+        // Saves the simulation results to a CSV file and calculates congestion metrics.
         //  csv 파일로 저장
         public void SaveToCSV()
         {
@@ -84,6 +91,7 @@ namespace TrafficSimulation{
             }
         }
 
+        // Adds a new line to the CSV file with the simulation result data.
         public void AddLine(string _filePath, string _truckName, string _routeName, Vector3 _origin, Vector3 _destination, float _completionTime_alone, float _completionTime, float _travelTime_byDistance, List<float> _arrivalTimeList, bool _isFirstLine)
         {   
             // Check if the CSV file exists
@@ -155,6 +163,7 @@ namespace TrafficSimulation{
             return _isPrevTruck;
         }
 
+        // Calculates the average congestion ratio for a list of result data.
         private float congestionRatio_AVG(List<ResultsData> _dataList)
         {
             float totalCongestionRatio = 0;
