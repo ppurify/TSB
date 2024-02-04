@@ -20,9 +20,13 @@ public class CranesInfo : MonoBehaviour
     public List<GameObject> finishedQueueList_toLeft;
     public List<GameObject> finishedQueueList_toRight;
 
+    // 각 QC, YC의 작업 시간 (Inspector 창에서 확인용)
     public float craneProcessTime;
+
+    // QC 위치
     private float quayCranePosition_z = 200f;
 
+    // QC, YC의 작업 시간
     public static float quayCraneProcessTime = 150f;
     public static float yardCraneProcessTime = 150f;
 
