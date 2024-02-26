@@ -11,7 +11,7 @@ namespace TrafficSimulation {
         // parameters
 
         // 상위 폴더 이름
-        private static string caseName = "Modify_prior_congestion";
+        private static string caseName = "Modify_prior_congestion_2";
         // 상위 폴더 경로
         private string caseFolderPath = "Assets/Data/" + caseName;
 
