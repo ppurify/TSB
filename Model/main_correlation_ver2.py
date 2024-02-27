@@ -275,7 +275,7 @@ def min_main(_grid, _YT_locations, _Job_locations, number_of_YT, number_of_Job, 
     f.write("next prev count : \n" + next_prev_count_str + "\n")
 
   # corrlation_data.csv라는 파일을 생성하여 [Trucks파일명, Min Middle Max 여부, objective_value]를 저장
-  corrlation_data_path = f'Model/corrlation_data.csv'
+  corrlation_data_path = f'Model/correlation_between_obj_and_Cmax.csv'
   with open(corrlation_data_path, 'a') as f:
      f.write(os.path.basename(filename_Truck) + ', Min, ' + str(objective_value) + '\n')
 
@@ -357,7 +357,7 @@ def middle_main(_grid, _YT_locations, _Job_locations, number_of_YT, number_of_Jo
 
 
   # corrlation_data.csv라는 파일을 생성하여 [Trucks파일명, Min Middle Max 여부, objective_value]를 저장
-  corrlation_data_path = f'Model/corrlation_data.csv'
+  corrlation_data_path = f'Model/correlation_between_obj_and_Cmax.csv'
   with open(corrlation_data_path, 'a') as f:
      f.write(os.path.basename(filename_Truck) + ', Middle, ' + str(objective_value) + '\n')
 
@@ -439,7 +439,7 @@ def max_main(_grid, _YT_locations, _Job_locations, number_of_YT, number_of_Job, 
     f.write("next prev count : \n" + next_prev_count_str + "\n")
   
   # corrlation_data.csv라는 파일을 생성하여 [Trucks파일명, Min Middle Max 여부, objective_value]를 저장
-  corrlation_data_path = f'Model/corrlation_data.csv'
+  corrlation_data_path = f'Model/correlation_between_obj_and_Cmax.csv'
   with open(corrlation_data_path, 'a') as f:
      f.write(os.path.basename(filename_Truck) + ', Max, ' + str(objective_value) + '\n')
 
@@ -448,7 +448,7 @@ def max_main(_grid, _YT_locations, _Job_locations, number_of_YT, number_of_Job, 
 
 if __name__ == "__main__":
 
-  casename = 'Correlation_cost_completiontime_modidied_A_ver'
+  casename = 'Correlation_between_obj_and_Cmax'
   subcasename = ['Min', 'Middle', 'Max']
 
   # 가로로 3개
@@ -464,10 +464,10 @@ if __name__ == "__main__":
   Now_number_of_YT = 20
   Now_number_of_Job = 20
 
-  reps = 30
-  alphas = [[0, 40],
-            [0, 50],
-            [100, 10]]
+  reps = 20
+  alphas = [[40],
+            [50],
+            [10]]
   
   for rep in range(reps):
     rep = rep + 1
