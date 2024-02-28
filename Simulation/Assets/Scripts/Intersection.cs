@@ -50,7 +50,7 @@ namespace TrafficSimulation{
         private Stopwatch intersectionTimer;
 
         // Time limit for vehicles in the intersection
-        private float intersectionTimeLimit = 15f;
+        private float intersectionTimeLimit = 30f;
         
         void Start(){
             vehiclesQueue = new List<GameObject>();
