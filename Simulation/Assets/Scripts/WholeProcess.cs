@@ -9,7 +9,7 @@ namespace TrafficSimulation {
     public class WholeProcess : MonoBehaviour
     {
         // private static string caseName = "Congestion/prev_20_now_20";
-        private static string caseName = "Modify_prior_congestion_30_0_10_20";
+        private static string caseName = "Correlation_between_obj_and_Cmax/Min";
         private string caseFolderPath = "Assets/Data/" + caseName;
         
         // parameters
