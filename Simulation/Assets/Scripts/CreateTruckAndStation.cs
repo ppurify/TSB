@@ -32,8 +32,8 @@ namespace TrafficSimulation{
 
 
         // 동일한 시작 위치를 가진 트럭들의 생성 주기
-        private static float createDelay = 160f;
-        // private static float createDelay = 10f;
+        // private static float createDelay = 160f;
+        private static float createDelay = 10f;
         
         // 이전에 스케줄링이 된게 없고 현재 한대만 돌릴 때는 truckIndexPlus_1을 100으로 해주기
         // 두대 돌리거나 이전에 스케줄링 된 걸 돌릴때는 truckIndexPlus_1을 0으로 해주기
